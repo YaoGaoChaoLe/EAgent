@@ -1,6 +1,6 @@
 ﻿[
     {
-        "CmdCount": 632,
+        "CmdCount": 674,
         "Guid": "d09f2340818511d396f6aaf844c7e325",
         "Key": "krnln",
         "MaxRefConstPos": 248,
@@ -80,6 +80,18 @@
         "Name": "多线程支持库",
         "Version": {
             "Major": 2,
+            "Minor": 0
+        }
+    },
+    {
+        "CmdCount": 11,
+        "Guid": "{4F9CE92B-DB1C-649C-869C-91DBD3C51A9C}",
+        "Key": "yihui",
+        "MaxRefConstPos": 0,
+        "MaxRefObjectPos": 0,
+        "Name": "E_易会开发支持库",
+        "Version": {
+            "Major": 1,
             "Minor": 0
         }
     }

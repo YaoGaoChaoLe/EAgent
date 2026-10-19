@@ -1,4 +1,5 @@
-﻿param(
+# cmd调用_打开浏览器：powershell -NoProfile -ExecutionPolicy Bypass -File ""{{运行目录}}\1_启动调试浏览器.ps1""
+param(
     [string]$ChromePath = "",
     [int]$Port = 9222,
     [string]$UserDataDir = "$env:TEMP\deepseek_debug_profile",
@@ -47,7 +48,9 @@ Start-Process -FilePath $ChromePath -ArgumentList @(
     "--disable-renderer-backgrounding",
     "--remote-allow-origins=*"
     "--disable-features=CalculateNativeWinOcclusion",
-    $Url
+    "--disable-blink-features=AutomationControlled",
+    "--test-type",
+    "--app=$Url"
 ) -WindowStyle Normal
 
 $ready = $false

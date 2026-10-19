@@ -1,4 +1,5 @@
-﻿param([int]$Port = 9222)
+﻿# cmd调用_关闭浏览器：powershell -NoProfile -ExecutionPolicy Bypass -File "{{运行目录}}\3_关闭浏览器.ps1"
+param([int]$Port = 9222)
 
 try {
     $resp = Invoke-RestMethod -Uri "http://127.0.0.1:$Port/json/version" -TimeoutSec 3

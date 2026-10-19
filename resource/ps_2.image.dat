@@ -1,4 +1,6 @@
-﻿param(
+﻿# cmd调用_发送并回复_不传文件：powershell -NoProfile -ExecutionPolicy Bypass -Command "& '{{运行目录}}\2_发送并等待回复.ps1' -MessageB64 '{{你的Base64字符串}}'"
+# cmd调用_发送并回复_附带文件：powershell -NoProfile -ExecutionPolicy Bypass -Command "& '{{运行目录}}\2_发送并等待回复.ps1' -Files {{提交文件}} -MessageB64 '{{你的Base64字符串}}'"
+param(
     [string]$Message = "",
     [string]$MessageB64 = "",
     [string[]]$Files = @(),

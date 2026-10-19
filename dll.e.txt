@@ -1,5 +1,34 @@
 ﻿.版本 2
 
-.DLL命令 API热键监视, 整数型, , "GetAsyncKeyState", 公开, 例：如果真.API热键(#F10)≠0 -> 执行
-    .参数 键位值, 整数型, , 当这个键被按下，返回被按下的键位值
+.DLL命令 RtlMoveMemory_MINMAXINFO2, , "kernel32", "RtlMoveMemory", , 　
+    .参数 pDest, 整数型
+    .参数 pSrc, MINMAXINFO
+    .参数 ByteLen, 字节型
+
+.DLL命令 MoveWindow, 整数型, , "MoveWindow", , user32.dll
+    .参数 hwnd, 整数型, , 备注1无法读取，请您提供该API名报易BBS中ID号klasp完善。
+    .参数 x, 整数型, , 备注2无法读取，请您提供该API名报易BBS中ID号klasp完善。
+    .参数 y, 整数型, , 备注3无法读取，请您提供该API名报易BBS中ID号klasp完善。
+    .参数 n, 整数型, , 备注4无法读取，请您提供该API名报易BBS中ID号klasp完善。
+    .参数 nHeight, 整数型, , 备注5无法读取，请您提供该API名报易BBS中ID号klasp完善。
+    .参数 bRepaint, 整数型, , 备注6无法读取，请您提供该API名报易BBS中ID号klasp完善。
+
+.DLL命令 GetClientRect, 逻辑型, "user32", "GetClientRect", , ,窗口_取控件大小
+    .参数 hwnd, 整数型
+    .参数 lpRect, 类型_矩形, 传址, 左边顶边=0   类似编辑框高度24 实际上只有12 因为活动区域只有12
+
+.DLL命令 GetWindowRect, 整数型, "user32", "GetWindowRect", , 取到界面是看到的值
+    .参数 hWnd, 整数型
+    .参数 lpRect, 类型_矩形
+
+.DLL命令 FindWindowExA, 整数型, "user32", "FindWindowExA"
+    .参数 父窗口句柄, 整数型
+    .参数 子窗口, 整数型
+    .参数 类名, 文本型
+    .参数 标题, 文本型
+
+.DLL命令 RtlMoveMemory_MINMAXINFO, , "kernel32", "RtlMoveMemory", , 　
+    .参数 pDest, MINMAXINFO
+    .参数 pSrc, 整数型
+    .参数 ByteLen, 字节型
 

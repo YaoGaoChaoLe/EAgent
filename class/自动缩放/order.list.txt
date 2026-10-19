@@ -1,0 +1,12 @@
+﻿类_自动缩放
+自动缩放
+MINMAXINFO
+类型_矩形
+类型_缩放
+类型_坐标
+FindWindowExA
+GetClientRect
+GetWindowRect
+MoveWindow
+RtlMoveMemory_MINMAXINFO
+RtlMoveMemory_MINMAXINFO2
