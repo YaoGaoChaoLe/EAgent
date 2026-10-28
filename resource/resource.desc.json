@@ -87,8 +87,12 @@
         "Comment": "3_关闭浏览器.ps1",
         "IsPublic": false
     },
-    "skill_zip": {
-        "Comment": ".\\{{临时目录}}\\skills_all.zip",
+    "ps_diff": {
+        "Comment": "文件夹对比工具",
+        "IsPublic": false
+    },
+    "内置skill": {
+        "Comment": ".7z",
         "IsPublic": false
     }
 }

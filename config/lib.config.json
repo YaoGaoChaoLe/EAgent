@@ -36,7 +36,7 @@
         }
     },
     {
-        "CmdCount": 5,
+        "CmdCount": 8,
         "Guid": "A512548E76954B6E92C21055517615B0",
         "Key": "spec",
         "MaxRefConstPos": 0,
@@ -80,18 +80,6 @@
         "Name": "多线程支持库",
         "Version": {
             "Major": 2,
-            "Minor": 0
-        }
-    },
-    {
-        "CmdCount": 28,
-        "Guid": "{4F9CE92B-DB1C-649C-869C-91DBD3C51A9C}",
-        "Key": "yihui",
-        "MaxRefConstPos": 0,
-        "MaxRefObjectPos": 0,
-        "Name": "E_易会开发支持库",
-        "Version": {
-            "Major": 1,
             "Minor": 0
         }
     }

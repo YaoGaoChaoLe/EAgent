@@ -12,7 +12,8 @@ param(
     [int]$Timeout = 180,
     [string]$OutputFile = "",
     [string]$Encoding = "gbk",
-    [switch]$Quiet = $false
+    [switch]$Quiet = $false,
+    [int]$FastFailSec = 15
 )
 $script:DbgT0 = Get-Date
 function Dbg([string]$msg, [string]$color = 'DarkGray') {
@@ -295,6 +296,10 @@ $requiredNull = 10
 $ctxWarn = $false
 $cdpBroken = $false
 $tick = 0
+$failFastDeadline = (Get-Date).AddSeconds($FastFailSec)
+$sawStop = $false
+$failFast = $false
+$btnProbe = 0
 Dbg ("进入轮询 超时={0}s 判定稳定次数={1} 判定断开次数={2}" -f $Timeout, $requiredStable, $requiredNull) 'Cyan'
 
 while ((Get-Date) -lt $deadline) {
@@ -320,6 +325,24 @@ while ((Get-Date) -lt $deadline) {
     }
     $nullTicks = 0
     $cur = [string]$cur
+    if (-not $sawNew -and -not $sawStop) {
+        $btnProbe++
+        if ($btnProbe -ge 10) {
+            $btnProbe = 0
+            $bv = CDP $btnJs -timeoutMs 3000
+            if ($bv) {
+                try {
+                    $bj = $bv | ConvertFrom-Json
+                    if ($bj.ok -and $bj.isStop) { $sawStop = $true; Dbg '检测到 stop 按钮(生成中)' 'Cyan' }
+                } catch {}
+            }
+            if (-not $sawStop -and (Get-Date) -gt $failFastDeadline) {
+                $failFast = $true
+                Write-Output "ERROR: FAIL_FAST: ${FastFailSec}s 内未进入生成态且无新回复"
+                break
+            }
+        }
+    }
 
     if (-not $sawNew) {
         if ($cur -ne $lastAssist0 -and $cur.Length -gt 0) {
@@ -348,6 +371,7 @@ while ((Get-Date) -lt $deadline) {
 Dbg ("轮询结束 用时={0}ms 有结果={1}" -f [int]((Get-Date)-$script:DbgT0).TotalMilliseconds, [bool]$finalText) 'Cyan'
 if ($ws.State -eq 'Open') { $ws.Dispose() }
 if ($cdpBroken) { exit 3 }
+if ($failFast) { exit 4 }
 
 if ($finalText) {
     if ($Encoding.ToLower() -match 'utf-?8') {
