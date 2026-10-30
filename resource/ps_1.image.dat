@@ -1,0 +1,70 @@
+# cmd调用_打开浏览器：powershell -NoProfile -ExecutionPolicy Bypass -File ""{{运行目录}}\1_启动调试浏览器.ps1""
+param(
+    [string]$ChromePath = "",
+    [int]$Port = 9222,
+    [string]$UserDataDir = "$env:TEMP\deepseek_debug_profile",
+    [string]$Url = "https://chat.deepseek.com"
+)
+
+if (-not $ChromePath -or -not (Test-Path $ChromePath)) {
+    $candidates = @(
+        "${env:ProgramFiles}\Google\Chrome\Application\chrome.exe",
+        "${env:ProgramFiles(x86)}\Google\Chrome\Application\chrome.exe",
+        "$env:LOCALAPPDATA\Google\Chrome\Application\chrome.exe",
+        "${env:ProgramFiles}\Microsoft\Edge\Application\msedge.exe",
+        "${env:ProgramFiles(x86)}\Microsoft\Edge\Application\msedge.exe"
+    )
+    foreach ($c in $candidates) {
+        if (Test-Path $c) { $ChromePath = $c; break }
+    }
+}
+
+if (-not $ChromePath -or -not (Test-Path $ChromePath)) {
+    Write-Output "ERROR: Chrome/Edge not found"
+    exit 1
+}
+
+$portInUse = $false
+try {
+    $tcp = New-Object System.Net.Sockets.TcpClient
+    $tcp.Connect("127.0.0.1", $Port)
+    $tcp.Close()
+    $portInUse = $true
+} catch {}
+
+if ($portInUse) {
+    Write-Output "ALREADY_RUNNING: port $Port"
+    exit 0
+}
+
+Start-Process -FilePath $ChromePath -ArgumentList @(
+    "--remote-debugging-port=$Port",
+    "--user-data-dir=$UserDataDir",
+    "--no-first-run",
+    "--no-default-browser-check",
+    "--disable-popup-blocking",
+    "--disable-background-timer-throttling",
+    "--disable-backgrounding-occluded-windows",
+    "--disable-renderer-backgrounding",
+    "--remote-allow-origins=*",
+    "--disable-features=CalculateNativeWinOcclusion",
+    "--disable-blink-features=AutomationControlled",
+    "--test-type",
+    "--app=$Url"
+) -WindowStyle Normal
+
+$ready = $false
+for ($i = 0; $i -lt 20; $i++) {
+    Start-Sleep -Milliseconds 500
+    try {
+        $resp = Invoke-RestMethod -Uri "http://127.0.0.1:$Port/json/version" -TimeoutSec 2
+        if ($resp.webSocketDebuggerUrl) { $ready = $true; break }
+    } catch {}
+}
+
+if ($ready) {
+    Write-Output "OK: browser started, port $Port ready"
+} else {
+    Write-Output "ERROR: debug port not ready"
+    exit 1
+}

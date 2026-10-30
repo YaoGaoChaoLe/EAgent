@@ -1,0 +1,25 @@
+﻿.版本 2
+
+.常量 HKEY_CLASSES_ROOT, "2147483648", , #根类
+.常量 HKEY_CURRENT_USER, "2147483649", , #现行用户
+.常量 HKEY_LOCAL_MACHINE, "2147483650", , #本地机器
+.常量 HKEY_USERS, "2147483651", , #所有用户
+.常量 HKEY_CURRENT_CONFIG, "2147483653", , #现行设置
+.常量 REG_FILE_NAME, , , 注册表数据类型_文本型，文件名
+.常量 REG_FILE_TIME, , , 注册表数据类型_文本型，文件时间
+.常量 REG_COLOR_RGB, , , 注册表数据类型_整数型，颜色描述
+.常量 REG_UNKNOWN, , , 注册表数据类型_未知类型，未知类型
+.常量 REG_NONE, "0", , 注册表数据类型_未知类型，未知类型
+.常量 REG_SZ, "1", , 注册表数据类型_文本型，文本型
+.常量 REG_EXPAND_SZ, "2", , 注册表数据类型_文本型，包含环境变量占位符的字符串
+.常量 REG_BINARY, "3", , 注册表数据类型_字节集，二进制
+.常量 REG_DWORD, "4", , 注册表数据类型_整数型，DWORD值32位整数型
+.常量 REG_DWORD_LITTLE_ENDIAN, "4", , 注册表数据类型_整数型，DWORD值特殊形式
+.常量 REG_DWORD_BIG_ENDIAN, "5", , 注册表数据类型_字节集，DWORD值的逆序存储形式
+.常量 REG_LINK, "6", , 注册表数据类型_字符串，命名一个符号链接(symbolic link)的Unicode串
+.常量 REG_MULTI_SZ, "7", , 注册表数据类型_文本型，以null字符分隔的字符串集合，集合中的最后一个字符串以两个null字符结尾
+.常量 REG_RESOURCE_LIST, "8", , 注册表数据类型_字节集，设备使用的资源列表
+.常量 REG_FULL_RESOURCE_DESCRIPTOR, "9", , 注册表数据类型_字节集，硬件资源列表
+.常量 REG_RESOURCE_REQUIREMENTS_LIST, "10", , 注册表数据类型_字节集，驱动程序资源列表
+.常量 REG_QWORD, "11", , 注册表数据类型_字节集，QWORD值64位整数型
+.常量 REG_QWORD_LITTLE_ENDIAN, "11", , 注册表数据类型_字节集，QWORD值特殊形式

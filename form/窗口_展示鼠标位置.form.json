@@ -1,0 +1,53 @@
+﻿{
+    "Class": "窗口程序集_窗口_展示鼠标位置",
+    "Comment": "",
+    "Controls": [
+        {
+            "Children": [],
+            "Comment": "",
+            "Cursor": "00000000",
+            "DataType": "窗口",
+            "Disable": true,
+            "ExtensionData": "060000000000000001000000FFFF0000000000000000000000000000010000000100000000000000000000000000000000000000000000000100000000000000000000000100000001000000000000000000000000000000000000000000000000000000",
+            "Height": 20,
+            "Left": 50,
+            "Name": "",
+            "Tag": "",
+            "Top": 50,
+            "UnknownBeforeEvents": 0,
+            "UnknownBeforeExtensionData": "0000000000000000000000000000000000000000",
+            "UnknownBeforeLeft": 0,
+            "UnknownBeforeName": "0000000000000000000000000000000000000000",
+            "UnknownBeforeParent": 0,
+            "UnknownBeforeVisible": 0,
+            "Visible": true,
+            "Width": 20
+        },
+        {
+            "Children": [],
+            "Comment": "",
+            "Cursor": "00000000",
+            "DataType": "时钟",
+            "Disable": false,
+            "ExtensionData": "",
+            "Height": 26,
+            "Left": 8,
+            "Name": "时钟1",
+            "Tag": "",
+            "Top": 8,
+            "UnknownBeforeEvents": 0,
+            "UnknownBeforeExtensionData": "0000000000000000000000000000000000000000",
+            "UnknownBeforeLeft": 0,
+            "UnknownBeforeName": "0000000000000000000000000000000000000000",
+            "UnknownBeforeParent": 0,
+            "UnknownBeforeVisible": 0,
+            "Visible": false,
+            "Width": 26
+        }
+    ],
+    "Id": 1375812006,
+    "Menus": [],
+    "Name": "窗口_展示鼠标位置",
+    "UnknownAfterId": 42221472,
+    "UnknownBeforeClass": 42108036
+}

@@ -1,0 +1,23 @@
+﻿{
+    "Address": "",
+    "Author": "https://github.com/YaoGaoChaoLe/",
+    "BuilderVersion": {
+        "Major": 0,
+        "Minor": 0
+    },
+    "CompilePlugins": "",
+    "Copyright": "https://github.com/YaoGaoChaoLe/",
+    "Description": "在网页中使用Agent，而不是用API。\r\n@备注:\r\n易Agent",
+    "Email": "",
+    "ExportPublicClassMethod": false,
+    "FaxNumber": "",
+    "Homepage": "",
+    "Name": "EAgent",
+    "ReleaseVersion": {
+        "Major": 2,
+        "Minor": 6
+    },
+    "TelephoneNumber": "",
+    "WriteVersion": true,
+    "ZipCode": ""
+}

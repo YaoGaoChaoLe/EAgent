@@ -1,0 +1,311 @@
+﻿param(
+    [string]$Message = "",
+    [string]$MessageB64 = "",
+    [string[]]$Files = @(),
+    [int]$Port = 9222,
+    [int]$Timeout = 180,
+    [string]$OutputFile = "",
+    [string]$Encoding = "gbk",
+    [switch]$NoWait
+)
+
+if ($PSScriptRoot) { $WorkDir = $PSScriptRoot } else { $WorkDir = (Get-Location).Path }
+if (-not $OutputFile) { $OutputFile = Join-Path $WorkDir "reply.txt" }
+# ===== 选择器配置（方案二：集中配置 / 方案一：候选回退）=====
+$Selectors = @{
+    assistant = @('.ds-assistant-message-main-content', '[class*="ds-assistant-message-main-content"]')
+    user      = @('[class*="fbb737a4"]')
+    input     = @('textarea')
+    sendBtn   = @('div[role="button"].ds-button--primary.ds-button--circle', '[role="button"][aria-label*="发送"]', '[role="button"][aria-label*="Send"]')
+}
+$SelJson = ($Selectors | ConvertTo-Json -Compress)
+$SelJs = @"
+var SEL = $SelJson;
+function pick(key){
+    var list = SEL[key]||[];
+    if(typeof list==='string') list=[list];
+    var out=[], seen=[];
+    for(var i=0;i<list.length;i++){
+        var els=document.querySelectorAll(list[i]);
+        for(var j=0;j<els.length;j++){
+            if(seen.indexOf(els[j])<0){ seen.push(els[j]); out.push(els[j]); }
+        }
+    }
+    return out;
+}
+"@
+
+if ($MessageB64) {
+    try {
+        $bytes = [Convert]::FromBase64String($MessageB64)
+        $Message = [Text.Encoding]::UTF8.GetString($bytes)
+    } catch { Write-Output "ERROR: MessageB64 decode failed"; exit 1 }
+}
+if ([string]::IsNullOrEmpty($Message) -and $Files.Count -eq 0) { Write-Output "ERROR: no message"; exit 1 }
+
+$pages = Invoke-RestMethod -Uri "http://127.0.0.1:$Port/json" -TimeoutSec 5
+$target = $pages | Where-Object { $_.url -match "chat\.deepseek\.com" -and $_.type -eq 'page' } | Select-Object -First 1
+if (-not $target) { Write-Output "ERROR: no deepseek page"; exit 1 }
+
+$ws = New-Object System.Net.WebSockets.ClientWebSocket
+$ws.ConnectAsync([Uri]$target.webSocketDebuggerUrl, [Threading.CancellationToken]::None).Wait(5000) | Out-Null
+if ($ws.State -ne 'Open') { Write-Output "ERROR: WS not open"; exit 1 }
+
+$script:cdpId = 0
+
+function CDPRecv([int]$id, [int]$timeoutMs) {
+    $buf = New-Object byte[] 1048576
+    $recvSeg = New-Object System.ArraySegment[byte] -ArgumentList @(,$buf)
+    $deadline = (Get-Date).AddMilliseconds($timeoutMs)
+    while ((Get-Date) -lt $deadline) {
+        $msLeft = [int]($deadline - (Get-Date)).TotalMilliseconds
+        if ($msLeft -lt 1) { return $null }
+        $task = $ws.ReceiveAsync($recvSeg, [Threading.CancellationToken]::None)
+        if (-not $task.Wait($msLeft)) { return $null }
+        $rr = $task.Result
+        if ($rr -and $rr.Count -gt 0) {
+            $text = [Text.Encoding]::UTF8.GetString($buf, 0, $rr.Count)
+            $pattern = '"id"\s*:\s*' + $id + '\b'
+            foreach ($line in ($text -split "`n")) {
+                if ($line -match $pattern) {
+                    try { return ($line | ConvertFrom-Json) } catch {}
+                }
+            }
+        }
+    }
+    return $null
+}
+
+function CDPCall([string]$method, $params, [int]$timeoutMs = 8000) {
+    $script:cdpId++; $id = $script:cdpId
+    $payload = @{ id=$id; method=$method; params=$params } | ConvertTo-Json -Depth 20 -Compress
+    $bytes = [Text.Encoding]::UTF8.GetBytes($payload)
+    $seg = New-Object System.ArraySegment[byte] -ArgumentList @(,$bytes)
+    $ws.SendAsync($seg, [System.Net.WebSockets.WebSocketMessageType]::Text, $true, [Threading.CancellationToken]::None).Wait(3000) | Out-Null
+    $resp = CDPRecv $id $timeoutMs
+    if ($resp -and $resp.result) { return $resp.result }
+    return $null
+}
+
+function CDP([string]$expr, [int]$timeoutMs = 8000) {
+    $r = CDPCall 'Runtime.evaluate' @{ expression=$expr; returnByValue=$true } $timeoutMs
+    if ($r -and $r.result) { return $r.result.value }
+    return $null
+}
+
+$msgJs = $SelJs + @"
+(function(){
+    var els = pick('assistant');
+    if(els.length===0) return JSON.stringify({count:0, text:''});
+    var last = els[els.length-1];
+    var t = (last.textContent||'').trim();
+    return JSON.stringify({count:els.length, text:t});
+})()
+"@
+
+$userJs = $SelJs + @"
+(function(){
+    var users = pick('user');
+    return JSON.stringify({count: users.length});
+})()
+"@
+
+$btnJs = $SelJs + @"
+(function(){
+    var btns = pick('sendBtn');
+    var btn=null,w=window.innerWidth,h=window.innerHeight;
+    for(var i=0;i<btns.length;i++){
+        var el=btns[i];
+        if(el.offsetParent===null) continue;
+        var r=el.getBoundingClientRect();
+        if(r.x<w*0.5||r.y<h*0.6) continue;
+        btn=el;
+    }
+    if(!btn) return JSON.stringify({ok:false});
+    var svg=btn.querySelector('svg'),p=svg&&svg.querySelector('path');
+    var d=p?(p.getAttribute('d')||''):'';
+    return JSON.stringify({
+        ok:true,
+        isStop: d.indexOf('M2 4.88C2 3.68009')===0,
+        isArrow: d.indexOf('M8.3125 0.980206')===0,
+        head: d.substring(0,30)
+    });
+})()
+"@
+
+# -------- 保持页面活跃（防遮挡/最小化导致渲染停止） --------
+$null = CDPCall 'Page.enable' @{}
+$null = CDPCall 'Page.bringToFront' @{}
+$null = CDPCall 'Emulation.setFocusEmulationEnabled' @{enabled=$true}
+Write-Output "KEEPALIVE_SET"
+# -------- 0. 记录发送前的助手消息条数和用户消息条数 --------
+$initCount = 0
+$cv = CDP $msgJs -timeoutMs 4000
+if ($cv) { try { $initCount = [int](($cv | ConvertFrom-Json).count) } catch {} }
+
+$uInit = 0
+$uv = CDP $userJs -timeoutMs 4000
+if ($uv) { try { $uInit = [int](($uv | ConvertFrom-Json).count) } catch {} }
+
+Write-Output "INIT_COUNT: a=$initCount u=$uInit"
+$lastAssistJs = $SelJs + @"
+(function(){
+    var a=pick('assistant');
+    if(a.length===0) return '';
+    return (a[a.length-1].textContent||'').trim();
+})()
+"@
+$lastAssist0 = CDP $lastAssistJs -timeoutMs 4000
+if ($null -eq $lastAssist0) { $lastAssist0 = '' }
+Write-Output "PREV_ASSIST_LEN: $($lastAssist0.Length)"
+
+# -------- 1. 上传文件 --------
+if ($Files.Count -gt 0) {
+    $abs = @()
+    foreach ($f in $Files) {
+        if (-not (Test-Path -LiteralPath $f)) { Write-Output "ERROR: file not found: $f"; $ws.Dispose(); exit 1 }
+        $abs += (Resolve-Path -LiteralPath $f).Path
+    }
+    $null = CDPCall 'DOM.enable' @{}
+    $objRes = CDPCall 'Runtime.evaluate' @{ expression = 'document.querySelector(''input[type="file"]'')'; returnByValue = $false }
+    if (-not $objRes -or -not $objRes.result -or -not $objRes.result.objectId) { Write-Output "ERROR: no file input"; $ws.Dispose(); exit 1 }
+    $objectId = $objRes.result.objectId
+    $null = CDPCall 'DOM.setFileInputFiles' @{ files = $abs; objectId = $objectId }
+    Write-Output "FILES_SET: $($abs.Count)"
+    Start-Sleep -Seconds 3
+}
+
+# -------- 2. 注入消息 --------
+$msgJson = $Message | ConvertTo-Json -Compress
+$injectJs = $SelJs + @"
+(function(){
+    var msg = $msgJson;
+    var ta = pick('input')[0];
+    if(!ta) return JSON.stringify({ok:false, err:'no textarea'});
+    ta.focus();
+    var s = Object.getOwnPropertyDescriptor(window.HTMLTextAreaElement.prototype, 'value').set;
+    s.call(ta, msg);
+    ta.dispatchEvent(new Event('input',{bubbles:true}));
+    ta.dispatchEvent(new Event('change',{bubbles:true}));
+    return JSON.stringify({ok:true, len:ta.value.length});
+})()
+"@
+$r = CDP $injectJs
+if (-not $r -or $r -notmatch '"ok":true') {
+    Write-Output "ERROR: inject failed ($r)"
+    $ws.Dispose(); exit 1
+}
+Write-Output "INJECTED"
+
+Start-Sleep -Milliseconds 300
+
+# -------- 3. 发送 --------
+if ([string]::IsNullOrEmpty($Message)) {
+    $sendJs = $SelJs + @"
+(function(){
+    var btns = pick('sendBtn');
+    var btn=null,w=window.innerWidth,h=window.innerHeight;
+    for(var i=0;i<btns.length;i++){
+        var el=btns[i];
+        if(el.offsetParent===null) continue;
+        var r=el.getBoundingClientRect();
+        if(r.x<w*0.5||r.y<h*0.6) continue;
+        btn=el;
+    }
+    if(!btn) return 'NO_BTN';
+    btn.click();
+    return 'SENT';
+})()
+"@
+} else {
+    $sendJs = $SelJs + @"
+(function(){
+    var ta = pick('input')[0];
+    if(!ta) return 'NO_TA';
+    ta.focus();
+    function ev(t){
+        var e = new KeyboardEvent(t, {key:'Enter', code:'Enter', keyCode:13, which:13, bubbles:true, cancelable:true});
+        ta.dispatchEvent(e);
+    }
+    ev('keydown'); ev('keypress'); ev('keyup');
+    return 'SENT';
+})()
+"@
+}
+$r = CDP $sendJs
+if ($r -ne 'SENT') {
+    Write-Output "ERROR: send failed ($r)"
+    $ws.Dispose(); exit 1
+}
+Write-Output "SEND_ACTION: SENT"
+
+# -------- 4a. NoWait: 只确认用户消息已发出 --------
+if ($NoWait) {
+    $deadline = (Get-Date).AddSeconds($Timeout)
+    while ((Get-Date) -lt $deadline) {
+        Start-Sleep -Milliseconds 300
+        $uv = CDP $userJs -timeoutMs 4000
+        if (-not $uv) { continue }
+        $us = $null; try { $us = $uv | ConvertFrom-Json } catch {}
+        if ($us -and [int]$us.count -gt $uInit) {
+            $ws.Dispose()
+            Write-Output "OK_NOWAIT: user messages $uInit -> $($us.count)"
+            exit 0
+        }
+    }
+    $ws.Dispose()
+    Write-Output "NOWAIT_TIMEOUT"
+    exit 2
+}
+
+# -------- 4b. 轮询等待助手回复 --------
+$deadline = (Get-Date).AddSeconds($Timeout)
+$finalText = ""
+$prevText = $lastAssist0
+$stableTicks = 0
+$requiredStable = 7
+$sawNew = $false
+
+while ((Get-Date) -lt $deadline) {
+    Start-Sleep -Milliseconds 300
+    $cur = CDP $lastAssistJs -timeoutMs 5000
+    if ($null -eq $cur) { continue }
+    $cur = [string]$cur
+
+    if (-not $sawNew) {
+        if ($cur -ne $lastAssist0 -and $cur.Length -gt 0) {
+            Write-Output "  [new-reply] len=$($cur.Length)"
+            $sawNew = $true
+            $prevText = $cur
+        }
+        continue
+    }
+
+    if ($cur -eq $prevText) {
+        $stableTicks++
+        if ($stableTicks -ge $requiredStable) {
+            $finalText = $cur
+            break
+        }
+    } else {
+        $stableTicks = 0
+        $prevText = $cur
+    }
+}
+
+$ws.Dispose()
+
+if ($finalText) {
+    if ($Encoding.ToLower() -match 'utf-?8') {
+        [IO.File]::WriteAllText($OutputFile, $finalText, [Text.UTF8Encoding]::new($false))
+    } else {
+        $enc = [Text.Encoding]::GetEncoding(936)
+        [IO.File]::WriteAllText($OutputFile, $finalText, $enc)
+    }
+    Write-Output "OK: len=$($finalText.Length) path=$OutputFile"
+    Write-Output "----- reply.txt -----"
+    Write-Output $finalText
+} else {
+    Write-Output "TIMEOUT"
+    exit 2
+}

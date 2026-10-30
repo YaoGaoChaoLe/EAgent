@@ -1,0 +1,21 @@
+﻿# cmd调用_关闭浏览器：powershell -NoProfile -ExecutionPolicy Bypass -File "{{运行目录}}\3_关闭浏览器.ps1"
+param([int]$Port = 9222)
+
+try {
+    $resp = Invoke-RestMethod -Uri "http://127.0.0.1:$Port/json/version" -TimeoutSec 3
+    $wsUrl = $resp.webSocketDebuggerUrl
+    if ($wsUrl) {
+        $payload = @{ id = 1; method = "Browser.close" } | ConvertTo-Json -Compress
+        $ws = New-Object System.Net.WebSockets.ClientWebSocket
+        $ws.ConnectAsync([Uri]$wsUrl, [Threading.CancellationToken]::None).Wait(3000)
+        $bytes = [Text.Encoding]::UTF8.GetBytes($payload)
+        $seg = New-Object System.ArraySegment[byte] -ArgumentList @(,$bytes)
+        $ws.SendAsync($seg, [System.Net.WebSockets.WebSocketMessageType]::Text, $true, [Threading.CancellationToken]::None).Wait(3000)
+        $ws.Dispose()
+        Write-Output "OK: close command sent"
+    } else {
+        Write-Output "ERROR: ws url not found"
+    }
+} catch {
+    Write-Output "INFO: browser not running on port $Port"
+}
