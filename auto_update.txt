@@ -19,3 +19,5 @@
 \nhttps://github.com/YaoGaoChaoLe/EAgent/issues/22
 \nhttps://github.com/YaoGaoChaoLe/EAgent/issues/24
 ]_更新日志
+
+下载链接_[https://github.com/YaoGaoChaoLe/EAgent/releases/download/2026.10.28/EAgent.zip]_下载链接
