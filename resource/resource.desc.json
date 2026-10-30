@@ -91,6 +91,14 @@
         "Comment": "文件夹对比工具",
         "IsPublic": false
     },
+    "常量_ZIP压缩包1": {
+        "Comment": "ZIP压缩",
+        "IsPublic": false
+    },
+    "常量_ZIP压缩包2": {
+        "Comment": "ZIP压缩",
+        "IsPublic": false
+    },
     "内置skill": {
         "Comment": ".7z",
         "IsPublic": false
