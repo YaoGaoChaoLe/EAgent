@@ -5,6 +5,20 @@
 - 必须：Edge 浏览器(电脑自带)
 - 系统要求：仅Win10/11
 
+## 快速使用
+- 下载文件：[点我下载](https://github.com/YaoGaoChaoLe/EAgent/releases)
+- 右键 `EAgent.exe`，以管理员身份运行。`而不是直接双击打开`
+- 进入程序，点击 `选择工作目录` 按钮，选择一个目录。
+- 然后会自动打开 Edge 浏览器，请自行登录后，才能进行下一步操作。
+- 点击 `开始新对话` 。等待 Ai 分析提示词...
+- 到你回复它了 —— 用 EAgent 发消息，而**不是用网页版发消息**。 `网页版的唯一作用就是给你看的，而不是发消息的。`
+
+---
+
+<img width="1396" height="825" alt="2" src="https://github.com/user-attachments/assets/26816735-55d1-407f-a7b6-9610f889f673" />
+
+---
+
 ## 起源
 - 先说一下网络上的项目：
     - `DeepSeek Harness` 等正经的 Agent —— 它们的功能都比 EAgent 强大 100 倍！**但它们都要 API-Key、都要花钱买 token**
@@ -23,20 +37,6 @@
 还能更多，正在持续开发中...
 ```
 
-## 快速使用
-- 下载文件：[点我下载](https://github.com/YaoGaoChaoLe/EAgent/releases)
-- 右键 `EAgent.exe`，以管理员身份运行。`而不是直接双击打开`
-- 进入程序，点击 `选择工作目录` 按钮，选择一个目录。
-- 然后会自动打开 Edge 浏览器，请自行登录后，才能进行下一步操作。
-- 点击 `开始新对话` 。等待 Ai 分析提示词...
-- 到你回复它了 —— 用 EAgent 发消息，而**不是用网页版发消息**。 `网页版的唯一作用就是给你看的，而不是发消息的。`
-
----
-
-<img width="1396" height="825" alt="2" src="https://github.com/user-attachments/assets/26816735-55d1-407f-a7b6-9610f889f673" />
-
----
-
 ## 实现原理 —— 自动化脚本
 - EAgent **不是反代**、没第三方中转、没逆向 DeepSeek 网页！
 - 核心原理是：cdp 自动化模拟用户操作，**和反代一样均违反了 [DeepSeek 用户协议](https://cdn.deepseek.com/policies/zh-CN/deepseek-terms-of-use.html)**。EAgent 的实现原理理论上比反代安全。
@@ -49,7 +49,7 @@
 
 ## 声明
 - 您应该清楚 —— 风险与利益共存，一分钱一分货：
-    - EAgent 轻量级的设计：整体只有一个 .exe 文件，大小连 3 MB都不到，仅供学习交流，不适用于生产 (小玩具来的)；
+    - EAgent 轻量级的设计：整体只有一个 5 MB都不到.exe文件，仅供学习交流，不适用于生产 (小玩具来的)；
     - EAgent 无安全系统：DeepSeek 可能生成恶意代码、再通过 EAgent 破坏系统，有必要审查 Ai 执行的命令；
     - EAgent 有基础的防风控措施，但是 **极端高频的使用** 仍会被 DeepSeek 限制，作者不承担责任；
 - 病毒问题：本项目由 `e语言` 编写，由于其一言难尽的狗屎编译器，使部分杀毒软件误报木马病毒。但我保证：**本项目自身不会带有任何恶意代码，请放心使用。**[微步云-样本分析报告.pdf](https://github.com/user-attachments/files/33975912/_aa1cfadfaf91e60eef30a1400670305089e0cb11eefc07470897802731f74f41.pdf)
