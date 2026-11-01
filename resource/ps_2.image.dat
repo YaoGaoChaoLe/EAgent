@@ -203,6 +203,18 @@ $lastAssistJs = $SelJs + @"
 "@
 $lastAssist0 = CDP $lastAssistJs -timeoutMs 4000
 if ($null -eq $lastAssist0) { $lastAssist0 = '' }
+$retryCount = 0
+$chkRetryJs = $SelJs + @"
+(function(){
+    var contBtn = Array.from(document.querySelectorAll('.ds-button')).find(el => el.textContent.trim() === '继续生成' && el.offsetParent !== null);
+    if (!contBtn) return 'NO_CONTINUE';
+    var rbs = document.querySelectorAll('svg path[d^="M7.92136"]');
+    if (rbs.length === 0) return 'NO_RETRY';
+    var retryBtn = rbs[rbs.length - 1].closest('[role="button"]');
+    if (retryBtn) { retryBtn.click(); return 'CLICKED'; }
+    return 'NO_RETRY';
+})()
+"@
 Write-Output "PREV_ASSIST_LEN: $($lastAssist0.Length)"
 
 if ($Files.Count -gt 0) {
@@ -305,6 +317,25 @@ Dbg ("进入轮询 超时={0}s 判定稳定次数={1} 判定断开次数={2}" -f
 while ((Get-Date) -lt $deadline) {
     Start-Sleep -Milliseconds 100
     $tick++
+    if ($tick % 20 -eq 0) {
+        $chkRes = CDP $chkRetryJs -timeoutMs 3000
+        if ($chkRes -eq 'CLICKED') {
+            $retryCount++
+            Write-Output "CONTINUE_CLICKED: 已推翻半截重新生成 (第 $retryCount 次)"
+            Dbg ("点击继续生成 第{0}次" -f $retryCount) 'Magenta'
+            if ($retryCount -gt 5) {
+                Write-Output "ERROR: RETRY_MAX_EXCEEDED: 重试次数过多，强制终止"
+                if ($ws.State -eq 'Open') { $ws.Dispose() }
+                exit 5
+            }
+            Start-Sleep -Milliseconds 800
+            $stableTicks = 0
+            $sawNew = $false
+            $prevText = ""
+            $lastAssist0 = ""
+            continue
+        }
+    }
     if ($tick -eq 1 -or ($tick % 10) -eq 0) {
         Dbg ("轮询#{0} 新={1} 稳定={2}/{3} 空={4}/{5}" -f $tick, $sawNew, $stableTicks, $requiredStable, $nullTicks, $requiredNull) 'DarkGray'
     }
