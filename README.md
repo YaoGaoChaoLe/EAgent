@@ -1,7 +1,9 @@
 # 易Agent 
 0 tokens、0门槛 、轻量级 | 基于 DeepSeek 网页版制作的 Agent —— 让 deepseek "操控"你的电脑。
-
-**气死我了，11月3日deepseek加强了风控检查。从2026年11月4日开始，EAgent 总共支持 deepseek(弃用)、豆包、元宝 的网页版！**
+```
+2026年11月3日 deepseek 加强了风控检查。
+从2026年11月4日开始，EAgent 总共支持 deepseek(不稳定)、豆包、元宝 的网页版！
+```
 
 ## 环境要求
 - 仅支持 Win10~11 操作系统
