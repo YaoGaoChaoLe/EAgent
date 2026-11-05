@@ -1,0 +1,1 @@
+powershell -NoProfile -ExecutionPolicy Bypass -Command "& '{{{{{.ps1文件位置}}}}}' *>&1 | Tee-Object -FilePath '{{{{{.ps1_输出结果文件位置}}}}}'"

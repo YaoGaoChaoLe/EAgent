@@ -1,0 +1,26 @@
+﻿{
+    "常量_初始提示词": {
+        "Comment": "",
+        "IsPublic": true
+    },
+    "常量_发送并回复_不传文件": {
+        "Comment": "2.ps1 调用方法",
+        "IsPublic": false
+    },
+    "常量_发送并回复_附带文件": {
+        "Comment": "2.ps1 调用方法",
+        "IsPublic": false
+    },
+    "常量_关闭ds": {
+        "Comment": "3.ps1 调用方法",
+        "IsPublic": false
+    },
+    "常量_启动ds": {
+        "Comment": "1.ps1 调用方法",
+        "IsPublic": false
+    },
+    "常量_执行目录diff": {
+        "Comment": "目录diff 调用方法",
+        "IsPublic": false
+    }
+}

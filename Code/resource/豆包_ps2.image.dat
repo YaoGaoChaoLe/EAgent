@@ -1,0 +1,404 @@
+﻿# 豆包版：发送消息并等待回复（文本变化 + regenerate 判定）
+param(
+    [string]$Message = "",
+    [string]$MessageB64 = "",
+    [string[]]$Files = @(),
+    [int]$Port = 9224,
+    [int]$Timeout = 180,
+    [string]$OutputFile = "",
+    [string]$Encoding = "gbk",
+    [switch]$Quiet = $false,
+    [int]$FastFailSec = 15
+)
+$script:DbgT0 = Get-Date
+function Dbg([string]$msg, [string]$color = 'DarkGray') {
+    if ($Quiet) { return }
+    $ms = [int]((Get-Date) - $script:DbgT0).TotalMilliseconds
+    Write-Host ("[{0,7}ms] {1}" -f $ms, $msg) -ForegroundColor $color
+}
+
+if ($PSScriptRoot) { $WorkDir = $PSScriptRoot } else { $WorkDir = (Get-Location).Path }
+if (-not $OutputFile) { $OutputFile = Join-Path $WorkDir "reply.txt" }
+Dbg ("参数 Message={0}字 B64={1} Files={2} Port={3} Timeout={4}s Out={5} Enc={6} Quiet={7}" -f $Message.Length, $MessageB64.Length, $Files.Count, $Port, $Timeout, $OutputFile, $Encoding, $Quiet) 'Cyan'
+Dbg ("工作目录={0}" -f $WorkDir) 'Cyan'
+
+$Selectors = @{
+    input     = @('div.tiptap.ProseMirror[contenteditable="true"]')
+    sendBtn   = @('#flow-end-msg-send', '[data-testid="chat_input_send_button"]')
+    assistant = @('[data-testid="receive_message"] [data-testid="message_content"]')
+    receive   = @('[data-testid="receive_message"]')
+    user      = @('[data-testid="send_message"]')
+    list      = @('[data-testid="message-list"]')
+}
+$SelJson = ($Selectors | ConvertTo-Json -Compress)
+$SelJs = @"
+var SEL = $SelJson;
+function pick(key){
+    var list = SEL[key]||[];
+    if(typeof list==='string') list=[list];
+    var out=[], seen=[];
+    for(var i=0;i<list.length;i++){
+        var els=document.querySelectorAll(list[i]);
+        for(var j=0;j<els.length;j++){
+            if(seen.indexOf(els[j])<0){ seen.push(els[j]); out.push(els[j]); }
+        }
+    }
+    return out;
+}
+"@
+
+if ($MessageB64) {
+    if (Test-Path -LiteralPath $MessageB64 -PathType Leaf) {
+        $MessageB64 = [IO.File]::ReadAllText((Resolve-Path -LiteralPath $MessageB64).Path).Trim()
+    }
+    try {
+        $bytes = [Convert]::FromBase64String($MessageB64)
+        $Message = [Text.Encoding]::UTF8.GetString($bytes)
+    } catch { Write-Output "ERROR: MessageB64 decode failed"; exit 1 }
+}
+if ([string]::IsNullOrEmpty($Message) -and $Files.Count -eq 0) { Write-Output "ERROR: no message"; exit 1 }
+
+Dbg ("查询调试端口 {0} 页面列表..." -f $Port) 'Cyan'
+$pages = Invoke-RestMethod -Uri "http://127.0.0.1:$Port/json" -TimeoutSec 5
+$target = $pages | Where-Object { $_.url -match "doubao\.com" -and $_.type -eq 'page' } | Select-Object -First 1
+if (-not $target) { Write-Output "ERROR: no doubao page"; exit 1 }
+Dbg ("目标页面 url={0}" -f $target.url) 'Cyan'
+
+$ws = New-Object System.Net.WebSockets.ClientWebSocket
+$ws.ConnectAsync([Uri]$target.webSocketDebuggerUrl, [Threading.CancellationToken]::None).Wait(5000) | Out-Null
+if ($ws.State -ne 'Open') { Write-Output "ERROR: WS not open"; exit 1 }
+Dbg "WebSocket 已连接" 'Cyan'
+
+$script:cdpId = 0
+
+function CDPRecv([int]$id, [int]$timeoutMs) {
+    $deadline = (Get-Date).AddMilliseconds($timeoutMs)
+    $pattern = '"id"\s*:\s*' + $id + '\b'
+    try {
+        while ((Get-Date) -lt $deadline) {
+            $ms = New-Object System.IO.MemoryStream
+            $buf = New-Object byte[] 4194304
+            $done = $false
+            while (-not $done) {
+                $left = [int]($deadline - (Get-Date)).TotalMilliseconds
+                if ($left -lt 1) { break }
+                $seg = New-Object System.ArraySegment[byte] -ArgumentList @(,$buf)
+                $task = $ws.ReceiveAsync($seg, [Threading.CancellationToken]::None)
+                if (-not $task.Wait($left)) { break }
+                $rr = $task.Result
+                if ($rr.Count -gt 0) { $ms.Write($buf, 0, $rr.Count) }
+                if ($rr.EndOfMessage) { $done = $true }
+            }
+            if ($ms.Length -gt 0) {
+                $text = [Text.Encoding]::UTF8.GetString($ms.ToArray())
+                $ms.Dispose()
+                foreach ($line in ($text -split "`n")) {
+                    if ($line -match $pattern) {
+                        try { return ($line | ConvertFrom-Json) } catch {}
+                    }
+                }
+            } else { $ms.Dispose() }
+        }
+    } catch {
+        Write-Output "ERROR: WS_RECV_FAIL: $($_.Exception.Message)"
+        return $null
+    }
+    return $null
+}
+
+function CDPCall([string]$method, $params, [int]$timeoutMs = 8000) {
+    try {
+        $script:cdpId++; $id = $script:cdpId
+        $dbgPs = ''
+        if ($null -ne $params) {
+            try { $dbgPs = ($params | ConvertTo-Json -Compress -Depth 4) } catch { $dbgPs = '<json?>' }
+        }
+        if ($dbgPs.Length -gt 150) { $dbgPs = $dbgPs.Substring(0,150) + '…' }
+        Dbg ("CDP>> #{0} {1} {2}" -f $id, $method, $dbgPs) 'Magenta'
+        $payload = @{ id=$id; method=$method; params=$params } | ConvertTo-Json -Depth 20 -Compress
+        $bytes = [Text.Encoding]::UTF8.GetBytes($payload)
+        $seg = New-Object System.ArraySegment[byte] -ArgumentList @(,$bytes)
+        $sendTask = $ws.SendAsync($seg, [System.Net.WebSockets.WebSocketMessageType]::Text, $true, [Threading.CancellationToken]::None)
+        if (-not $sendTask.Wait(3000)) { Write-Output "ERROR: CDP_SEND_TIMEOUT: $method"; return $null }
+        $resp = CDPRecv $id $timeoutMs
+        Dbg ("CDP<< #{0} {1}" -f $id, $(if ($null -eq $resp) { 'NULL' } else { 'OK' })) 'Magenta'
+        if ($resp -and $resp.result) { return $resp.result }
+        return $null
+    } catch {
+        Write-Output "ERROR: CDP_$method : $($_.Exception.Message)"
+        return $null
+    }
+}
+
+function CDP([string]$expr, [int]$timeoutMs = 8000) {
+    $r = CDPCall 'Runtime.evaluate' @{ expression=$expr; returnByValue=$true; awaitPromise=$true } $timeoutMs
+    if ($r -and $r.result) { return $r.result.value }
+    return $null
+}
+
+$statusJs = $SelJs + @"
+(function(){
+    var assistants = pick('assistant');
+    var receives = pick('receive');
+    var lastText = assistants.length > 0 ? (assistants[assistants.length-1].textContent||'').trim() : '';
+    var receiveCount = receives.length;
+    var hasRegen = false;
+    var regenVisible = false;
+    if (receives.length > 0) {
+        var lastReceive = receives[receives.length-1];
+        var regen = lastReceive.querySelector('[data-testid="message_action_regenerate"]');
+        if (regen) {
+            hasRegen = true;
+            var r = regen.getBoundingClientRect();
+            regenVisible = (regen.offsetParent !== null) && r.width > 0 && r.height > 0;
+        }
+    }
+    return JSON.stringify({
+        assistCount: assistants.length,
+        text: lastText,
+        receiveCount: receiveCount,
+        hasRegen: hasRegen,
+        regenVisible: regenVisible
+    });
+})()
+"@
+
+$userCountJs = $SelJs + @"
+(function(){ return pick('user').length; })()
+"@
+
+$null = CDPCall 'Page.enable' @{}
+$null = CDPCall 'Page.bringToFront' @{}
+$null = CDPCall 'Emulation.setFocusEmulationEnabled' @{enabled=$true}
+Write-Output "KEEPALIVE_SET"
+Dbg "页面保持活跃已设置" 'DarkGray'
+
+$initReceiveCount = -1
+$initAssistCount = 0
+$initLastText = ''
+$stableInit = 0
+$prevKey = '<<<INIT>>>'
+$initDeadline = (Get-Date).AddSeconds(10)
+while ((Get-Date) -lt $initDeadline -and $stableInit -lt 3) {
+    Start-Sleep -Milliseconds 150
+    $s = CDP $statusJs -timeoutMs 3000
+    if ($null -eq $s) { continue }
+    try {
+        $j = $s | ConvertFrom-Json
+        $key = ('{0}|{1}' -f ([int]$j.receiveCount), ([string]$j.text).Length)
+        if ($key -eq $prevKey) { $stableInit++ } else { $stableInit = 0; $prevKey = $key }
+        $initReceiveCount = [int]$j.receiveCount
+        $initAssistCount  = [int]$j.assistCount
+        $initLastText     = [string]$j.text
+    } catch {}
+}
+if ($initReceiveCount -lt 0) { $initReceiveCount = 0 }
+
+$uInit = 0
+$uv = CDP $userCountJs -timeoutMs 4000
+if ($null -ne $uv) { try { $uInit = [int]$uv } catch {} }
+
+Write-Output "INIT_COUNT: receive=$initReceiveCount assist=$initAssistCount u=$uInit"
+Write-Output "PREV_ASSIST_LEN: $($initLastText.Length)"
+Dbg ("初始计数（稳定）receive={0} assist={1} user={2} 发送前末条长度={3}" -f $initReceiveCount, $initAssistCount, $uInit, $initLastText.Length) 'Cyan'
+
+# ===== 文件上传 =====
+if ($Files.Count -gt 0) {
+    $abs = @()
+    foreach ($f in $Files) {
+        if (-not (Test-Path -LiteralPath $f)) { Write-Output "ERROR: file not found: $f"; $ws.Dispose(); exit 1 }
+        $abs += (Resolve-Path -LiteralPath $f).Path
+    }
+    $null = CDPCall 'DOM.enable' @{}
+    $objRes = CDPCall 'Runtime.evaluate' @{ expression = 'document.querySelector(''input[type="file"]'')'; returnByValue = $false }
+    if (-not $objRes -or -not $objRes.result -or -not $objRes.result.objectId) { Write-Output "ERROR: no file input"; $ws.Dispose(); exit 1 }
+    $objectId = $objRes.result.objectId
+
+    $resetJs = @'
+(function(){
+    try {
+        var input = document.querySelector('input[type="file"]');
+        if (input) { input.value = ''; }
+    } catch(e) {}
+    return 'RESET';
+})()
+'@
+    $rr = CDP $resetJs -timeoutMs 3000
+    Dbg ("重置 file input: {0}" -f $rr) 'DarkGray'
+    Start-Sleep -Milliseconds 300
+
+    Dbg ("上传文件 {0} 个: {1}" -f $abs.Count, ($abs -join '; ')) 'Cyan'
+    $null = CDPCall 'DOM.setFileInputFiles' @{ files = $abs; objectId = $objectId }
+    Write-Output "FILES_SET: $($abs.Count)"
+    Start-Sleep -Seconds 3
+}
+
+# ===== 注入文本 =====
+if (-not [string]::IsNullOrEmpty($Message)) {
+    $focusJs = $SelJs + @"
+(function(){
+    var ta = pick('input')[0];
+    if(!ta) return 'NO_INPUT';
+    ta.focus();
+    try { document.execCommand('selectAll', false, null); document.execCommand('delete', false, null); } catch(e){}
+    return 'FOCUSED';
+})()
+"@
+    $fr = CDP $focusJs
+    if ($fr -ne 'FOCUSED') { Write-Output "ERROR: focus input failed ($fr)"; $ws.Dispose(); exit 1 }
+    Dbg ("注入消息 长度={0}（Input.insertText）" -f $Message.Length) 'Cyan'
+    $insRes = CDPCall 'Input.insertText' @{ text = $Message } 8000
+    if ($null -eq $insRes) {
+        Dbg "Input.insertText 无返回，尝试 execCommand 备用" 'Yellow'
+        $msgJson = $Message | ConvertTo-Json -Compress
+        $execJs = $SelJs + @"
+(function(){
+    var msg = $msgJson;
+    var ta = pick('input')[0];
+    if(!ta) return 'NO_INPUT';
+    ta.focus();
+    var ok = document.execCommand('insertText', false, msg);
+    return ok ? 'OK' : 'FAIL';
+})()
+"@
+        $er = CDP $execJs
+        if ($er -ne 'OK') { Write-Output "ERROR: inject failed ($er)"; $ws.Dispose(); exit 1 }
+    }
+    Write-Output "INJECTED"
+    Start-Sleep -Milliseconds 400
+}
+
+# ===== 等待发送按钮并点击 =====
+$btnExistJs = $SelJs + @"
+(function(){
+    var btns = pick('sendBtn');
+    for(var i=0;i<btns.length;i++){
+        var el = btns[i];
+        if(el.offsetParent === null) continue;
+        if(el.disabled) continue;
+        return true;
+    }
+    return false;
+})()
+"@
+$btnDeadline = (Get-Date).AddSeconds(8)
+$btnFound = $false
+while ((Get-Date) -lt $btnDeadline) {
+    $bv = CDP $btnExistJs -timeoutMs 3000
+    if ($bv -eq $true) { $btnFound = $true; break }
+    Start-Sleep -Milliseconds 200
+}
+if (-not $btnFound) { Write-Output "ERROR: send button not found"; $ws.Dispose(); exit 1 }
+
+$clickJs = $SelJs + @"
+(function(){
+    var btns = pick('sendBtn');
+    for(var i=0;i<btns.length;i++){
+        var el = btns[i];
+        if(el.offsetParent === null) continue;
+        if(el.disabled) continue;
+        el.click();
+        return 'SENT';
+    }
+    return 'NO_BTN';
+})()
+"@
+Dbg "执行发送（点击发送按钮）" 'Cyan'
+$r = CDP $clickJs
+if ($r -ne 'SENT') { Write-Output "ERROR: send failed ($r)"; $ws.Dispose(); exit 1 }
+Write-Output "SEND_ACTION: SENT"
+
+# ===== 轮询：文本变化 + regenerate + 稳定 3 次 =====
+$deadline = (Get-Date).AddSeconds($Timeout)
+$failFastDeadline = (Get-Date).AddSeconds($FastFailSec)
+$finalText = ""
+$nullTicks = 0
+$requiredNull = 10
+$cdpBroken = $false
+$tick = 0
+$sawNew = $false
+$failFast = $false
+$stage2Stable = 0
+$stage2LastText = ''
+$requiredStage2Stable = 3
+
+Dbg ("进入轮询 超时={0}s 断开={1} 快速失败={2}s 判定=文本变化+regenerate+稳定3" -f $Timeout, $requiredNull, $FastFailSec) 'Cyan'
+Dbg ("初始基线 len={0} head={1}" -f $initLastText.Length, ($initLastText.Substring(0, [Math]::Min(40, $initLastText.Length)))) 'DarkGray'
+
+while ((Get-Date) -lt $deadline) {
+    Start-Sleep -Milliseconds 150
+    $tick++
+    if ($tick -eq 1 -or ($tick % 20) -eq 0) {
+        Dbg ("轮询#{0} 新={1} 阶段2稳定={2}/{3}" -f $tick, $sawNew, $stage2Stable, $requiredStage2Stable) 'DarkGray'
+    }
+    $status = CDP $statusJs -timeoutMs 5000
+    if ($null -eq $status) {
+        $nullTicks++
+        if ($nullTicks -ge $requiredNull) {
+            $cdpBroken = $true
+            Write-Output "ERROR: CDP_BROKEN: 连续 $nullTicks 次无响应"
+            break
+        }
+        continue
+    }
+    $nullTicks = 0
+    $j = $null
+    try { $j = $status | ConvertFrom-Json } catch { continue }
+    if (-not $j) { continue }
+
+    $curReceiveCount = [int]$j.receiveCount
+    $curText         = [string]$j.text
+    $hasRegen        = [bool]$j.hasRegen
+    $regenVisible    = [bool]$j.regenVisible
+
+    if (-not $sawNew) {
+        $changed = ($curText -ne $initLastText) -and ($curText.Length -gt 0)
+        if ($changed) {
+            Write-Output "  [new-reply] receive=$curReceiveCount textLen=$($curText.Length) (init=$($initLastText.Length))"
+            Dbg ("检测到新回复文本 len {0} → {1}" -f $initLastText.Length, $curText.Length) 'Green'
+            $sawNew = $true
+            continue
+        }
+        if ((Get-Date) -gt $failFastDeadline) {
+            $failFast = $true
+            Write-Output "ERROR: FAIL_FAST: ${FastFailSec}s 内未出现新回复（init=$($initLastText.Length) cur=$($curText.Length)）"
+            break
+        }
+        continue
+    }
+
+    if ($hasRegen -and $curText.Length -gt 0 -and $curText -ne $initLastText) {
+        if ($curText -eq $stage2LastText) { $stage2Stable++ } else { $stage2Stable = 1; $stage2LastText = $curText }
+        if ($stage2Stable -ge $requiredStage2Stable) {
+            Dbg ("regenerate 出现 + 文本稳定 {0} 次 可见={1} 长度={2}" -f $requiredStage2Stable, $regenVisible, $curText.Length) 'Green'
+            Write-Output "  [regen-found] visible=$regenVisible textLen=$($curText.Length) stable=$stage2Stable"
+            $finalText = $curText
+            break
+        }
+    } else {
+        $stage2Stable = 0
+        $stage2LastText = ''
+    }
+}
+
+Dbg ("轮询结束 用时={0}ms 有结果={1}" -f [int]((Get-Date)-$script:DbgT0).TotalMilliseconds, [bool]$finalText) 'Cyan'
+if ($ws.State -eq 'Open') { $ws.Dispose() }
+if ($cdpBroken) { exit 3 }
+if ($failFast) { exit 4 }
+
+if ($finalText) {
+    if ($Encoding.ToLower() -match 'utf-?8') {
+        [IO.File]::WriteAllText($OutputFile, $finalText, [Text.UTF8Encoding]::new($false))
+    } else {
+        $enc = [Text.Encoding]::GetEncoding(936)
+        [IO.File]::WriteAllText($OutputFile, $finalText, $enc)
+    }
+    Dbg ("已写文件 {0} 编码={1}" -f $OutputFile, $(if ($Encoding.ToLower() -match 'utf-?8') { 'UTF8-NOBOM' } else { 'GBK' })) 'Green'
+    Write-Output "OK: len=$($finalText.Length) path=$OutputFile"
+    Write-Output "----- reply.txt -----"
+    Write-Output $finalText
+} else {
+    Dbg "超时 未等到回复" 'Red'
+    Write-Output "TIMEOUT"
+    exit 2
+}

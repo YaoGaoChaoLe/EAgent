@@ -1,4 +1,16 @@
 ﻿{
+    "Ds_ps1": {
+        "Comment": "1_启动调试浏览器.ps1",
+        "IsPublic": false
+    },
+    "Ds_ps2": {
+        "Comment": "2_发送并等待回复.ps1",
+        "IsPublic": false
+    },
+    "Ds_ps3": {
+        "Comment": "3_关闭浏览器.ps1",
+        "IsPublic": false
+    },
     "FMTID_AudioSummaryInformation": {
         "Comment": "{64440490-4C8B-11D1-8B70-080036B11A03}",
         "IsPublic": false
@@ -73,18 +85,6 @@
     },
     "System_AppUserModel": {
         "Comment": "{9F4C2855-9F79-4B39-A8D0-E1D42DE1D5F3}",
-        "IsPublic": false
-    },
-    "ps_1": {
-        "Comment": "1_启动调试浏览器.ps1",
-        "IsPublic": false
-    },
-    "ps_2": {
-        "Comment": "2_发送并等待回复.ps1 | 改版维护提示词：这里面有些东西，如果ds网页改版就失效。请给我浏览器F12调试代码探测目标并将结果拷贝到粘贴板，我把结果传给你。",
-        "IsPublic": false
-    },
-    "ps_3": {
-        "Comment": "3_关闭浏览器.ps1",
         "IsPublic": false
     },
     "ps_diff": {

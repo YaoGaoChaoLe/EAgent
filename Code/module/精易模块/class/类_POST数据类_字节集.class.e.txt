@@ -1,0 +1,41 @@
+﻿.版本 2
+
+.程序集 类_POST数据类_字节集, , 公开
+.子程序 清空, , 公开
+    
+
+.子程序 添加, , 公开
+    .参数 key, 文本型
+    .参数 value, 字节集
+    .参数 types, 文本型, 可空, 如： Content-Type: audio/mp3，请填写【audio/mp3】
+    .参数 filename, 文本型, 可空, 如： Content-Type: audio/mp3，请填写【audio/mp3】
+
+    
+
+.子程序 取值, 字节集, 公开
+    .参数 key, 文本型
+
+    
+
+.子程序 置值, , 公开
+    .参数 key, 文本型
+    .参数 value, 字节集
+
+    
+
+.子程序 获取Post数据, 字节集, 公开
+    .参数 boundary, 文本型
+    .参数 分割符数量, 整数型, 可空, 默认为2，如：--WebKitFormBoundaryPPRO2xsdBWf1T1h4
+
+    
+
+.子程序 获取Key数组, , 公开
+    .参数 arr, 文本型, 参考 数组
+
+    
+
+.子程序 获取Value数组, , 公开
+    .参数 arr, 字节集, 参考 数组
+
+    
+

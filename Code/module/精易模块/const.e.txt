@@ -1,0 +1,1357 @@
+﻿.版本 2
+
+.常量 旧窗口过程, "“oldWndProc”"
+.常量 LMEM_ZEROINIT, "64"
+.常量 WM_NOTIFY, "78", , 当某个控件的某个事件已经发生或这个控件需要得到一些信息时，发送此消息给它的父窗口
+.常量 NM_CUSTOMDRAW, "-12"
+.常量 CDDS_PREPAINT, "1"
+.常量 CDRF_NOTIFYSUBITEMDRAW, "32"
+.常量 CDDS_ITEMPREPAINT, "65537"
+.常量 CDDS_SUBITEM, "131072"
+.常量 DT_VCENTER, "4"
+.常量 DT_LEFT, "0"
+.常量 DT_SINGLELINE, "32"
+.常量 CDRF_SKIPDEFAULT, "4"
+.常量 WS_POPUP, "-2147483648", , 该窗口是一个弹出窗口。此样式不能与WS_CHILD样式一起使用。
+.常量 IMAGE_BITMAP, "0", , 复制位图。
+.常量 IMAGE_ICON, "1", , 复制一个图标。
+.常量 IMAGE_CURSOR, "2", , 复制光标。
+.常量 STIF_DEFAULT, "0"
+.常量 STIF_SUPPORT_HEX, "1"
+.常量 CP_gb2312, "936", , ANSI/OEM Simplified Chinese (PRC, Singapore); Chinese Simplified (GB2312)
+.常量 CP_UTF8, "65001", , Unicode (UTF-8)
+.常量 CP_BIG5, "950", , 繁体中文（Big5）
+.常量 HtmlEntitiesTable, "“Tab	9NewLine	10excl	33quot	34num	35dollar	36percnt	37amp	38apos	39lpar	40rpar	41ast	42plus	43comma	44period	46sol	47colon	58semi	59lt	60equals	61gt	62quest	63commat	64lsqb	91bsol	92rsqb	93Hat	94lowbar	95grave	96lcub	123verbar	124rcub	125nbsp	160iexcl	161cent	162pound	163curren	164yen	165brvbar	166sect	167Dot	168copy	169ordf	170laquo	171not	172shy	173reg	174macr	175deg	176plusmn	177sup2	178sup3	179acute	180micro	181para	182middot	183cedil	184sup1	185ordm	186raquo	187frac14	188frac12	189frac34	190iquest	191Agrave	192Aacute	193Acirc	194Atilde	195Auml	196Aring	197AElig	198Ccedil	199Egrave	200Eacute	201Ecirc	202Euml	203Igrave	204Iacute	205Icirc	206Iuml	207ETH	208Ntilde	209Ograve	210Oacute	211Ocirc	212Otilde	213Ouml	214times	215Oslash	216Ugrave	217Uacute	218Ucirc	219Uuml	220Yacute	221THORN	222szlig	223agrave	224aacute	225acirc	226atilde	227auml	228aring	229aelig	230ccedil	231egrave	232eacute	233ecirc	234euml	235igrave	236iacute	237icirc	238iuml	239eth	240ntilde	241ograve	242oacute	243ocirc	244otilde	245ouml	246divide	247oslash	248ugrave	249uacute	250ucirc	251uuml	252yacute	253thorn	254yuml	255Amacr	256amacr	257Abreve	258abreve	259Aogon	260aogon	261Cacute	262cacute	263Ccirc	264ccirc	265Cdot	266cdot	267Ccaron	268ccaron	269Dcaron	270dcaron	271Dstrok	272dstrok	273Emacr	274emacr	275Edot	278edot	279Eogon	280eogon	281Ecaron	282ecaron	283Gcirc	284gcirc	285Gbreve	286gbreve	287Gdot	288gdot	289Gcedil	290Hcirc	292hcirc	293Hstrok	294hstrok	295Itilde	296itilde	297Imacr	298imacr	299Iogon	302iogon	303Idot	304imath	305IJlig	306ijlig	307Jcirc	308jcirc	309Kcedil	310kcedil	311kgreen	312Lacute	313lacute	314Lcedil	315lcedil	316Lcaron	317lcaron	318Lmidot	319lmidot	320Lstrok	321lstrok	322Nacute	323nacute	324Ncedil	325ncedil	326Ncaron	327ncaron	328napos	329ENG	330eng	331Omacr	332omacr	333Odblac	336odblac	337OElig	338oelig	339Racute	340racute	341Rcedil	342rcedil	343Rcaron	344rcaron	345Sacute	346sacute	347Scirc	348scirc	349Scedil	350scedil	351Scaron	352scaron	353Tcedil	354tcedil	355Tcaron	356tcaron	357Tstrok	358tstrok	359Utilde	360utilde	361Umacr	362umacr	363Ubreve	364ubreve	365Uring	366uring	367Udblac	368udblac	369Uogon	370uogon	371Wcirc	372wcirc	373Ycirc	374ycirc	375Yuml	376Zacute	377zacute	378Zdot	379zdot	380Zcaron	381zcaron	382fnof	402imped	437gacute	501jmath	567circ	710caron	711breve	728dot	729ring	730ogon	731tilde	732dblac	733DownBreve	785UnderBar	818Alpha	913Beta	914Gamma	915Delta	916Epsilon	917Zeta	918Eta	919Theta	920Iota	921Kappa	922Lambda	923Mu	924Nu	925Xi	926Omicron	927Pi	928Rho	929Sigma	931Tau	932Upsilon	933Phi	934Chi	935Psi	936Omega	937alpha	945beta	946gamma	947delta	948epsiv	949zeta	950eta	951theta	952iota	953kappa	954lambda	955mu	956nu	957xi	958omicron	959pi	960rho	961sigmav	962sigma	963tau	964upsi	965phi	966chi	967psi	968omega	969thetav	977Upsi	978straightphi	981piv	982Gammad	988gammad	989kappav	1008rhov	1009epsi	1013bepsi	1014IOcy	1025DJcy	1026GJcy	1027Jukcy	1028DScy	1029Iukcy	1030YIcy	1031Jsercy	1032LJcy	1033NJcy	1034TSHcy	1035KJcy	1036Ubrcy	1038DZcy	1039Acy	1040Bcy	1041Vcy	1042Gcy	1043Dcy	1044IEcy	1045ZHcy	1046Zcy	1047Icy	1048Jcy	1049Kcy	1050Lcy	1051Mcy	1052Ncy	1053Ocy	1054Pcy	1055Rcy	1056Scy	1057Tcy	1058Ucy	1059Fcy	1060KHcy	1061TScy	1062CHcy	1063SHcy	1064SHCHcy	1065HARDcy	1066Ycy	1067SOFTcy	1068Ecy	1069YUcy	1070YAcy	1071acy	1072bcy	1073vcy	1074gcy	1075dcy	1076iecy	1077zhcy	1078zcy	1079icy	1080jcy	1081kcy	1082lcy	1083mcy	1084ncy	1085ocy	1086pcy	1087rcy	1088scy	1089tcy	1090ucy	1091fcy	1092khcy	1093tscy	1094chcy	1095shcy	1096shchcy	1097hardcy	1098ycy	1099softcy	1100ecy	1101yucy	1102yacy	1103iocy	1105djcy	1106gjcy	1107jukcy	1108dscy	1109iukcy	1110yicy	1111jsercy	1112ljcy	1113njcy	1114tshcy	1115kjcy	1116ubrcy	1118dzcy	1119ensp	8194emsp	8195emsp13	8196emsp14	8197numsp	8199puncsp	8200thinsp	8201hairsp	8202ZeroWidthSpace	8203zwnj	8204zwj	8205lrm	8206rlm	8207hyphen	8208ndash	8211mdash	8212horbar	8213Verbar	8214lsquo	8216rsquo	8217lsquor	8218ldquo	8220rdquo	8221ldquor	8222dagger	8224Dagger	8225bull	8226nldr	8229hellip	8230permil	8240pertenk	8241prime	8242Prime	8243tprime	8244bprime	8245lsaquo	8249rsaquo	8250oline	8254caret	8257hybull	8259frasl	8260bsemi	8271qprime	8279MediumSpace	8287NoBreak	8288ApplyFunction	8289InvisibleTimes	8290InvisibleComma	8291euro	8364tdot	8411DotDot	8412Copf	8450incare	8453gscr	8458hamilt	8459Hfr	8460quaternions	8461planckh	8462planck	8463Iscr	8464image	8465Lscr	8466ell	8467Nopf	8469numero	8470copysr	8471weierp	8472Popf	8473rationals	8474Rscr	8475real	8476reals	8477rx	8478trade	8482integers	8484ohm	8486mho	8487Zfr	8488iiota	8489angst	8491bernou	8492Cfr	8493escr	8495Escr	8496Fscr	8497phmmat	8499order	8500alefsym	8501beth	8502gimel	8503daleth	8504CapitalDifferentialD	8517DifferentialD	8518ExponentialE	8519ImaginaryI	8520frac13	8531frac23	8532frac15	8533frac25	8534frac35	8535frac45	8536frac16	8537frac56	8538frac18	8539frac38	8540frac58	8541frac78	8542larr	8592uarr	8593rarr	8594darr	8595harr	8596varr	8597nwarr	8598nearr	8599searr	8600swarr	8601nlarr	8602nrarr	8603rarrw	8605Larr	8606Uarr	8607Rarr	8608Darr	8609larrtl	8610rarrtl	8611LeftTeeArrow	8612UpTeeArrow	8613map	8614DownTeeArrow	8615larrhk	8617rarrhk	8618larrlp	8619rarrlp	8620harrw	8621nharr	8622lsh	8624rsh	8625ldsh	8626rdsh	8627crarr	8629cularr	8630curarr	8631olarr	8634orarr	8635lharu	8636lhard	8637uharr	8638uharl	8639rharu	8640rhard	8641dharr	8642dharl	8643rlarr	8644udarr	8645lrarr	8646llarr	8647uuarr	8648rrarr	8649ddarr	8650lrhar	8651rlhar	8652nlArr	8653nhArr	8654nrArr	8655lArr	8656uArr	8657rArr	8658dArr	8659hArr	8660vArr	8661nwArr	8662neArr	8663seArr	8664swArr	8665lAarr	8666rAarr	8667zigrarr	8669larrb	8676rarrb	8677duarr	8693loarr	8701roarr	8702hoarr	8703forall	8704comp	8705part	8706exist	8707nexist	8708empty	8709nabla	8711isin	8712notin	8713niv	8715notni	8716prod	8719coprod	8720sum	8721minus	8722mnplus	8723plusdo	8724setmn	8726lowast	8727compfn	8728radic	8730prop	8733infin	8734angrt	8735ang	8736angmsd	8737angsph	8738mid	8739nmid	8740par	8741npar	8742and	8743or	8744cap	8745cup	8746int	8747Int	8748tint	8749conint	8750Conint	8751Cconint	8752cwint	8753cwconint	8754awconint	8755there4	8756becaus	8757ratio	8758Colon	8759minusd	8760mDDot	8762homtht	8763sim	8764bsim	8765ac	8766acd	8767wreath	8768nsim	8769esim	8770sime	8771nsime	8772cong	8773simne	8774ncong	8775asymp	8776nap	8777ape	8778apid	8779bcong	8780asympeq	8781bump	8782bumpe	8783esdot	8784eDot	8785efDot	8786erDot	8787colone	8788ecolon	8789ecir	8790cire	8791wedgeq	8793veeeq	8794trie	8796equest	8799ne	8800equiv	8801nequiv	8802le	8804ge	8805lE	8806gE	8807lnE	8808gnE	8809Lt	8810Gt	8811twixt	8812NotCupCap	8813nlt	8814ngt	8815nle	8816nge	8817lsim	8818gsim	8819nlsim	8820ngsim	8821lg	8822gl	8823ntlg	8824ntgl	8825pr	8826sc	8827prcue	8828sccue	8829prsim	8830scsim	8831npr	8832nsc	8833sub	8834sup	8835nsub	8836nsup	8837sube	8838supe	8839nsube	8840nsupe	8841subne	8842supne	8843cupdot	8845uplus	8846sqsub	8847sqsup	8848sqsube	8849sqsupe	8850sqcap	8851sqcup	8852oplus	8853ominus	8854otimes	8855osol	8856odot	8857ocir	8858oast	8859odash	8861plusb	8862minusb	8863timesb	8864sdotb	8865vdash	8866dashv	8867top	8868bottom	8869models	8871vDash	8872Vdash	8873Vvdash	8874VDash	8875nvdash	8876nvDash	8877nVdash	8878nVDash	8879prurel	8880vltri	8882vrtri	8883ltrie	8884rtrie	8885origof	8886imof	8887mumap	8888hercon	8889intcal	8890veebar	8891barvee	8893angrtvb	8894lrtri	8895xwedge	8896xvee	8897xcap	8898xcup	8899diam	8900sdot	8901sstarf	8902divonx	8903bowtie	8904ltimes	8905rtimes	8906lthree	8907rthree	8908bsime	8909cuvee	8910cuwed	8911Sub	8912Sup	8913Cap	8914Cup	8915fork	8916epar	8917ltdot	8918gtdot	8919Ll	8920Gg	8921leg	8922gel	8923cuepr	8926cuesc	8927nprcue	8928nsccue	8929nsqsube	8930nsqsupe	8931lnsim	8934gnsim	8935prnsim	8936scnsim	8937nltri	8938nrtri	8939nltrie	8940nrtrie	8941vellip	8942ctdot	8943utdot	8944dtdot	8945disin	8946isinsv	8947isins	8948isindot	8949notinvc	8950notinvb	8951isinE	8953nisd	8954xnis	8955nis	8956notnivc	8957notnivb	8958barwed	8965Barwed	8966lceil	8968rceil	8969lfloor	8970rfloor	8971drcrop	8972dlcrop	8973urcrop	8974ulcrop	8975bnot	8976profline	8978profsurf	8979telrec	8981target	8982ulcorn	8988urcorn	8989dlcorn	8990drcorn	8991frown	8994smile	8995lang	9001rang	9002cylcty	9005profalar	9006topbot	9014ovbar	9021solbar	9023angzarr	9084lmoust	9136rmoust	9137tbrk	9140bbrk	9141bbrktbrk	9142OverParenthesis	9180UnderParenthesis	9181OverBrace	9182UnderBrace	9183trpezium	9186elinters	9191blank	9251oS	9416boxh	9472boxv	9474boxdr	9484boxdl	9488boxur	9492boxul	9496boxvr	9500boxvl	9508boxhd	9516boxhu	9524boxvh	9532boxH	9552boxV	9553boxdR	9554boxDr	9555boxDR	9556boxdL	9557boxDl	9558boxDL	9559boxuR	9560boxUr	9561boxUR	9562boxuL	9563boxUl	9564boxUL	9565boxvR	9566boxVr	9567boxVR	9568boxvL	9569boxVl	9570boxVL	9571boxHd	9572boxhD	9573boxHD	9574boxHu	9575boxhU	9576boxHU	9577boxvH	9578boxVh	9579boxVH	9580uhblk	9600lhblk	9604block	9608blk14	9617blk12	9618blk34	9619squ	9633squf	9642EmptyVerySmallSquare	9643rect	9645marker	9646fltns	9649xutri	9651utrif	9652utri	9653rtrif	9656rtri	9657xdtri	9661dtrif	9662dtri	9663ltrif	9666ltri	9667loz	9674cir	9675tridot	9708xcirc	9711ultri	9720urtri	9721lltri	9722EmptySmallSquare	9723FilledSmallSquare	9724starf	9733star	9734phone	9742female	9792male	9794spades	9824clubs	9827hearts	9829diams	9830sung	9834flat	9837natur	9838sharp	9839check	10003cross	10007malt	10016sext	10038VerticalSeparator	10072lbbrk	10098rbbrk	10099lobrk	10214robrk	10215lang	10216rang	10217Lang	10218Rang	10219loang	10220roang	10221xlarr	10229xrarr	10230xharr	10231xlArr	10232xrArr	10233xhArr	10234xmap	10236dzigrarr	10239nvlArr	10498nvrArr	10499nvHarr	10500Map	10501lbarr	10508rbarr	10509lBarr	10510rBarr	10511RBarr	10512DDotrahd	10513UpArrowBar	10514DownArrowBar	10515Rarrtl	10518latail	10521ratail	10522lAtail	10523rAtail	10524larrfs	10525rarrfs	10526larrbfs	10527rarrbfs	10528nwarhk	10531nearhk	10532searhk	10533swarhk	10534nwnear	10535nesear	10536seswar	10537swnwar	10538rarrc	10547cudarrr	10549ldca	10550rdca	10551cudarrl	10552larrpl	10553curarrm	10556cularrp	10557rarrpl	10565harrcir	10568Uarrocir	10569lurdshar	10570ldrushar	10571LeftRightVector	10574RightUpDownVector	10575DownLeftRightVector	10576LeftUpDownVector	10577LeftVectorBar	10578RightVectorBar	10579RightUpVectorBar	10580RightDownVectorBar	10581DownLeftVectorBar	10582DownRightVectorBar	10583LeftUpVectorBar	10584LeftDownVectorBar	10585LeftTeeVector	10586RightTeeVector	10587RightUpTeeVector	10588RightDownTeeVector	10589DownLeftTeeVector	10590DownRightTeeVector	10591LeftUpTeeVector	10592LeftDownTeeVector	10593lHar	10594uHar	10595rHar	10596dHar	10597luruhar	10598ldrdhar	10599ruluhar	10600rdldhar	10601lharul	10602llhard	10603rharul	10604lrhard	10605udhar	10606duhar	10607RoundImplies	10608erarr	10609simrarr	10610larrsim	10611rarrsim	10612rarrap	10613ltlarr	10614gtrarr	10616subrarr	10617suplarr	10619lfisht	10620rfisht	10621ufisht	10622dfisht	10623lopar	10629ropar	10630lbrke	10635rbrke	10636lbrkslu	10637rbrksld	10638lbrksld	10639rbrkslu	10640langd	10641rangd	10642lparlt	10643rpargt	10644gtlPar	10645ltrPar	10646vzigzag	10650vangrt	10652angrtvbd	10653ange	10660range	10661dwangle	10662uwangle	10663angmsdaa	10664angmsdab	10665angmsdac	10666angmsdad	10667angmsdae	10668angmsdaf	10669angmsdag	10670angmsdah	10671bemptyv	10672demptyv	10673cemptyv	10674raemptyv	10675laemptyv	10676ohbar	10677omid	10678opar	10679operp	10681olcross	10683odsold	10684olcir	10686ofcir	10687olt	10688ogt	10689cirscir	10690cirE	10691solb	10692bsolb	10693boxbox	10697trisb	10701rtriltri	10702LeftTriangleBar	10703RightTriangleBar	10704race	10714iinfin	10716infintie	10717nvinfin	10718eparsl	10723smeparsl	10724eqvparsl	10725lozf	10731RuleDelayed	10740dsol	10742xodot	10752xoplus	10753xotime	10754xuplus	10756xsqcup	10758qint	10764fpartint	10765cirfnint	10768awint	10769rppolint	10770scpolint	10771npolint	10772pointint	10773quatint	10774intlarhk	10775pluscir	10786plusacir	10787simplus	10788plusdu	10789plussim	10790plustwo	10791mcomma	10793minusdu	10794loplus	10797roplus	10798Cross	10799timesd	10800timesbar	10801smashp	10803lotimes	10804rotimes	10805otimesas	10806Otimes	10807odiv	10808triplus	10809triminus	10810tritime	10811iprod	10812amalg	10815capdot	10816ncup	10818ncap	10819capand	10820cupor	10821cupcap	10822capcup	10823cupbrcap	10824capbrcup	10825cupcup	10826capcap	10827ccups	10828ccaps	10829ccupssm	10832And	10835Or	10836andand	10837oror	10838orslope	10839andslope	10840andv	10842orv	10843andd	10844ord	10845wedbar	10847sdote	10854simdot	10858congdot	10861easter	10862apacir	10863apE	10864eplus	10865pluse	10866Esim	10867Colone	10868Equal	10869eDDot	10871equivDD	10872ltcir	10873gtcir	10874ltquest	10875gtquest	10876les	10877ges	10878lesdot	10879gesdot	10880lesdoto	10881gesdoto	10882lesdotor	10883gesdotol	10884lap	10885gap	10886lne	10887gne	10888lnap	10889gnap	10890lEg	10891gEl	10892lsime	10893gsime	10894lsimg	10895gsiml	10896lgE	10897glE	10898lesges	10899gesles	10900els	10901egs	10902elsdot	10903egsdot	10904el	10905eg	10906siml	10909simg	10910simlE	10911simgE	10912LessLess	10913GreaterGreater	10914glj	10916gla	10917ltcc	10918gtcc	10919lescc	10920gescc	10921smt	10922lat	10923smte	10924late	10925bumpE	10926pre	10927sce	10928prE	10931scE	10932prnE	10933scnE	10934prap	10935scap	10936prnap	10937scnap	10938Pr	10939Sc	10940subdot	10941supdot	10942subplus	10943supplus	10944submult	10945supmult	10946subedot	10947supedot	10948subE	10949supE	10950subsim	10951supsim	10952subnE	10955supnE	10956csub	10959csup	10960csube	10961csupe	10962subsup	10963supsub	10964subsub	10965supsup	10966suphsub	10967supdsub	10968forkv	10969topfork	10970mlcp	10971Dashv	10980Vdashl	10982Barv	10983vBar	10984vBarv	10985Vbar	10987Not	10988bNot	10989rnmid	10990cirmid	10991midcir	10992topcir	10993nhpar	10994parsim	10995parsl	11005fflig	64256filig	64257fllig	64258ffilig	64259ffllig	64260Ascr	119964Cscr	119966Dscr	119967Gscr	119970Jscr	119973Kscr	119974Nscr	119977Oscr	119978Pscr	119979Qscr	119980Sscr	119982Tscr	119983Uscr	119984Vscr	119985Wscr	119986Xscr	119987Yscr	119988Zscr	119989ascr	119990bscr	119991cscr	119992dscr	119993fscr	119995hscr	119997iscr	119998jscr	119999kscr	120000lscr	120001mscr	120002nscr	120003pscr	120005qscr	120006rscr	120007sscr	120008tscr	120009uscr	120010vscr	120011wscr	120012xscr	120013yscr	120014zscr	120015Afr	120068Bfr	120069Dfr	120071Efr	120072Ffr	120073Gfr	120074Jfr	120077Kfr	120078Lfr	120079Mfr	120080Nfr	120081Ofr	120082Pfr	120083Qfr	120084Sfr	120086Tfr	120087Ufr	120088Vfr	120089Wfr	120090Xfr	120091Yfr	120092afr	120094bfr	120095cfr	120096dfr	120097efr	120098ffr	120099gfr	120100hfr	120101ifr	120102jfr	120103kfr	120104lfr	120105mfr	120106nfr	120107ofr	120108pfr	120109qfr	120110rfr	120111sfr	120112tfr	120113ufr	120114vfr	120115wfr	120116xfr	120117yfr	120118zfr	120119Aopf	120120Bopf	120121Dopf	120123Eopf	120124Fopf	120125Gopf	120126Iopf	120128Jopf	120129Kopf	120130Lopf	120131Mopf	120132Oopf	120134Sopf	120138Topf	120139Uopf	120140Vopf	120141Wopf	120142Xopf	120143Yopf	120144aopf	120146bopf	120147copf	120148dopf	120149eopf	120150fopf	120151gopf	120152hopf	120153iopf	120154jopf	120155kopf	120156lopf	120157mopf	120158nopf	120159oopf	120160popf	120161qopf	120162ropf	120163sopf	120164topf	120165uopf	120166vopf	120167wopf	120168xopf	120169yopf	120170zopf	120171”", ,  HTML Entity 目前最全转义表，没错，就是最
+.常量 ERROR_BUFFER_OVERFLOW, "111", , SizePointer参数 指示的缓冲区大小太小，无法容纳适配器信息或AdapterAddresses参数为NULL。返回的SizePointer参数指向保存适配器信息所需的缓冲区大小。
+.常量 ERROR_SUCCESS, "0", , 操作成功完成。
+.常量 MIB_IF_TYPE_ETHERNET, "6", , 以太网网络接口。
+.常量 MIB_IF_TYPE_FDDI, "15", , 光纤分布式数据接口 (FDDI) 网络接口。
+.常量 MIB_IF_TYPE_LOOPBACK, "24", , 软件环回网络接口。
+.常量 MIB_IF_TYPE_OTHER, "1", , 一些其他类型的网络接口。
+.常量 MIB_IF_TYPE_PPP, "23", , PPP 网络接口。
+.常量 MIB_IF_TYPE_SLIP, "28", , ATM 网络接口。
+.常量 MIB_IF_TYPE_TOKENRING, "9", , 令牌环网络接口。
+.常量 MIB_IF_TYPE_IEEE80211, "71", , IEEE 802.11 无线网络接口。
+.常量 ERROR_INSUFFICIENT_BUFFER, "122", , 一个无效参数传递给函数。如果TableClass参数包含未在TCP_TABLE_CLASS枚举中定义的值， 则返回此错误。
+.常量 WM_GETTEXTLENGTH, "14", , 得到与一个窗口有关的文本的长度（不包含空字符）
+.常量 SMTO_NORMAL, "0"
+.常量 服务器消息, "1029", , 服务器消息
+.常量 客户消息, "1030", , 客户消息
+.常量 FD_CLOSE, "32", , 客户退出
+.常量 FD_ACCEPT, "8", , 客户进入
+.常量 FD_READ, "1", , 数据到达
+.常量 PF_INET, "2", , TCP/IP协议族
+.常量 SOCK_STREAM, "1", , 流套接字类型(TCP)
+.常量 SOCK_DGRAM, "2", , 数据报套接字类型(UDP)
+.常量 IPPROTO_TCP, "6"
+.常量 IPPROTO_UDP, "17", , 用户数据报协议（UDP/IP），一种无连接的数据报协议。
+.常量 SRCCOPY, "13369376", , 直接复制，不做任何修改。
+.常量 网页属性_网页标题, "“title”"
+.常量 网页属性_网页地址, "“location”"
+.常量 网页属性_网页源码, "“outerHTML”", , outerHTML
+.常量 网页属性_网页文本, "“innerText”", , innerText
+.常量 网页属性_网站域名, "“domain”", , domain
+.常量 网页属性_访问来源, "“referrer”", , referrer
+.常量 网页属性_创建时间, "“fileCreatedDate”", , fileCreatedDate
+.常量 网页属性_修改时间, "“lastModified”", , lastModified
+.常量 网页属性_Cookies, "“cookie”", , cookie
+.常量 网页属性_编码类型, "“charset”", , charset
+.常量 网页属性_文档大小, "“fileSize”", , fileSize
+.常量 脚本类型_JavaScript, "“JavaScript”"
+.常量 脚本类型_VBScript, "“VBScript”"
+.常量 网页事件_selectedIndex, "“selectedIndex”", , 组合框被选择
+.常量 网页事件_onabort, "“onabort”", , 当用户中断下载图像时触发。.常量 网页事件_onactivate, "“onactivate”", 公开, 当对象设置为活动元素时触发。
+.常量 网页事件_onafterprint, "“onafterprint”", , 对象所关联的文档打印或打印预览后立即在对象上触发。
+.常量 网页事件_onafterupdate, "“onafterupdate”", , 当成功更新数据源对象中的关联对象后在数据绑定对象上触发。
+.常量 网页事件_onbeforeactivate, "“onbeforeactivate”", , 对象要被设置为当前元素前立即触发。
+.常量 网页事件_onbeforecopy, "“onbeforecopy”", , 当选中区复制到系统剪贴板之前在源对象触发。
+.常量 网页事件_onbeforecut, "“onbeforecut”", , 当选中区从文档中删除之前在源对象触发。
+.常量 网页事件_onbeforedeactivate, "“onbeforedeactivate”", , 在 activeElement 从当前对象变为父文档其它对象之前立即触发。
+.常量 网页事件_onbeforeeditfocus, "“onbeforeeditfocus”", , 在包含于可编辑元素内的对象进入用户界面激活状态前或可编辑容器变成控件选中区前触发。
+.常量 网页事件_onbeforepaste, "“onbeforepaste”", , 在选中区从系统剪贴板粘贴到文档前在目标对象上触发。
+.常量 网页事件_onbeforeprint, "“onbeforeprint”", , 对象的关联文档打印或打印预览前在对象上触发。
+.常量 网页事件_onbeforeunload, "“onbeforeunload”", , 在页面将要被卸载前触发。
+.常量 网页事件_onbeforeupdate, "“onbeforeupdate”", , 当成功更新数据源对象中的关联对象前在数据绑定对象上触发。
+.常量 网页事件_onblur, "“onblur”", , 在对象失去输入焦点时触发。***************
+.常量 网页事件_onbounce, "“onbounce”", , 当 marquee 对象的 behavior 属性设置为“alternate”且字幕的内容到达窗口一边时触发。
+.常量 网页事件_oncellchange, "“oncellchange”", , 在数据供应者中的数据变更时触发。
+.常量 网页事件_onchange, "“onchange”", , 当对象或选中区的内容改变时触发。
+.常量 网页事件_oncontextmenu, "“oncontextmenu”", , 在用户使用鼠标右键单击客户区打开上下文菜单时触发。
+.常量 网页事件_oncontrolselect, "“oncontrolselect”", , 当用户将要对该对象制作一个控件选中区时触发。
+.常量 网页事件_oncopy, "“oncopy”", , 当用户复制对象或选中区，将其添加到系统剪贴板上时在源元素上触发。
+.常量 网页事件_oncut, "“oncut”", , 当对象或选中区从文档中删除并添加到系统剪贴板上时在源元素上触发。
+.常量 网页事件_ondataavailable, "“ondataavailable”", , 每当异步传输数据的数据源对象的数据到达时触发。
+.常量 网页事件_ondatasetchanged, "“ondatasetchanged”", , 当数据源对象对应的数据集发生变更时触发。
+.常量 网页事件_ondatasetcomplete, "“ondatasetcomplete”", , 触发就表明数据源对象所有数据都可用。
+.常量 网页事件_ondeactivate, "“ondeactivate”", , 当 activeElement 从当前对象变为父文档其它对象时触发。
+.常量 网页事件_ondrag, "“ondrag”", , 当进行拖曳操作时在源对象上持续触发。
+.常量 网页事件_ondragend, "“ondragend”", , 当用户在拖曳操作结束后释放鼠标时在源对象上触发。
+.常量 网页事件_ondragenter, "“ondragenter”", , 当用户拖曳对象到一个合法拖曳目标时在目标元素上触发。
+.常量 网页事件_ondragleave, "“ondragleave”", , 当用户在拖曳操作过程中将鼠标移出合法拖曳目标时在目标对象上触发。
+.常量 网页事件_ondragover, "“ondragover”", , 当用户拖曳对象划过合法拖曳目标时持续在目标元素上触发。
+.常量 网页事件_ondragstart, "“ondragstart”", , 当用户开始拖曳文本选中区或选中对象时在源对象上触发。
+.常量 网页事件_ondrop, "“ondrop”", , 当鼠标按钮在拖曳操作过程中释放时在目标对象上触发。
+.常量 网页事件_onerror, "“onerror”", , 当对象装载过程中发生错误时触发。
+.常量 网页事件_onerrorupdate, "“onerrorupdate”", , 更新数据源对象中的关联数据出错时在数据绑定对象上触发。
+.常量 网页事件_onfilterchange, "“onfilterchange”", , 当可视滤镜更改状态或完成转换时触发。
+.常量 网页事件_onfinish, "“onfinish”", , 当字幕循环完成后触发。
+.常量 网页事件_onfocus, "“onfocus”", , 当对象获得焦点时触发。
+.常量 网页事件_onfocusin, "“onfocusin”", , 当元素将要被设置为焦点之前触发。
+.常量 网页事件_onfocusout, "“onfocusout”", , 在移动焦点到其它元素之后立即触发于当前拥有焦点的元素上触发。
+.常量 网页事件_onhelp, "“onhelp”", , 当用户在浏览器为当前窗口时按
+.常量 网页事件_onkeydown, "“onkeydown”", , 当用户按下键盘按键时触发。
+.常量 网页事件_onkeypress, "“onkeypress”", , 当用户按下字面键时触发。
+.常量 网页事件_onkeyup, "“onkeyup”", , 当用户释放键盘按键时触发。
+.常量 网页事件_onlayoutcomplete, "“onlayoutcomplete”", , 当打印或打印预览版面处理完成用来自于源文档的内容填充当前
+.常量 网页事件_onload, "“onload”", , 在浏览器完成对象的装载后立即触发。
+.常量 网页事件_onlosecapture, "“onlosecapture”", , 当对象失去鼠标捕捉时触发。
+.常量 网页事件_onmousedown, "“onmousedown”", , 当用户用任何鼠标按钮单击对象时触发。
+.常量 网页事件_onmouseenter, "“onmouseenter”", , 当用户将鼠标指针移动到对象内时触发。
+.常量 网页事件_onmouseleave, "“onmouseleave”", , 当用户将鼠标指针移出对象边界时触发。
+.常量 网页事件_onmousemove, "“onmousemove”", , 当用户将鼠标划过对象时触发。
+.常量 网页事件_onmouseout, "“onmouseout”", , 当用户将鼠标指针移出对象边界时触发。
+.常量 网页事件_onmouseover, "“onmouseover”", , 当用户将鼠标指针移动到对象内时触发。
+.常量 网页事件_onmouseup, "“onmouseup”", , 当用户在鼠标位于对象之上时释放鼠标按钮时触发。
+.常量 网页事件_onmousewheel, "“onmousewheel”", , 当鼠标滚轮按钮旋转时触发。
+.常量 网页事件_onmove, "“onmove”", , 当对象移动时触发。
+.常量 网页事件_onmoveend, "“onmoveend”", , 当对象停止移动时触发。
+.常量 网页事件_onmovestart, "“onmovestart”", , 当对象开始移动时触发。
+.常量 网页事件_onpaste, "“onpaste”", , 当用户粘贴数据以便从系统剪贴板向文档传送数据时在目标对象上触发。
+.常量 网页事件_onpropertychange, "“onpropertychange”", , 当在对象上发生属性更改时触发。
+.常量 网页事件_onreadystatechange, "“onreadystatechange”", , 当对象状态变更时触发。
+.常量 网页事件_onreset, "“onreset”", , 当用户重置表单时触发。
+.常量 网页事件_onresize, "“onresize”", , 当对象的大小将要改变时触发。
+.常量 网页事件_onresizeend, "“onresizeend”", , 当用户更改完控件选中区中对象的尺寸时触发。
+.常量 网页事件_onresizestart, "“onresizestart”", , 当用户开始更改控件选中区中对象的尺寸时触发。
+.常量 网页事件_onrowenter, "“onrowenter”", , 触发就表明当前行已经在数据源中更改，对象上有可用的新数据值。
+.常量 网页事件_onrowexit, "“onrowexit”", , 当数据源控件更改对象当前行前触发。
+.常量 网页事件_onrowsdelete, "“onrowsdelete”", , 当行将要从记录集中被删除时触发。
+.常量 网页事件_onrowsinserted, "“onrowsinserted”", , 当在当前记录集中插入新行后触发。
+.常量 网页事件_onscroll, "“onscroll”", , 当用户滚动对象的滚动条时触发。
+.常量 网页事件_onselect, "“onselect”", , 当当前选中区改变时触发。
+.常量 网页事件_onselectionchange, "“onselectionchange”", , 当文档的选中状态改变时触发。
+.常量 网页事件_onselectstart, "“onselectstart”", , 对象将要被选中时触发。
+.常量 网页事件_onstart, "“onstart”", , 在 marquee 对象的每次循环开始时触发。
+.常量 网页事件_onstop, "“onstop”", , 当用户单击停止按钮或离开
+.常量 网页事件_onunload, "“onunload”", , 在对象卸载前立即触发。
+.常量 网页事件_onsubmit, "“onsubmit”", , 当表单将要被提交时触发。
+.常量 网页事件_focus, "“focus”", , 控件获得焦点；
+.常量 网页事件_click, "“click”", , 在用户用鼠标左键单击对象时触发。
+.常量 网页事件_onclick, "“onclick”", , 在用户用鼠标左键单击对象时触发。
+.常量 网页事件_ondblclick, "“ondblclick”", , 当用户用鼠标左键双击对象时触发。
+.常量 PROCESS_VM_OPERATION, "8", , 在进程的地址空间上执行操作所必需
+.常量 PROCESS_CREATE_THREAD, "2", , 启用在CreateRemoteThread函数中使用进程句柄来创建一个线程。
+.常量 PROCESS_DUP_HANDLE, "64", , 使用DuplicateHandle功能中的进程句柄作为源或目标进程来复制句柄。
+.常量 INFINITE, "-1", , 对于接受参数的线程处理方法，此值用于无限期挂起线程。
+.常量 PROCESS_QUERY_INFORMATION, "1024", , 启用GetExitCodeProcess和GetPriorityClass功能中的进程句柄来读取进程对象中的信息。
+.常量 PROCESS_QUERY_LIMITED_INFORMATION, "4096", , 检索有关进程的某些信息是必需的。具有PROCESS_QUERY_INFORMATION访问权限的句柄将自动授予PROCESS_QUERY_LIMITED_INFORMATION。
+.常量 PROCESS_VM_READ, "16", , 在使用ReadProcessMemory的进程中读取内存所必需
+.常量 PROCESS_ALL_ACCESS, "2035711", , 指定进程对象的所有可能的访问标志。
+.常量 MEM_PRIVATE, "131072", , 内存操作
+.常量 PROCESS_VM_WRITE, "32", , 在使用WriteProcessMemory的进程中写入内存所必需
+.常量 PAGE_READWRITE, "4", , 允许将视图映射为只读、写时复制或读/写访问。hFile参数指定的文件句柄必须使用 GENERIC_READ和 GENERIC_WRITE访问权限创建。
+.常量 备份, "“SeBackupPrivilege”", , 备份文件和目录
+.常量 启动, "“SeRestorePrivilege”", , 还原文件和目录
+.常量 关机, "“SeShutdownPrivilege”", , 关闭系统
+.常量 调试, "“SeDebugPrivilege”", , 调试程序
+.常量 GENERIC_READ, "-2147483648", , 指定对对象的读访问。可以从文件读取数据，文件指针可以移动。结合GENERIC_WRITE进行读写访问。
+.常量 FILE_FLAG_SEQUENTIAL_SCAN, "134217728", , 针对连续访问对文件缓冲进行优化
+.常量 GENERIC_WRITE, "1073741824", , 指定对对象的写访问。数据可以写入文件，文件指针可以移动。结合GENERIC_READ进行读写访问。
+.常量 OPEN_ALWAYS, "4", , 4
+.常量 FILE_ATTRIBUTE_READONLY, "1", , 只读文件。应用程序可以读取文件，但不能对其进行写入或删除。
+.常量 FILE_ATTRIBUTE_HIDDEN, "2", , 文件或目录被隐藏。它不包含在普通目录列表中。
+.常量 FILE_ATTRIBUTE_SYSTEM, "4", , 操作系统使用一部分或专门使用的文件或目录。
+.常量 FILE_ATTRIBUTE_DIRECTORY, "16", , 标识目录的句柄
+.常量 FILE_ATTRIBUTE_ARCHIVE, "32", , 作为存档文件或目录的文件或目录。应用程序通常使用此属性来标记文件以进行备份或删除。
+.常量 FILE_ACTION_ADDED, "1", , 该文件已添加到目录中。
+.常量 FILE_ACTION_REMOVED, "2", , 该文件已从目录中删除。
+.常量 FILE_ACTION_MODIFIED, "3", , 文件已修改。这可以是时间戳或属性的更改。
+.常量 FILE_ACTION_RENAMED_OLD_NAME, "4", , 该文件已重命名，这是旧名称。
+.常量 FILE_ACTION_RENAMED_NEW_NAME, "5", , 文件已重命名，这是新名称。
+.常量 INTERNET_FLAG_RELOAD, "2147483648"
+.常量 INTERNET_COOKIE_THIRD_PARTY, "16", , 运行第三方COOKIE
+.常量 INTERNET_FLAG_NO_COOKIES, "524288"
+.常量 INTERNET_FLAG_NO_CACHE_WRITE, "67108864", , 0x04000000
+.常量 INTERNET_FLAG_NO_AUTO_REDIRECT, "2097152", , HttpSendRequest、InternetOpenUrl 不自动处理重定向
+.常量 INTERNET_FLAG_SECURE, "8388608", , SSL访问
+.常量 INTERNET_FLAG_IGNORE_REDIRECT_TO_HTTP, "32768", , 禁用检测这一特殊类型的重新传入。当这个标志使用,WinINet透明允许将从HTTPS to HTTP的网址。这个标志可以使用的,HttpOpenRequest InternetOpenUrl
+.常量 INTERNET_FLAG_IGNORE_REDIRECT_TO_HTTPS, "16384", , 禁用检测这一特殊类型的重新传入。当这个标志使用,WinINet透明允许将从HTTP到HTTPS网址。这个标志可以使用的,HttpOpenRequest InternetOpenUrl
+.常量 INTERNET_FLAG_PASSIVE, "134217728", , FTP连接被动模式
+.常量 INTERNET_OPTION_HTTP_DECODING, "65", , Enables WinINet to perform decoding for the gzip and deflate encoding schemes. For more information, see Content Encoding
+.常量 常量_SC_MANAGER_CREATE_SERVICE, "2"
+.常量 常量_SERVICE_ALL_ACCESS, "983551"
+.常量 常量_SERVICE_WIN32_OWN_PROCESS, "16"
+.常量 常量_SERVICE_STOPPED, "1"
+.常量 常量_SERVICE_ACCEPT_STOP, "1"
+.常量 常量_SERVICE_ACCEPT_SHUTDOWN, "4"
+.常量 常量_SERVICE_WIN32_SHARE_PROCESS, "32"
+.常量 常量_SERVICE_CONTROL_SHUTDOWN, "5", , shutdown
+.常量 常量_SERVICE_CONTROL_STOP, "1"
+.常量 常量_SERVICE_CONFIG_DESCRIPTION, "1"
+.常量 常量_SERVICE_ERROR_NORMAL, "1"
+.常量 常量_SERVICE_INTERACTIVE_PROCESS, "256"
+.常量 常量_SERVICE_AUTO_START, "2", , 0x00000002
+.常量 GENERIC_EXECUTE, "536870912", , 0x20000000L
+.常量 SERVICE_START, "16", , 0x0010
+.常量 SC_MANAGER_ALL_ACCESS, "983103", , 0x000F003FL
+.常量 SERVICE_QUERY_STATUS, "4", , 0x0004
+.常量 SERVICE_STOP, "32", , 0x0020
+.常量 DELETE, "65536", , 0x00010000L
+.常量 SC_MANAGER_LOCK, "8", , 0x0008
+.常量 SERVICE_CHANGE_CONFIG, "2", , 0x0002
+.常量 SERVICE_QUERY_CONFIG, "1", , 0x0001
+.常量 SERVICE_NO_CHANGE, "-1", , 0xffffffff
+.常量 SQL_NULL_HANDLE, "0"
+.常量 SQL_HANDLE_ENV, "1"
+.常量 SQL_HANDLE_DBC, "2"
+.常量 SQL_HANDLE_STMT, "3"
+.常量 SQL_HANDLE_DESC, "4"
+.常量 SQL_SUCCESS, "0"
+.常量 SQL_SUCCESS_WITH_INFO, "1"
+.常量 SQL_NO_DATA, "100"
+.常量 SQL_ERROR, "-1"
+.常量 SQL_INVALID_HANDLE, "-2"
+.常量 SQL_STILL_EXECUTING, "2"
+.常量 SQL_NEED_DATA, "99"
+.常量 SQL_ATTR_ODBC_VERSION, "200"
+.常量 SQL_ATTR_CONNECTION_POOLING, "201"
+.常量 SQL_ATTR_CP_MATCH, "202"
+.常量 SQL_OV_ODBC2, "2"
+.常量 SQL_OV_ODBC3, "3"
+.常量 SQL_IS_POINTER, "-4"
+.常量 SQL_IS_UINTEGER, "-5"
+.常量 SQL_IS_INTEGER, "-6"
+.常量 SQL_IS_USMALLINT, "-7"
+.常量 SQL_IS_SMALLINT, "-8"
+.常量 SQL_SIGNED_OFFSET, "-20"
+.常量 SQL_UNSIGNED_OFFSET, "-22"
+.常量 SQL_C_SLONG, "-16"
+.常量 SQL_DRIVER_NOPROMPT, "0"
+.常量 SQL_DRIVER_COMPLETE, "1"
+.常量 SQL_DRIVER_PROMPT, "2"
+.常量 SQL_DRIVER_COMPLETE_REQUIRED, "3"
+.常量 SQL_C_CHAR, "1"
+.常量 SQL_C_LONG, "4"
+.常量 SQL_C_SHORT, "5"
+.常量 SQL_C_FLOAT, "7"
+.常量 SQL_C_DOUBLE, "8"
+.常量 SQL_C_NUMERIC, "2"
+.常量 SQL_C_DEFAULT, "99"
+.常量 SQL_C_DATE, "9"
+.常量 SQL_C_TIME, "10"
+.常量 SQL_C_TIMESTAMP, "11"
+.常量 SQL_C_BINARY, "-2"
+.常量 SQL_C_BIT, "-7"
+.常量 SQL_C_SBIGINT, "-22"
+.常量 SQL_C_UBIGINT, "-24"
+.常量 SQL_C_TINYINT, "-6"
+.常量 SQL_UNKNOWN_TYPE, "0"
+.常量 SQL_CHAR, "1"
+.常量 SQL_NUMERIC, "2"
+.常量 SQL_DECIMAL, "3"
+.常量 SQL_INTEGER, "4"
+.常量 SQL_SMALLINT, "5"
+.常量 SQL_FLOAT, "6"
+.常量 SQL_REAL, "7"
+.常量 SQL_DOUBLE, "8"
+.常量 SQL_DATE, "9"
+.常量 SQL_TIME, "10"
+.常量 SQL_TIMESTAMP, "11"
+.常量 SQL_VARCHAR, "12"
+.常量 SQL_LONGVARCHAR, "-1"
+.常量 SQL_BINARY, "-2"
+.常量 SQL_VARBINARY, "-3"
+.常量 SQL_LONGVARBINARY, "-4"
+.常量 SQL_BIGINT, "-5"
+.常量 SQL_TINYINT, "-6"
+.常量 SQL_BIT, "-7"
+.常量 SQL_GUID, "-11"
+.常量 SQL_ATTR_ACCESS_MODE, "101"
+.常量 SQL_ATTR_AUTOCOMMIT, "102"
+.常量 SQL_ATTR_CONNECTION_TIMEOUT, "113"
+.常量 SQL_ATTR_CURRENT_CATALOG, "109"
+.常量 SQL_ATTR_DISCONNECT_BEHAVIOR, "114"
+.常量 SQL_ATTR_ENLIST_IN_DTC, "1207"
+.常量 SQL_ATTR_ENLIST_IN_XA, "1208"
+.常量 SQL_ATTR_LOGIN_TIMEOUT, "103"
+.常量 SQL_ATTR_ODBC_CURSORS, "110"
+.常量 SQL_ATTR_PACKET_SIZE, "112"
+.常量 SQL_ATTR_QUIET_MODE, "111"
+.常量 SQL_ATTR_TRACE, "104"
+.常量 SQL_ATTR_TRACEFILE, "105"
+.常量 SQL_ATTR_TRANSLATE_LIB, "106"
+.常量 SQL_ATTR_TRANSLATE_OPTION, "107"
+.常量 SQL_ATTR_TXN_ISOLATION, "108"
+.常量 SQL_ATTR_CONNECTION_DEAD, "1209"
+.常量 SQL_CD_TRUE, "1"
+.常量 SQL_CD_FALSE, "0"
+.常量 SQL_PARAM_TYPE_UNKNOWN, "0"
+.常量 SQL_PARAM_INPUT, "1"
+.常量 SQL_PARAM_INPUT_OUTPUT, "2"
+.常量 SQL_RESULT_COL, "3"
+.常量 SQL_PARAM_OUTPUT, "4"
+.常量 SQL_RETURN_VALUE, "5"
+.常量 SQL_NTS, "-3"
+.常量 SQL_AUTOCOMMIT_OFF, "0"
+.常量 SQL_AUTOCOMMIT_ON, "1"
+.常量 SQL_COMMIT, "0"
+.常量 SQL_ROLLBACK, "1"
+.常量 SQL_ATTR_CURSOR_TYPE, "6"
+.常量 SQL_ATTR_ROW_NUMBER, "14"
+.常量 SQL_ATTR_MAX_ROWS, "1"
+.常量 光标类型_向前, "0", , SQL_CURSOR_FORWARD_ONLY
+.常量 光标类型_键集, "1", , SQL_CURSOR_KEYSET_DRIVEN
+.常量 光标类型_动态, "2", , SQL_CURSOR_DYNAMIC
+.常量 光标类型_静态, "3", , SQL_CURSOR_STATIC
+.常量 SQL_FETCH_NEXT, "1", , 移动_下一行
+.常量 SQL_FETCH_FIRST, "2", , 移动_首行
+.常量 SQL_FETCH_LAST, "3", , 移动_尾行
+.常量 SQL_FETCH_PRIOR, "4", , 移动_上一行
+.常量 SQL_FETCH_ABSOLUTE, "5", , 移动_绝对移动
+.常量 SQL_FETCH_RELATIVE, "6", , 移动_相对移动
+.常量 INTERNET_OPTION_PROXY, "38", , Internet常量代理服务器
+.常量 INTERNET_OPTION_SETTINGS_CHANGED, "39", , Internet常量IE设置改变
+.常量 INTERNET_OPTION_CONNECT_TIMEOUT, "2", , 连接超时
+.常量 INTERNET_OPTION_SEND_TIMEOUT, "5", , 发送超时
+.常量 INTERNET_OPTION_RECEIVE_TIMEOUT, "6", , 回复超时
+.常量 SQLITE_成功, "0", , SQLITE_OK
+.常量 SQLITE_错误, "1", , SQLITE_ERROR SQL 错误或没有数据库
+.常量 SQLITE_内部, "2", , SQLITE_INTERNAL 一个SQLite内部的逻辑错误
+.常量 SQLITE_权限, "3", , SQLITE_PERM 访问权限被拒绝
+.常量 SQLITE_终止, "4", , SQLITE_ABORT 需要一个中断的Callback指令
+.常量 SQLITE_繁忙, "5", , SQLITE_BUSY 数据据库文件被锁定
+.常量 SQLITE_锁定, "6", , SQLITE_LOCKED 表被锁定
+.常量 SQLITE_申请内存失败, "7", , SQLITE_NOMEM
+.常量 SQLITE_只读, "8", , SQLITE_READONLY 试图写一个只读的数据库
+.常量 SQLITE_中断, "9", , SQLITE_INTERRUPT 操作被中断结束
+.常量 SQLITE_IO错误, "10", , SQLITE_IOERR 某种磁盘I/O错误发生
+.常量 SQLITE_损坏, "11", , SQLITE_CORRUPT 数据库磁盘镜像异常
+.常量 SQLITE_为找到, "12", , SQLITE_NOTFOUND 未使用。表或记录不存在
+.常量 SQLITE_数据库满, "13", , SQLITE_FULL 数据库满，插入失败
+.常量 SQLITE_不能打开, "14", , SQLITE_CANTOPEN 不能打开数据库文件
+.常量 SQLITE_协议, "15", , SQLITE_PROTOCOL 数据库错定协议错
+.常量 SQLITE_无表, "16", , SQLITE_EMPTY 数据库表为空
+.常量 SQLITE_结构, "17", , SQLITE_SCHEMA 数据库结构被改变
+.常量 SQLITE_表太大, "18", , SQLITE_TOOBIG 一个表的行数据过多
+.常量 SQLITE_约束, "19", , SQLITE_CONSTRAINT 由于约束冲突而中止
+.常量 SQLITE_不匹配, "20", , SQLITE_MISMATCH 数据类型不匹配
+.常量 SQLITE_误用, "21", , SQLITE_MISUSE 库被不正确使用
+.常量 SQLITE_不支持OS, "22", , SQLITE_NOLFS 主机不支持的OS特性
+.常量 SQLITE_认证, "23", , SQLITE_AUTH 授权被否定
+.常量 SQLITE_格式, "24", , SQLITE_FORMAT 辅助数据库格式错误
+.常量 SQLITE_范围, "25", , SQLITE_RANGE 绑定参数时索引超出范围
+.常量 SQLITE_无数据库, "26", , SQLITE_NOTADB 文件已打开但没有数据库
+.常量 SQLITE_行, "100", , SQLITE_ROW 有另一行就绪
+.常量 SQLITE_完成, "101", , SQLITE_DONE 已经完成执行
+.常量 SQLITE_UTF8, "1"
+.常量 SQLITE_UTF16, "2"
+.常量 SQLITE_UTF16BE, "3"
+.常量 SQLITE_UTF16LE, "4"
+.常量 SQLITE_ANY, "5"
+.常量 SQLITE_OPEN_READONLY, "1"
+.常量 SQLITE_OPEN_READWRITE, "2"
+.常量 SQLITE_OPEN_CREATE, "4"
+.常量 S3字段类型_整型, "1", , SQLITE_INTEGER
+.常量 S3字段类型_浮点型, "2", , SQLITE_FLOAT
+.常量 S3字段类型_文本型, "3", , SQLITE_TEXT
+.常量 S3字段类型_字节集型, "4", , SQLITE_BLOB
+.常量 S3字段类型_空, "5", , SQLITE_NULL
+.常量 S3析构_静态, "0", , SQLITE_STATIC
+.常量 S3析构_临时, "-1", , SQLITE_TRANSIENT
+.常量 S3触发条件_插入, "0"
+.常量 S3触发条件_删除, "1"
+.常量 S3触发条件_更新, "2"
+.常量 S3触发条件_字段更新, "3"
+.常量 S3触发时间_普通模式, "0"
+.常量 S3触发时间_之前, "1"
+.常量 S3触发时间_之后, "2"
+.常量 SW_SHOWMINNOACTIVE, "7", , 最小化一个窗口，同时不改变活动窗口
+.常量 SW_SHOWNOACTIVATE, "4", , 用最近的大小和位置显示一个窗口，同时不改变活动窗口
+.常量 SW_SHOWMAXIMIZED, "3", , 激活窗口并将其显示为最大化窗口。
+.常量 SW_SHOWMINIMIZED, "2", , 以最小化状态显示窗口，使当前活动窗口保持活动状态。
+.常量 SW_SHOWNORMAL, "1", , 激活并显示一个窗口。如果窗口被最小化或最大化，系统会将其恢复到其原始大小和位置。应用程序应在第一次显示窗口时指定此标志。
+.常量 SW_SHOWDEFAULT, "10", , 按默认状态显示
+.常量 ABE_BOTTOM, "3", , 底边。
+.常量 SW_HIDE, "0", , 隐藏窗口，活动状态给另一个窗口
+.常量 SW_FORCEMINIMIZE, "11", , 即使拥有窗口的线程未响应，也会最小化窗口。 仅当将窗口从不同的线程最小化时，才应使用此标志。
+.常量 STARTF_USESHOWWINDOW, "1", , 该wShowWindow成员包含更多的信息。
+.常量 STARTF_USESTDHANDLES, "256"
+.常量 STILL_ACTIVE, "259"
+.常量 URLMON_OPTION_USERAGENT, "268435457"
+.常量 HKEY_CURRENT_CONFIG, "-2147483643", , 包含了当前系统配置的信息。 　
+.常量 HKEY_PERFORMANCE_DATA, "-2147483644", , 仅XP/winNT/win2000可用
+.常量 HKEY_USERS, "-2147483645", , 用作默认用户首选设置，也作为单个用户的首选设置。
+.常量 HKEY_LOCAL_MACHINE, "-2147483646", , 包含描述计算机及其配置的条目。其中包括关于处理器、系统主板、内存和已安装的软件和硬件的信息。 　
+.常量 HKEY_CURRENT_USER, "-2147483647", , 是用于当前（登录）用户的相关信息。 
+.常量 HKEY_CLASSES_ROOT, "-2147483648", , 是与文档类型和 OLE\COM 相关的信息的支持键。这个键是 HKEY_LOCAL_MACHINE的从属键。 
+.常量 KEY_ALL_ACCESS, "983103", , 结合了 STANDARD_RIGHTS_REQUIRED、KEY_QUERY_VALUE、KEY_SET_VALUE、KEY_CREATE_SUB_KEY、KEY_ENUMERATE_SUB_KEYS、KEY_NOTIFY 和 KEY_CREATE_LINK 访问权限。
+.常量 KEY_WOW64_64KEY, "256", , 使用32位或64位应用程序中的64位注册表项。
+.常量 KEY_WOW64_32KEY, "512", , 使用32位或64位应用程序中的32位注册表项。
+.常量 KEY_READ, "131097", , 组合 STANDARD_RIGHTS_READ、KEY_QUERY_VALUE、KEY_ENUMERATE_SUB_KEYS 和 KEY_NOTIFY 值。
+.常量 KEY_WRITE, "131078", , 结合 STANDARD_RIGHTS_WRITE、KEY_SET_VALUE 和 KEY_CREATE_SUB_KEY 访问权限。
+.常量 REG_NONE, "0", , 没有定义的值类型。
+.常量 REG_BINARY, "3", , 任何形式的二进制数据。
+.常量 REG_DWORD, "4", , 一个32位数字。
+.常量 REG_SZ, "1", , 空终止的字符串。根据您使用的是Unicode还是ANSI函数，它可以是Unicode或ANSI字符串。
+.常量 REG_DWORD_LITTLE_ENDIAN, "4", , 大计数法格式32位数字，一个字的有效字节是高端字
+.常量 REG_DWORD_BIG_ENDIAN, "5", , 大计数法格式32位数字，一个字的有效字节是低端字
+.常量 REG_LINK, "6", , 单一代码符号链
+.常量 REG_EXPAND_SZ, "2", , 空终止字符串，包括对"&TEMP&"之类环境变量的引用
+.常量 REG_MULTI_SZ, "7", , 定义包括空终止字符串的数组，数组被两个实际的空字符串结束
+.常量 ERROR_MORE_DATA, "234", , 并非所有数据都随此调用一起返回。要获取其他数据，请使用resume句柄再次调用该函数。
+.常量 ERROR_NO_MORE_ITEMS, "259", , 没有更多要枚举的条目。
+.常量 WS_EX_TOPMOST, "8", , 窗口置顶(停留在所有非最高层窗口的上面)
+.常量 WS_DISABLED, "134217728", , 不可用状态
+.常量 CDS_FULLSCREEN, "4", , 0x00000004
+.常量 CDS_GLOBAL, "8", , 0x00000008
+.常量 CDS_UPDATEREGISTRY, "1", , 0x00000001
+.常量 WS_EX_ACCEPTFILES, "16", , 窗口接受拖放文件
+.常量 HEAP_ZERO_MEMORY, "8", , 指定分配的内存将初始化为零。否则，内存不会初始化为零。
+.常量 REG_OPTION_NON_VOLATILE, "0", , 打开或创建的密钥不是易失性的；系统重新启动时，信息将被保留。
+.常量 REG_QWORD, "11", , 一个64位数字。
+.常量 托盘事件_移动鼠标, "512", , 移动鼠标
+.常量 托盘事件_按下鼠标左键, "513", , 按下鼠标左键
+.常量 托盘事件_释放鼠标左键, "514", , 释放鼠标左键
+.常量 托盘事件_双击鼠标左键, "515", , 双击鼠标左键
+.常量 托盘事件_按下鼠标右键, "516", , 按下鼠标右键
+.常量 托盘事件_释放鼠标右键, "517", , 释放鼠标右键
+.常量 托盘事件_双击鼠标右键, "518", , 双击鼠标右键
+.常量 托盘事件_按下鼠标中键, "519", , 按下鼠标中键
+.常量 托盘事件_释放鼠标中键, "520", , 释放鼠标中键
+.常量 托盘事件_双击鼠标中键, "521", , 双击鼠标中键
+.常量 托盘事件_任务重建, "1120"
+.常量 托盘事件_托盘退出, "1130"
+.常量 托盘图标_无图标, "0"
+.常量 托盘图标_信息图标, "1"
+.常量 托盘图标_警告图标, "2"
+.常量 托盘图标_错误图标, "3"
+.常量 WS_CHILD, "1073741824"
+.常量 GW_HWNDLAST, "1", , 检索到的句柄标识Z顺序中最低的同一类型的窗口。如果指定的窗口是最顶部的窗口，则句柄标识Z顺序中最低的最顶部窗口。如果指定的窗口是顶级窗口，则句柄标识Z顺序中最低的顶级窗口。如果指定的窗口是子窗口，则句柄标识Z顺序中最低的同级窗口。
+.常量 GW_HWNDNEXT, "2", , 检索到的句柄以Z顺序标识指定窗口下面的窗口。如果指定的窗口是最上面的窗口，则句柄将标识指定窗口下面的最上面的窗口。如果指定的窗口是顶级窗口，则句柄将标识指定窗口下面的顶级窗口。如果指定的窗口是子窗口，则句柄标识指定窗口下面的同级窗口。
+.常量 GW_HWNDPREV, "3", , 检索到的句柄以Z顺序标识指定窗口上方的窗口。如果指定的窗口是最顶部的窗口，则句柄标识指定窗口上方的最顶部窗口。如果指定的窗口是顶级窗口，则句柄标识指定窗口上方的顶级窗口。如果指定的窗口是子窗口，则句柄标识指定窗口上方的同级窗口。
+.常量 GW_CHILD, "5", , 如果指定的窗口是父窗口，则检索到的句柄标识Z顺序顶部的子窗口；否则，检索到的句柄为空。函数只检查指定窗口的子窗口。它不检查子代窗口。
+.常量 GW_ENABLEDPOPUP, "6", , 属于指定窗口的处于状态为弹出式窗口
+.常量 BM_CLICK, "245", , 模拟用户点击按钮
+.常量 WINHTTP_ACCESS_TYPE_NO_PROXY, "1", , 直接访问，不使用代理。
+.常量 WINHTTP_ACCESS_TYPE_DEFAULT_PROXY, "2", , 通过静态代理或注册表配置的代理访问。不继承和不共享IE的代理设置，调用WinHttpSetDefaultProxyConfiguration进行设置。
+.常量 WINHTTP_ACCESS_TYPE_NAMED_PROXY, "3", , 通过指定名称的代理访问。
+.常量 INTERNET_SCHEME_HTTPS, "2"
+.常量 INTERNET_SCHEME_HTTP, "1"
+.常量 WINHTTP_NO_REFERER, "0", , 没有来源页面
+.常量 WINHTTP_DEFAULT_ACCEPT_TYPES, "0", , 默认文件类型
+.常量 WINHTTP_FLAG_SECURE, "8388608", , SSL/TLS安全超文本协议。
+.常量 WINHTTP_AUTH_TARGET_SERVER, "0", , 验证目标：网站服务器。
+.常量 WINHTTP_AUTH_TARGET_PROXY, "1", , 验证目标：代理服务器。
+.常量 WINHTTP_AUTH_SCHEME_BASIC, "1", , 基本认证方式(BASE64加密)。
+.常量 WINHTTP_OPTION_DISABLE_FEATURE, "63", , 禁用功能
+.常量 WINHTTP_OPTION_ENABLE_FEATURE, "79"
+.常量 WINHTTP_DISABLE_COOKIES, "1", , 禁用自动设置COOKIES
+.常量 WINHTTP_DISABLE_REDIRECTS, "2", , 禁用重定向
+.常量 WINHTTP_OPTION_SECURITY_FLAGS, "31", , 忽略证书错误 #define WINHTTP_OPTION_SECURITY_FLAGS                31
+.常量 WINHTTP_ADDREQ_FLAG_ADD, "536870912", , 添加一个协议头，如果协议头已存在则被新值替换，与WINHTTP_ADDREQ_FLAG_REPLACE标志一起使用。
+.常量 WINHTTP_ADDREQ_FLAG_REPLACE, "-2147483648", , 替换或者删除一个协议头，如果值为空则删除，否则被替换。
+.常量 WINHTTP_QUERY_RAW_HEADERS_CRLF, "22", , 协议头以换行符分割
+.常量 WINHTTP_NO_HEADER_INDEX, "0", , 没有协议索引
+.常量 WINHTTP_ADDREQ_FLAG_ADD_IF_NEW, "268435456", , 只有不存在的时候才添加
+.常量 WINHTTP_ADDREQ_FLAG_COALESCE, "1073741824", , 合并相同的名称
+.常量 WINHTTP_ADDREQ_FLAG_COALESCE_WITH_COMMA, "1073741824", , 合并相同的名称使用逗号
+.常量 WINHTTP_ADDREQ_FLAG_COALESCE_WITH_SEMICOLON, "16777216", , 合并相投的名称使用分号
+.常量 VER_NT_WORKSTATION, "1", , 操作系统为 Windows 8、Windows 7、Windows Vista、Windows XP Professional、Windows XP Home Edition 或 Windows 2000 Professional。
+.常量 SystemProcessInformation, "5", , 进程_取父ID
+.常量 WH_KEYBOARD, "2", , 安装监视击键消息的钩子过程。有关更多信息，请参阅KeyboardProc hook过程。
+.常量 WH_KEYBOARD_LL, "13", , 安装一个钩子过程来监视低级键盘输入事件。有关更多信息，请参阅LowLevelKeyboardProc挂钩过程。
+.常量 WH_MOUSE_LL, "14", , 安装监视低级鼠标输入事件的钩子过程。有关更多信息，请参阅LowLevelMouseProc hook过程。
+.常量 WH_MOUSE, "7", , 安装监视鼠标消息的钩子过程。有关更多信息，请参阅MouseProc hook过程。
+.常量 HC_ACTION, "0"
+.常量 INVALID_HANDLE_VALUE, "-1"
+.常量 SERVICE_INTERACTIVE_PROCESS, "256"
+.常量 SERVICE_ALL_ACCESS, "983551"
+.常量 SERVICE_ERROR_NORMAL, "1"
+.常量 SC_MANAGER_CONNECT, "1"
+.常量 SERVICE_ENUMERATE_DEPENDENTS, "8"
+.常量 SC_MANAGER_ENUMERATE_SERVICE, "4"
+.常量 NIF_INFO, "16"
+.常量 NIF_ICON, "2"
+.常量 NIF_TIP, "4"
+.常量 NIF_MESSAGE, "1"
+.常量 STD_OUTPUT_HANDLE, "-11"
+.常量 STD_INPUT_HANDLE, "-10"
+.常量 EM_REPLACESEL, "194"
+.常量 FOREGROUND_RED, "4"
+.常量 FOREGROUND_INTENSITY, "8"
+.常量 FOREGROUND_GREEN, "2"
+.常量 FOREGROUND_BLUE, "1"
+.常量 GMEM_MOVEABLE, "2"
+.常量 sizeof_SECURITY_ATTRIBUTES, "12"
+.常量 AuAppBat, "“@echo off set _task=程序名set _svr=程序路径 :checkstarttasklist|findstr /i %_task%&&goto checkag||goto startsvr   :startsvrecho %time%echo ********程序开始启动********echo 程序重新启动于 %time% ,请检查系统日志 >> restart_service.txtset/p=.<nulfor /L %%i in (1 1 2) do set /p a=.<nul&ping.exe /n 1 127.0.0.1>nulecho .start %_svr%echo Wscript.Sleep WScript.Arguments(0) >%tmp%/delay.vbscscript //b //nologo %tmp%/delay.vbs 1000echo ********程序启动完成********goto checkstart  :checkagecho %time% 程序运行正常,1秒后继续检查..echo Wscript.Sleep WScript.Arguments(0) >%tmp%/delay.vbscscript //b //nologo %tmp%/delay.vbs 1000goto checkstart”"
+.常量 AuAppVBs, "“Option ExplicitDim wmi,proc,procs,proname,flag,WshShellDo    proname = "程序名"    Set wmi = GetObject("winmgmts:{impersonationlevel=impersonate}!\\.\root\cimv2")    Set procs = wmi.execquery("select * from win32_process")    flag = True    For Each proc In procs        If StrComp(proc.name,proname) = 0 Then            flag = False            Exit For        End If    Next    Set wmi = Nothing    If flag Then        Set WshShell = WScript.CreateObject("Wscript.Shell")        WshShell.Run ("程序路径")    End If    WScript.sleep 1000 '检测间隔时间，这里是50秒    Loop”"
+.常量 IP_SUCCESS, "0"
+.常量 TIME_FORCE24HOURFORMAT, "8", , 0x00000008 ----强制使用24小时制。
+.常量 GWL_EXSTYLE, "-20", , 设置/获取一个新的扩展风格。
+.常量 GWL_HINSTANCE, "-6", , 设置/获取一个新的应用程序实例句柄。
+.常量 GWL_ID, "-12", , 设置/获取一个新的窗口标识符。
+.常量 GWL_STYLE, "-16", , 设置/获取一个新的窗口风格。
+.常量 GWL_USERDATA, "-21", , 设置/获取与窗口有关的32位值。每个窗口均有一个由创建该窗口的应用程序使用的32位值。
+.常量 GWL_WNDPROC, "-4", , 设置一个新的处理函数。/获得窗口过程的地址，或代表窗口过程的地址的句柄。必须使用CallWindowProc函数调用窗口过程。
+.常量 GWL_HWNDPARENT, "-8", , 设置/获取子窗口的父窗口,应使用SetParent函数。
+.常量 显示rar窗口, "2", , 普通激活
+.常量 隐藏rar窗口, "1", , 隐藏窗口
+.常量 系统_ALLUSERSPROFILE, "“ALLUSERSPROFILE”", , 局部 返回所有“用户配置文件”的位置。
+.常量 系统_APPDATA, "“APPDATA”", , 局部 返回默认情况下应用程序存储数据的位置。
+.常量 系统_CD, "“CD”", , 局部 返回当前目录字符串。
+.常量 系统_CMDCMDLINE, "“CMDCMDLINE”", , 局部 返回用来启动当前的 Cmd.exe 的准确命令行。
+.常量 系统_CMDEXTVERSION, "“CMDEXTVERSION”", , 系统 返回当前的“命令处理程序扩展”的版本号。
+.常量 系统_COMPUTERNAME, "“COMPUTERNAME”", , 系统 返回计算机的名称。
+.常量 系统_COMSPEC, "“COMSPEC”", , 系统 返回命令行解释器可执行程序的准确路径。
+.常量 系统_DATE, "“DATE”", , 系统 返回当前日期。使用与 date /t 命令相同的格式。由 Cmd.exe 生成。有关 date 命令的详细信息，请参阅 Date。
+.常量 系统_ERRORLEVEL, "“ERRORLEVEL”", , 系统 返回使用过的命令的错误代码。通常用非零值表示错误。
+.常量 系统_HOMEDRIVE, "“HOMEDRIVE”", , 系统 返回连接到用户主目录的本地工作站驱动器号。基于主目录值的设置。用户主目录是在“本地用户和组”中指定的。
+.常量 系统_HOMEPATH, "“HOMEPATH”", , 系统 返回用户主目录的完整路径。基于主目录值的设置。用户主目录是在“本地用户和组”中指定的。
+.常量 系统_HOMESHARE, "“HOMESHARE”", , 系统 返回用户的共享主目录的网络路径。基于主目录值的设置。用户主目录是在“本地用户和组”中指定的。
+.常量 系统_LOGONSEVER, "“LOGONSEVER”", , 局部 返回验证当前登录会话的域控制器的名称。
+.常量 系统_NUMBER_OF_PROCESSORS, "“NUMBER_OF_PROCESSORS”", , 系统 指定安装在计算机上的处理器的数目。
+.常量 系统_OS, "“OS”", , 系统 返回操作系统的名称。Windows 2000 将操作系统显示为 Windows_NT。
+.常量 系统_PATH, "“PATH”", , 系统 指定可执行文件的搜索路径。
+.常量 系统_PATHEXT, "“PATHEXT”", , 系统 返回操作系统认为可执行的文件扩展名的列表。
+.常量 系统_PROCESSOR_ARCHITECTURE, "“PROCESSOR_ARCHITECTURE”", , 系统 返回处理器的芯片体系结构。值: x86，IA64。
+.常量 系统_PROCESSOR_IDENTIFIER, "“PROCESSOR_IDENTIFIER”", , 系统 返回处理器说明。
+.常量 系统_PROCESSOR_LEVEL, "“PROCESSOR_LEVEL”", , 系统 返回计算机上安装的处理器的型号。
+.常量 系统_PROCESSOR_REVISION, "“PROCESSOR_REVISION”", , 系统 返回处理器修订号的系统变量。
+.常量 系统_PROMPT, "“PROMPT”", , 局部 返回当前解释程序的命令提示符设置。由 Cmd.exe 生成。
+.常量 系统_RANDOM, "“RANDOM”", , 系统 返回 0 到 32767 之间的任意十进制数字。由 Cmd.exe 生成。
+.常量 系统_SYSTEMDRIVE, "“SYSTEMDRIVE”", , 系统 返回包含 Windows XP 根目录（即系统根目录）的驱动器。
+.常量 系统_SYSTEMROOT, "“SYSTEMROOT”", , 系统 返回 Windows XP 根目录的位置。
+.常量 系统_TEMP, "“TEMP”", , and %TMP% 系统和用户 返回对当前登录用户可用的应用程序所使用的默认临时目录。有些应用程序需要 TEMP，而其它应用程序则需要 TMP。
+.常量 系统_TIME, "“TIME”", , 系统 返回当前时间。使用与 time /t 命令相同的格式。由 Cmd.exe 生成。有关 time 命令的详细信息，请参阅 Time。
+.常量 系统_USERDOMAIN, "“USERDOMAIN”", , 局部 返回包含用户帐户的域的名称。
+.常量 系统_USERNAME, "“USERNAME”", , 局部 返回当前登录的用户的名称。
+.常量 系统_UserProfile, "“UserProfile”", , 局部 返回当前用户的配置文件的位置。
+.常量 系统_WINDIR, "“WINDIR”", , 系统 返回操作系统目录的位置。
+.常量 PKCS5_PADDING, "1"
+.常量 RANDOM_PADDING, "2"
+.常量 ZERO_PADDING, "3"
+.常量 KP_IV, "1"
+.常量 KP_SALT, "2"
+.常量 KP_PADDING, "3"
+.常量 KP_MODE, "4"
+.常量 KP_MODE_BITS, "5"
+.常量 KP_PERMISSIONS, "6"
+.常量 KP_ALGID, "7"
+.常量 KP_BLOCKLEN, "8"
+.常量 KP_KEYLEN, "9"
+.常量 KP_SALT_EX, "10"
+.常量 KP_P, "11"
+.常量 KP_G, "12"
+.常量 KP_Q, "13"
+.常量 KP_X, "14"
+.常量 KP_Y, "15"
+.常量 KP_RA, "16"
+.常量 KP_RB, "17"
+.常量 KP_INFO, "18"
+.常量 KP_EFFECTIVE_KEYLEN, "19"
+.常量 KP_SCHANNEL_ALG, "20"
+.常量 KP_CLIENT_RANDOM, "21"
+.常量 KP_SERVER_RANDOM, "22"
+.常量 KP_RP, "23"
+.常量 KP_PRECOMP_MD5, "24"
+.常量 KP_PRECOMP_SHA, "25"
+.常量 KP_CERTIFICATE, "26"
+.常量 KP_CLEAR_KEY, "27"
+.常量 KP_PUB_EX_LEN, "28"
+.常量 KP_PUB_EX_VAL, "29"
+.常量 KP_KEYVAL, "30"
+.常量 KP_ADMIN_PIN, "31"
+.常量 KP_KEYEXCHANGE_PIN, "32"
+.常量 KP_SIGNATURE_PIN, "33"
+.常量 KP_ROUNDS, "35"
+.常量 KP_OAEP_PARAMS, "36"
+.常量 KP_CMS_KEY_INFO, "37"
+.常量 KP_CMS_DH_KEY_INFO, "38"
+.常量 KP_PUB_PARAMS, "39"
+.常量 KP_VERIFY_PARAMS, "40"
+.常量 KP_HIGHEST_VERSION, "41"
+.常量 KP_GET_USE_COUNT, "42"
+.常量 SIMPLEBLOB, "1"
+.常量 PUBLICKEYBLOB, "6"
+.常量 PRIVATEKEYBLOB, "7"
+.常量 PLAINTEXTKEYBLOB, "8"
+.常量 OPAQUEKEYBLOB, "9"
+.常量 PUBLICKEYBLOBEX, "10"
+.常量 SYMMETRICWRAPKEYBLOB, "11"
+.常量 CUR_BLOB_VERSION, "2"
+.常量 HP_HASHVAL, "2"
+.常量 CRYPT_MODE_CBC, "1"
+.常量 CRYPT_MODE_ECB, "2"
+.常量 CRYPT_MODE_OFB, "3"
+.常量 CRYPT_MODE_CFB, "4"
+.常量 CRYPT_MODE_CTS, "5"
+.常量 数据填充_NO_PADDING, "1"
+.常量 数据填充_ZERO_PADDING, "2"
+.常量 数据填充_ANSIX923_PADDING, "3"
+.常量 数据填充_ISO10126_PADDING, "4"
+.常量 数据填充_PKCS5_PADDING, "5"
+.常量 数据填充_PKCS7_PADDING, "7"
+.常量 对称算法_AES_CBC, "“AES-CBC”"
+.常量 对称算法_AES_ECB, "“AES-ECB”"
+.常量 对称算法_AES_OFB, "“AES-OFB”", , win7 不支持
+.常量 对称算法_AES_CFB, "“AES-CFB”"
+.常量 对称算法_AES_CTS, "“AES-CTS”", , win7 不支持
+.常量 对称算法_AES_192_CBC, "“AES192-CBC”"
+.常量 对称算法_AES_192_ECB, "“AES192-ECB”"
+.常量 对称算法_AES_192_OFB, "“AES192-OFB”", , win7 不支持
+.常量 对称算法_AES_192_CFB, "“AES192-CFB”"
+.常量 对称算法_AES_192_CTS, "“AES192-CTS”", , win7 不支持
+.常量 对称算法_AES_256_CBC, "“AES256-CBC”"
+.常量 对称算法_AES_256_ECB, "“AES256-ECB”"
+.常量 对称算法_AES_256_OFB, "“AES256-OFB”", , win7 不支持
+.常量 对称算法_AES_256_CFB, "“AES256-CFB”"
+.常量 对称算法_AES_256_CTS, "“AES256-CTS”", , win7 不支持
+.常量 对称算法_DES_CBC, "“DES-CBC”"
+.常量 对称算法_DES_ECB, "“DES-ECB”"
+.常量 对称算法_DES_OFB, "“DES-OFB”", , win7 不支持
+.常量 对称算法_DES_CFB, "“DES-CFB”"
+.常量 对称算法_DES_CTS, "“DES-CTS”", , win7 不支持
+.常量 对称算法_3DES_CBC, "“3DES-CBC”"
+.常量 对称算法_3DES_ECB, "“3DES-ECB”"
+.常量 对称算法_3DES_OFB, "“3DES-OFB”", , win7 不支持
+.常量 对称算法_3DES_CFB, "“3DES-CFB”"
+.常量 对称算法_3DES_CTS, "“3DES-CTS”", , win7 不支持
+.常量 对称算法_RC2, "“RC2”"
+.常量 对称算法_RC4, "“RC4”"
+.常量 NULL, "0"
+.常量 CALG_MD2, "32769"
+.常量 CALG_MD4, "32770"
+.常量 CALG_MD5, "32771"
+.常量 CALG_SHA, "32772"
+.常量 CALG_SHA1, "32772"
+.常量 CALG_MAC, "32773"
+.常量 CALG_RSA_SIGN, "9216"
+.常量 CALG_DSS_SIGN, "8704"
+.常量 CALG_NO_SIGN, "8192"
+.常量 CALG_RSA_KEYX, "41984"
+.常量 CALG_DES, "26113"
+.常量 CALG_3DES_112, "26121"
+.常量 CALG_3DES, "26115"
+.常量 CALG_DESX, "26116"
+.常量 CALG_RC2, "26114"
+.常量 CALG_RC4, "26625"
+.常量 CALG_SEAL, "26626"
+.常量 CALG_DH_SF, "43521"
+.常量 CALG_DH_EPHEM, "43522"
+.常量 CALG_AGREEDKEY_ANY, "43523"
+.常量 CALG_KEA_KEYX, "43524"
+.常量 CALG_HUGHES_MD5, "40963"
+.常量 CALG_SKIPJACK, "26122"
+.常量 CALG_TEK, "26123"
+.常量 CALG_CYLINK_MEK, "26124"
+.常量 CALG_SSL3_SHAMD5, "32776"
+.常量 CALG_SSL3_MASTER, "19457"
+.常量 CALG_SCHANNEL_MASTER_HASH, "19458"
+.常量 CALG_SCHANNEL_MAC_KEY, "19459"
+.常量 CALG_SCHANNEL_ENC_KEY, "19463"
+.常量 CALG_PCT1_MASTER, "19460"
+.常量 CALG_SSL2_MASTER, "19461"
+.常量 CALG_TLS1_MASTER, "19462"
+.常量 CALG_RC5, "26125"
+.常量 CALG_HMAC, "32777"
+.常量 CALG_TLS1PRF, "32778"
+.常量 CALG_HASH_REPLACE_OWF, "32779"
+.常量 CALG_AES_128, "26126"
+.常量 CALG_AES_192, "26127"
+.常量 CALG_AES_256, "26128"
+.常量 CALG_AES, "26129"
+.常量 CALG_SHA_256, "32780"
+.常量 CALG_SHA_384, "32781"
+.常量 CALG_SHA_512, "32782"
+.常量 CRYPT_VERIFYCONTEXT, "-268435456"
+.常量 CRYPT_NEWKEYSET, "8"
+.常量 CRYPT_DELETEKEYSET, "16"
+.常量 CRYPT_MACHINE_KEYSET, "32"
+.常量 CRYPT_SILENT, "64"
+.常量 CRYPT_EXPORTABLE, "1"
+.常量 CRYPT_USER_PROTECTED, "2"
+.常量 CRYPT_CREATE_SALT, "4"
+.常量 CRYPT_UPDATE_KEY, "8"
+.常量 CRYPT_NO_SALT, "16"
+.常量 CRYPT_PREGEN, "64"
+.常量 CRYPT_RECIPIENT, "16"
+.常量 CRYPT_INITIATOR, "64"
+.常量 CRYPT_ONLINE, "128"
+.常量 CRYPT_SF, "256"
+.常量 CRYPT_CREATE_IV, "512"
+.常量 CRYPT_KEK, "1024"
+.常量 CRYPT_DATA_KEY, "2048"
+.常量 CRYPT_VOLATILE, "4096"
+.常量 CRYPT_SGCKEY, "8192"
+.常量 CRYPT_ARCHIVABLE, "16384"
+.常量 RSA1024BIT_KEY, "67108864"
+.常量 CRYPT_SERVER, "1024"
+.常量 KEY_LENGTH_MASK, "-65536"
+.常量 CRYPT_Y_ONLY, "1"
+.常量 CRYPT_SSL2_FALLBACK, "2"
+.常量 CRYPT_DESTROYKEY, "4"
+.常量 CRYPT_OAEP, "64"
+.常量 CRYPT_BLOB_VER3, "128"
+.常量 CRYPT_IPSEC_HMAC_KEY, "256"
+.常量 CRYPT_DECRYPT_RSA_NO_PADDING_CHECK, "32"
+.常量 CRYPT_SECRETDIGEST, "1"
+.常量 CRYPT_OWF_REPL_LM_HASH, "1"
+.常量 CRYPT_LITTLE_ENDIAN, "1"
+.常量 CRYPT_NOHASHOID, "1"
+.常量 CRYPT_TYPE2_FORMAT, "2"
+.常量 CRYPT_X931_FORMAT, "4"
+.常量 CRYPT_MACHINE_DEFAULT, "1"
+.常量 CRYPT_USER_DEFAULT, "2"
+.常量 CRYPT_DELETE_DEFAULT, "4"
+.常量 PROV_RSA_FULL, "1"
+.常量 PROV_RSA_SIG, "2"
+.常量 PROV_DSS, "3"
+.常量 PROV_FORTEZZA, "4"
+.常量 PROV_MS_EXCHANGE, "5"
+.常量 PROV_SSL, "6"
+.常量 PROV_RSA_SCHANNEL, "12"
+.常量 PROV_DSS_DH, "13"
+.常量 PROV_EC_ECDSA_SIG, "14"
+.常量 PROV_EC_ECNRA_SIG, "15"
+.常量 PROV_EC_ECDSA_FULL, "16"
+.常量 PROV_EC_ECNRA_FULL, "17"
+.常量 PROV_DH_SCHANNEL, "18"
+.常量 PROV_SPYRUS_LYNKS, "20"
+.常量 PROV_RNG, "21"
+.常量 PROV_INTEL_SEC, "22"
+.常量 PROV_REPLACE_OWF, "23"
+.常量 PROV_RSA_AES, "24"
+.常量 OBJID_WINDOW, "0"
+.常量 ROLE_SYSTEM_TITLEBAR, "1"
+.常量 ROLE_SYSTEM_MENUBAR, "2"
+.常量 ROLE_SYSTEM_SCROLLBAR, "3"
+.常量 ROLE_SYSTEM_GRIP, "4"
+.常量 ROLE_SYSTEM_SOUND, "5"
+.常量 ROLE_SYSTEM_CURSOR, "6"
+.常量 ROLE_SYSTEM_CARET, "7"
+.常量 ROLE_SYSTEM_ALERT, "8"
+.常量 ROLE_SYSTEM_WINDOW, "9"
+.常量 ROLE_SYSTEM_CLIENT, "10"
+.常量 ROLE_SYSTEM_MENUPOPUP, "11"
+.常量 ROLE_SYSTEM_MENUITEM, "12"
+.常量 ROLE_SYSTEM_TOOLTIP, "13"
+.常量 ROLE_SYSTEM_APPLICATION, "14"
+.常量 ROLE_SYSTEM_DOCUMENT, "15"
+.常量 ROLE_SYSTEM_PANE, "16"
+.常量 ROLE_SYSTEM_CHART, "17"
+.常量 ROLE_SYSTEM_DIALOG, "18"
+.常量 ROLE_SYSTEM_BORDER, "19"
+.常量 ROLE_SYSTEM_GROUPING, "20"
+.常量 ROLE_SYSTEM_SEPARATOR, "21"
+.常量 ROLE_SYSTEM_TOOLBAR, "22"
+.常量 ROLE_SYSTEM_STATUSBAR, "23"
+.常量 ROLE_SYSTEM_TABLE, "24"
+.常量 ROLE_SYSTEM_COLUMNHEADER, "25"
+.常量 ROLE_SYSTEM_ROWHEADER, "26"
+.常量 ROLE_SYSTEM_COLUMN, "27"
+.常量 ROLE_SYSTEM_ROW, "28"
+.常量 ROLE_SYSTEM_CELL, "29"
+.常量 ROLE_SYSTEM_LINK, "30"
+.常量 ROLE_SYSTEM_HELPBALLOON, "31"
+.常量 ROLE_SYSTEM_CHARACTER, "32"
+.常量 ROLE_SYSTEM_LIST, "33"
+.常量 ROLE_SYSTEM_LISTITEM, "34"
+.常量 ROLE_SYSTEM_OUTLINE, "35"
+.常量 ROLE_SYSTEM_OUTLINEITEM, "36"
+.常量 ROLE_SYSTEM_PAGETAB, "37"
+.常量 ROLE_SYSTEM_PROPERTYPAGE, "38"
+.常量 ROLE_SYSTEM_INDICATOR, "39"
+.常量 ROLE_SYSTEM_GRAPHIC, "40"
+.常量 ROLE_SYSTEM_STATICTEXT, "41"
+.常量 ROLE_SYSTEM_TEXT, "42"
+.常量 ROLE_SYSTEM_PUSHBUTTON, "43"
+.常量 ROLE_SYSTEM_CHECKBUTTON, "44"
+.常量 ROLE_SYSTEM_RADIOBUTTON, "45"
+.常量 ROLE_SYSTEM_COMBOBOX, "46"
+.常量 ROLE_SYSTEM_DROPLIST, "47"
+.常量 ROLE_SYSTEM_PROGRESSBAR, "48"
+.常量 ROLE_SYSTEM_DIAL, "49"
+.常量 ROLE_SYSTEM_HOTKEYFIELD, "50"
+.常量 ROLE_SYSTEM_SLIDER, "51"
+.常量 ROLE_SYSTEM_SPINBUTTON, "52"
+.常量 ROLE_SYSTEM_DIAGRAM, "53"
+.常量 ROLE_SYSTEM_ANIMATION, "54"
+.常量 ROLE_SYSTEM_EQUATION, "55"
+.常量 ROLE_SYSTEM_BUTTONDROPDOWN, "56"
+.常量 ROLE_SYSTEM_BUTTONMENU, "57"
+.常量 ROLE_SYSTEM_BUTTONDROPDOWNGRID, "58"
+.常量 ROLE_SYSTEM_WHITESPACE, "59"
+.常量 ROLE_SYSTEM_PAGETABLIST, "60"
+.常量 ROLE_SYSTEM_CLOCK, "61"
+.常量 ROLE_SYSTEM_SPLITBUTTON, "62"
+.常量 ROLE_SYSTEM_IPADDRESS, "63"
+.常量 ROLE_SYSTEM_OUTLINEBUTTON, "64"
+.常量 STATE_SYSTEM_NORMAL, "0"
+.常量 STATE_SYSTEM_UNAVAILABLE, "1"
+.常量 STATE_SYSTEM_SELECTED, "2"
+.常量 STATE_SYSTEM_FOCUSED, "4"
+.常量 STATE_SYSTEM_PRESSED, "8"
+.常量 STATE_SYSTEM_CHECKED, "16"
+.常量 STATE_SYSTEM_MIXED, "32"
+.常量 STATE_SYSTEM_READONLY, "64"
+.常量 STATE_SYSTEM_HOTTRACKED, "128"
+.常量 STATE_SYSTEM_DEFAULT, "256"
+.常量 STATE_SYSTEM_EXPANDED, "512"
+.常量 STATE_SYSTEM_COLLAPSED, "1024"
+.常量 STATE_SYSTEM_BUSY, "2048"
+.常量 STATE_SYSTEM_FLOATING, "4096"
+.常量 STATE_SYSTEM_MARQUEED, "8192"
+.常量 STATE_SYSTEM_ANIMATED, "16384"
+.常量 STATE_SYSTEM_INVISIBLE, "32768"
+.常量 STATE_SYSTEM_OFFSCREEN, "65536"
+.常量 STATE_SYSTEM_SIZEABLE, "131072"
+.常量 STATE_SYSTEM_MOVEABLE, "262144"
+.常量 STATE_SYSTEM_SELFVOICING, "524288"
+.常量 STATE_SYSTEM_FOCUSABLE, "1048576"
+.常量 STATE_SYSTEM_SELECTABLE, "2097152"
+.常量 STATE_SYSTEM_LINKED, "4194304"
+.常量 STATE_SYSTEM_TRAVERSED, "8388608"
+.常量 STATE_SYSTEM_MULTISELECTABLE, "16777216"
+.常量 STATE_SYSTEM_EXTSELECTABLE, "33554432"
+.常量 STATE_SYSTEM_ALERT_LOW, "67108864"
+.常量 STATE_SYSTEM_ALERT_MEDIUM, "134217728"
+.常量 STATE_SYSTEM_ALERT_HIGH, "268435456"
+.常量 STATE_SYSTEM_PROTECTED, "536870912"
+.常量 SELFLAG_NONE, "0"
+.常量 SELFLAG_TAKEFOCUS, "1"
+.常量 SELFLAG_TAKESELECTION, "2"
+.常量 SELFLAG_EXTENDSELECTION, "4"
+.常量 SELFLAG_ADDSELECTION, "8"
+.常量 SELFLAG_REMOVESELECTION, "16"
+.常量 NAVDIR_UP, "1"
+.常量 NAVDIR_DOWN, "2"
+.常量 NAVDIR_LEFT, "3"
+.常量 NAVDIR_RIGHT, "4"
+.常量 NAVDIR_NEXT, "5"
+.常量 NAVDIR_PREVIOUS, "6"
+.常量 NAVDIR_FIRSTCHILD, "7"
+.常量 NAVDIR_LASTCHILD, "8"
+.常量 STATUS_INFO_LENGTH_MISMATCH, "-1073741820", , 指定的信息记录长度与指定信息类所需的长度不匹配。
+.常量 STATUS_SUCCESS, "0", , 操作成功完成。
+.常量 STATUS_INVALID_PARAMETER, "-1073741811"
+.常量 OBJ_INHERIT, "2"
+.常量 DUPLICATE_CLOSE_SOURCE, "1"
+.常量 DUPLICATE_SAME_ACCESS, "2"
+.常量 DUPLICATE_SAME_ATTRIBUTES, "4"
+.常量 OB_TYPE_PROCESS, "5"
+.常量 ZwGetCurrentProcess, "-1"
+.常量 JOB_OBJECT_ALL_ACCESS, "2031647"
+.常量 MEM_COMMIT, "4096", , 指示已在内存或磁盘上的分页文件中为其分配物理存储的提交页。
+.常量 TB_BUTTONCOUNT, "1048"
+.常量 TB_GETBUTTON, "1047"
+.常量 TB_DELETEBUTTON, "1046"
+.常量 MEM_RELEASE, "32768", , 释放指定的页面区域或占位符
+.常量 CP_ACP, "0"
+.常量 PAGE_EXECUTE_READWRITE, "64"
+.常量 CLSID_TaskbarList, "“{56FDF344-FD6D-11d0-958A-006097C9A090}”"
+.常量 IID_ITaskbarList, "“{56FDF342-FD6D-11d0-958A-006097C9A090}”"
+.常量 IID_ITaskbarList2, "“{602D4995-B13A-429b-A66E-1935E44F4317}”"
+.常量 IID_ITaskbarList3, "“{EA1AFB91-9E28-4B86-90E9-9E9F8A5EEFAF}”"
+.常量 CLSCTX_INPROC_SERVER, "1", , 创建和管理此类对象的代码是一个 DLL，它与指定类上下文的函数调用者在同一进程中运行。
+.常量 任务栏进度_无, "0", , TBPF_NOPROGRESS
+.常量 任务栏进度_不确定, "1", , TBPF_INDETERMINATE
+.常量 任务栏进度_正常, "2", , TBPF_NORMAL
+.常量 任务栏进度_错误, "4", , TBPF_ERROR
+.常量 任务栏进度_暂停, "8", , TBPF_PAUSED
+.常量 WM_NULL, "0"
+.常量 WM_DESTROY, "2"
+.常量 MSGFLT_ADD, "1", , 将消息添加到过滤器。这具有允许接收消息的效果。
+.常量 WM_COMMAND, "273"
+.常量 WM_COPY, "769", , 程序发送此消息给一个编辑框或combobox来复制当前选择的文本到剪贴板
+.常量 WM_SETICON, "128", , 程序发送此消息让一个新的大图标或小图标与某个窗口关联
+.常量 WM_DRAWCLIPBOARD, "776", , 当剪贴板的内容变化时发送此消息给剪贴板观察链的第一个窗口;它允许用剪贴板观察窗口来显示剪贴板的新内容
+.常量 WM_CHANGECBCHAIN, "781", , 当一个窗口从剪贴板观察链中移去时发送此消息给剪贴板观察链的第一个窗口
+.常量 THBN_CLICKED, "6144"
+.常量 缩略图按钮掩码_图片索引, "1", , THB_BITMAP “图片索引”成员有效
+.常量 缩略图按钮掩码_图标句柄, "2", , THB_ICON
+.常量 缩略图按钮掩码_提示文本, "4", , THB_TOOLTIP
+.常量 缩略图按钮掩码_按钮风格, "8", , THB_FLAGS
+.常量 缩略图按钮_可用, "0", , THBF_ENABLED
+.常量 缩略图按钮_禁止, "1", , THBF_DISABLED
+.常量 缩略图按钮_点击关闭, "2", , THBF_DISMISSONCLICK
+.常量 缩略图按钮_无背景, "4", , THBF_NOBACKGROUND
+.常量 缩略图按钮_隐藏, "8", , THBF_HIDDEN
+.常量 缩略图按钮_无交互按钮, "16", , THBF_NONINTERACTIVE
+.常量 GMEM_ZEROINIT, "64"
+.常量 MN_GETHMENU, "481"
+.常量 WM_ENTERIDLE, "289"
+.常量 MSGF_MENU, "2"
+.常量 MF_SEPARATOR, "2048", , 绘制一条水平分割线
+.常量 MF_STRING, "0", , 指定菜单项是文本字符串
+.常量 WM_CONTEXTMENU, "123"
+.常量 WM_NCHITTEST, "132", , 移动鼠标，按住或释放鼠标时发生
+.常量 MF_BYPOSITION, "1024", , 指示 uPosition 参数为新菜单项提供从零开始的相对位置
+.常量 MF_POPUP, "16", , 指定菜单项打开下拉菜单或子菜单
+.常量 HTVSCROLL, "7", , 在垂直滚动条中
+.常量 FILE_SUPPORTS_SPARSE_FILES, "64"
+.常量 FSCTL_SET_SPARSE, "590020"
+.常量 FILE_ATTRIBUTE_SPARSE_FILE, "512"
+.常量 GENERIC_READ_, "2147483648"
+.常量 FILE_SHARE_READ, "1", , 在文件或设备上启用后续打开操作，以请求读取访问权限。
+.常量 FILE_SHARE_WRITE, "2", , 在文件或设备上启用后续打开操作以请求写访问权限。
+.常量 OPEN_EXISTING, "3", , 仅打开文件或设备（如果存在）。
+.常量 FEATURE_DISABLE_NAVIGATION_SOUNDS, "21", , 禁止跳转声音
+.常量 SET_FEATURE_ON_PROCESS, "2", , 仅对当前进程有效
+.常量 FORMAT_MESSAGE_FROM_SYSTEM, "4096"
+.常量 FORMAT_MESSAGE_IGNORE_INSERTS, "512"
+.常量 TCM_FIRST, "4864"
+.常量 CCM_FIRST, "8192"
+.常量 CCM_GETUNICODEFORMAT, "8198"
+.常量 CCM_SETUNICODEFORMAT, "8197"
+.常量 TCM_ADJUSTRECT, "4904", , 调整矩形
+.常量 TCM_DELETEALLITEMS, "4873", , 删除全部子夹
+.常量 TCM_DELETEITEM, "4872", , 删除子夹
+.常量 TCM_DESELECTALL, "4914", , 全部取消选择
+.常量 TCM_GETCURFOCUS, "4911", , 获取光标焦点
+.常量 TCM_GETCURSEL, "4875", , 获取光标XXX？
+.常量 TCM_GETEXTENDEDSTYLE, "4917", , 取扩展风格
+.常量 TCM_GETIMAGELIST, "4866", , 取项目图片列表
+.常量 TCM_GETITEMA, "4869", , 取项目
+.常量 TCM_GETITEMCOUNT, "4868", , 取项目数
+.常量 TCM_GETITEMRECT, "4874", , 取项目矩形
+.常量 TCM_GETROWCOUNT, "4908", , 取行数
+.常量 TCM_GETTOOLTIPS, "4909", , 取工具条提示
+.常量 TCM_GETUNICODEFORMAT, "8198", , 取UNICODE格式
+.常量 TCM_HIGHLIGHTITEM, "4915"
+.常量 TCM_HITTEST, "4877", , 点击测试
+.常量 TCM_INSERTITEMA, "4871", , 插入子夹
+.常量 TCM_REMOVEIMAGE, "4906", , 移动图片
+.常量 TCM_SETCURFOCUS, "4912", , 置光标焦点
+.常量 TCM_SETCURSEL, "4876", , 置光标XXX？
+.常量 TCM_SETEXTENDEDSTYLE, "4916", , 置扩展风格
+.常量 TCM_SETIMAGELIST, "4867", , 置图片列表
+.常量 TCM_SETITEMA, "4870", , 置项目
+.常量 TCM_SETITEMEXTRA, "4878", , 置额外项目
+.常量 TCM_SETITEMSIZE, "4905", , 置项目尺寸
+.常量 TCM_SETMINTABWIDTH, "4913", , 置子夹栏最小宽度值
+.常量 TCM_SETPADDING, "4907", , 置子夹栏尺寸
+.常量 TCM_SETTOOLTIPS, "4910", , 置工具提示
+.常量 TCM_SETUNICODEFORMAT, "8197", , 置UNICODE格式
+.常量 TCIF_IMAGE, "2", , 项目图片
+.常量 TCIF_PARAM, "8", , 项目数值
+.常量 TCIF_RTLREADING, "4", , 项目右对齐
+.常量 TCIF_STATE, "16", , 状态
+.常量 TCIF_TEXT, "1", , 项目文本
+.常量 WM_MEASUREITEM, "44"
+.常量 WM_WINDOWPOSCHANGED, "71"
+.常量 LVS_OWNERDRAWFIXED, "1024"
+.常量 CF_LIMITSIZE, "8192"
+.常量 HWND_TOP, "0", , 将窗口置于Z顺序的顶部。
+.常量 SWP_NOMOVE, "2", , 维持当前位置（忽略X和Y参数）
+.常量 SWP_NOSIZE, "1", , 维持当前尺寸（忽略cx和Cy参数）
+.常量 SWP_NOACTIVATE, "16", , 不激活窗口。如果未设置此标志，则激活窗口并将其移到最顶层或非顶层组的顶部（取决于hWndInsertAfter参数的设置）。
+.常量 HWND_TOPMOST, "-1", , 将窗口置于所有非最上面的窗口上方。即使禁用窗口，窗口也将保持其最高位置。
+.常量 HWND_NOTOPMOST, "-2", , 将窗口置于所有非最上面的窗口上方（即，所有最上面的窗口的后面）。如果窗口已经是非最上面的窗口，则此标志无效。
+.常量 WS_EX_LAYERED, "524288", , 分层或透明窗口,该样式可使用混合特效
+.常量 WS_EX_TRANSPARENT, "32", , 透明样式,在同属窗口已重画时该窗口才可重画
+.常量 WS_EX_NOACTIVATE, "134217728", , 处于顶层但不激活
+.常量 WM_MBUTTONDBLCLK, "521", , 双击鼠标中键
+.常量 WM_RBUTTONUP, "517", , 释放鼠标右键
+.常量 WM_MBUTTONUP, "520", , 释放鼠标中键
+.常量 WM_MBUTTONDOWN, "519", , 按下鼠标中键
+.常量 WM_RBUTTONDBLCLK, "518", , 双击鼠标右键
+.常量 WM_RBUTTONDOWN, "516", , 按下鼠标右键
+.常量 WM_LBUTTONDBLCLK, "515", , 双击鼠标左键
+.常量 WM_LBUTTONUP, "514", , 释放鼠标左键
+.常量 WM_LBUTTONDOWN, "513", , 按下鼠标左键
+.常量 WM_MOUSEWHEEL, "522", , 当鼠标轮子转动时发送此消息个当前有焦点的控件
+.常量 DWM_BB_ENABLE, "1"
+.常量 DWM_BB_BLURREGION, "2"
+.常量 DWM_BB_TRANSITIONONMAXIMIZED, "4"
+.常量 DWMWA_NCRENDERING_ENABLED, "1"
+.常量 DWMWA_NCRENDERING_POLICY, "2"
+.常量 DWMWA_TRANSITIONS_FORCEDISABLED, "3"
+.常量 DWMWA_ALLOW_NCPAINT, "4"
+.常量 DWMWA_CAPTION_BUTTON_BOUNDS, "5"
+.常量 DWMWA_NONCLIENT_RTL_LAYOUT, "6"
+.常量 DWMWA_FORCE_ICONIC_REPRESENTATION, "7"
+.常量 DWMWA_FLIP3D_POLICY, "8"
+.常量 DWMWA_EXTENDED_FRAME_BOUNDS, "9"
+.常量 DWMWA_LAST, "10"
+.常量 DWMNCRP_USEWINDOWSTYLE, "0"
+.常量 DWMNCRP_DISABLED, "1"
+.常量 DWMNCRP_ENABLED, "2"
+.常量 DWMNCRP_LAST, "3"
+.常量 DWMFLIP3D_DEFAULT, "0"
+.常量 DWMFLIP3D_EXCLUDEBELOW, "1"
+.常量 DWMFLIP3D_EXCLUDEABOVE, "2"
+.常量 DWMFLIP3D_LAST, "3"
+.常量 DWM_TNP_RECTDESTINATION, "1"
+.常量 DWM_TNP_RECTSOURCE, "2"
+.常量 DWM_TNP_OPACITY, "4"
+.常量 DWM_TNP_VISIBLE, "8"
+.常量 DWM_TNP_SOURCECLIENTAREAONLY, "16"
+.常量 DWM_SOURCE_FRAME_SAMPLING_POINT, "0"
+.常量 DWM_SOURCE_FRAME_SAMPLING_COVERAGE, "1"
+.常量 DWM_SOURCE_FRAME_SAMPLING_LAST, "2"
+.常量 DWM_EC_DISABLECOMPOSITION, "0"
+.常量 DWM_EC_ENABLECOMPOSITION, "1"
+.常量 单位_世界坐标, "0", , // 0 -- World coordinate (non-physical unit)
+.常量 单位_Display, "1", , // 1 -- Variable -- for PageTransform only
+.常量 单位_像素, "2", , // 2 -- Each unit is one device pixel.像素
+.常量 单位_点, "3", , // 3 -- Each unit is a printer's point 点
+.常量 单位_英寸, "4", , // 4 -- Each unit is 1 inch.英寸
+.常量 单位_Document, "5", , // 5 -- Each unit is 1/300 inch.
+.常量 单位_毫米, "6", , // 6 -- Each unit is 1 millimeter.毫米
+.常量 像素格式_Indexed, "65536", , Indexed 该像素数据包含颜色索引值，这意味着这些值是系统颜色表中颜色的索引，而不是单个颜色值。
+.常量 像素格式_GDI, "131072", , Gdi 像素数据包含 GDI 颜色。
+.常量 像素格式_Alpha, "262144", , Alpha 像素数据包含没有进行过自左乘的 alpha 值。
+.常量 像素格式_PAlpha, "524288", , PAlpha 像素格式包含自左乘的 alpha 值。
+.常量 像素格式_Extended, "1048576", , Extended 保留。
+.常量 像素格式_Canonical, "2097152", , Canonical 保留。
+.常量 像素格式_Undefined, "0", , Undefined 未定义像素格式。
+.常量 像素格式_DontCare, "0", , DontCare 没有指定像素格式。
+.常量 像素格式_1bppIndexed, "196865", , Format1bppIndexed 指定像素格式为每像素 1 位，并指定它使用索引颜色。因此颜色表中有两种颜色。
+.常量 像素格式_4bppIndexed, "197634", , Format4bppIndexed 指定格式为每像素 4 位而且已创建索引。
+.常量 像素格式_8bppIndexed, "198659", , Format8bppIndexed 指定格式为每像素 8 位而且已创建索引。因此颜色表中有 256 种颜色。
+.常量 像素格式_16bppGrayScale, "1052676", , Format16bppGrayScale 像素格式为每像素 16 位。该颜色信息指定 65536 种灰色调。
+.常量 像素格式_16bppRGB555, "135173", , Format16bppRgb555 指定格式为每像素 16 位；红色、绿色和蓝色分量各使用 5 位。剩余的 1 位未使用。
+.常量 像素格式_16bppRGB565, "135174", , Format16bppRgb565 指定格式为每像素 16 位；红色分量使用 5 位，绿色分量使用 6 位，蓝色分量使用 5 位。
+.常量 像素格式_16bppARGB1555, "397319", , Format16bppArgb1555 像素格式为每像素 16 位。该颜色信息指定 32
+.常量 像素格式_24bppRGB, "137224", , Format24bppRgb 指定格式为每像素 24 位；红色、绿色和蓝色分量各使用 8 位。
+.常量 像素格式_32bppRGB, "139273", , Format32bppRgb 指定格式为每像素 32 位；红色、绿色和蓝色分量各使用 8 位。剩余的 8 位未使用。
+.常量 像素格式_32bppARGB, "2498570", , Format32bppArgb 指定格式为每像素 32 位；alpha、红色、绿色和蓝色分量各使用 8 位。
+.常量 像素格式_32bppPARGB, "925707", , Format32bppPArgb 指定格式为每像素 32 位；alpha、红色、绿色和蓝色分量各使用 8 位。根据 alpha 分量，对红色、绿色和蓝色分量进行自左乘。
+.常量 像素格式_48bppRGB, "1060876", , Format48bppRgb 指定格式为每像素 48 位；红色、绿色和蓝色分量各使用 16 位。
+.常量 像素格式_64bppARGB, "3424269", , Format64bppArgb 指定格式为每像素 64 位；alpha、红色、绿色和蓝色分量各使用 16 位。
+.常量 像素格式_64bppPARGB, "1851406", , Format64bppPArgb 指定格式为每像素 64 位；alpha、红色、绿色和蓝色分量各使用 16 位。根据 alpha 分量，对红色、绿色和蓝色分量进行自左乘。
+.常量 像素格式_Max, "15", , Max 此枚举的最大值。
+.常量 常量_代码页标识符, "“037|IBM037|IBM EBCDIC美国 - 加拿大437|IBM437|OEM美国500|IBM500|IBM EBCDIC International708|ASMO-708|阿拉伯语（ASMO 708）709||阿拉伯语（ASMO-449 +，BCON V4）710||阿拉伯语 - 透明阿拉伯720|DOS-720|阿拉伯语（透明ASMO）; 阿拉伯语（DOS）737|ibm737|OEM希腊语（原名437G）; 希腊语（DOS）775|ibm775|OEM波罗的海; 波罗的海（DOS）850|ibm850|OEM多语种拉丁语1; 西欧（DOS）852|ibm852|OEM拉丁文2; 中欧（DOS）855|IBM855|OEM西里尔文（主要是俄罗斯）857|ibm857|OEM土耳其; 土耳其语（DOS）858|IBM00858|OEM多语言拉丁语1 +欧元符号860|IBM860|OEM葡萄牙语; 葡萄牙语（DOS）861|ibm861|OEM冰岛; 冰岛语（DOS）862|DOS-862|OEM希伯来语; 希伯来语（DOS）863|IBM863|OEM法国加拿大人; 法语加拿大人（DOS）864|IBM864|OEM阿拉伯语; 阿拉伯语（864）865|IBM865|OEM北欧; 北欧（DOS）866|CP866|OEM俄罗斯; 西里尔文（DOS）869|ibm869|OEM现代希腊语; 希腊语，现代（DOS）870|IBM870|IBM EBCDIC Multilingual / ROECE（Latin 2）; IBM EBCDIC多语种拉丁语2874|窗户-874|ANSI / OEM Thai（ISO 8859-11）; 泰语（Windows）875|cp875|IBM EBCDIC希腊现代版932|shift_jis访问|ANSI / OEM日语; 日语（Shift-JIS）936|GB2312|ANSI / OEM简体中文（中国，新加坡）; 简体中文（GB2312）949|ks_c_5601-1987|ANSI / OEM韩语（统一韩语代码）950|中文|ANSI / OEM繁体中文（台湾;中国香港特别行政区）; 繁体中文（Big5）1026|IBM1026|IBM EBCDIC土耳其语（拉丁语5）1047|IBM01047|IBM EBCDIC Latin 1 / Open System1140|IBM01140|IBM EBCDIC美国 - 加拿大（037 +欧元符号）; IBM EBCDIC（美国 - 加拿大 - 欧元）1141|IBM01141|IBM EBCDIC德国（20273 +欧元符号）; IBM EBCDIC（德国 - 欧元）1142|IBM01142|IBM EBCDIC丹麦 - 挪威（20277 +欧元符号）; IBM EBCDIC（丹麦 - 挪威 - 欧元）1143|IBM01143|IBM EBCDIC芬兰 - 瑞典（20278 +欧元符号）; IBM EBCDIC（芬兰 - 瑞典 - 欧元）1144|IBM01144|IBM EBCDIC意大利（20280 +欧元符号）; IBM EBCDIC（意大利 - 欧元）1145|IBM01145|IBM EBCDIC拉丁美洲 - 西班牙（20284 +欧元符号）; IBM EBCDIC（西班牙 - 欧元）1146|IBM01146|IBM EBCDIC英国（20285 +欧元符号）; IBM EBCDIC（英国 - 欧元）1147|IBM01147|IBM EBCDIC France（20297 +欧元符号）; IBM EBCDIC（法国 - 欧元）1148|IBM01148|IBM EBCDIC International（500 +欧元符号）; IBM EBCDIC（国际 - 欧元）1149|IBM01149|IBM EBCDIC Icelandic（20871 +欧元符号）; IBM EBCDIC（冰岛 - 欧元）1200|UTF-16|Unicode UTF-16，小端字节顺序（ISO 10646的BMP）; 仅适用于托管应用程序1201|unicodeFFFE|Unicode UTF-16，大端字节顺序; 仅适用于托管应用程序1250|窗户-1250|ANSI中欧; 中欧（Windows）1251|窗户-1251|ANSI西里尔文; 西里尔文（Windows）1252|窗口1252|ANSI Latin 1; 西欧（Windows）1253|窗户-1253|ANSI希腊语; 希腊语（Windows）1254|窗户-1254|ANSI土耳其语; 土耳其语（Windows）1255|窗户-1255|ANSI希伯来语; 希伯来语（Windows）1256|窗户-1256|ANSI阿拉伯语; 阿拉伯语（Windows）1257|窗户-1257|ANSI波罗的海; 波罗的海（Windows）1258|窗户-1258|ANSI / OEM越南语; 越南语（Windows）1361|裘哈|韩国人（Johab）10000|苹果|MAC罗马; 西欧（Mac）10001|X-MAC-日本|日语（Mac）10002|X-MAC-chinesetrad|MAC繁体中文（Big5）; 繁体中文（Mac）10003|X-MAC-韩国|韩语（Mac）10004|X-MAC-阿拉伯语|阿拉伯语（Mac）10005|X-MAC-希伯来语|希伯来语（Mac）10006|X-MAC-希腊|希腊语（Mac）10007|X-MAC-西里尔|西里尔文（Mac）10008|X-MAC-chinesesimp|MAC简体中文（GB 2312）; 简体中文（Mac）10010|X-MAC-罗马尼亚|罗马尼亚语（Mac）10017|X-MAC-乌克兰|乌克兰语（Mac）10021|X-MAC泰|泰语（Mac）10029|X-MAC-CE|MAC拉丁文2; 中欧（Mac）10079|X-MAC-冰岛|冰岛语（Mac）10081|X-MAC-土耳其|土耳其语（Mac）10082|X-MAC-克罗地亚|克罗地亚语（Mac）12000|UTF-32|Unicode UTF-32，小端字节顺序; 仅适用于托管应用程序12001|UTF-32BE|Unicode UTF-32，大端字节顺序; 仅适用于托管应用程序20000|X-Chinese_CNS|CNS台湾; 繁体中文（CNS）20001|X-cp20001|TCA台湾20002|x_Chinese，倚天|台湾; 繁体中文（Eten）20003|X-cp20003|IBM5550台湾20004|X-cp20004|TeleText台湾20005|X-cp20005|王台湾20105|X-IA5|IA5（IRV国际字母第5号，7位）; 西欧（IA5）20106|X-IA5德|IA5德语（7位）20107|X-IA5瑞典|IA5瑞典语（7位）20108|X-IA5挪威|IA5挪威语（7位）20127|US-ASCII|US-ASCII（7位）20261|X-cp20261|T.6120269|X-cp20269|ISO 6937非间距重音20273|IBM273|IBM EBCDIC德国20277|IBM277|IBM EBCDIC丹麦 - 挪威20278|IBM278|IBM EBCDIC芬兰 - 瑞典20280|IBM280|IBM EBCDIC意大利20284|IBM284|IBM EBCDIC拉丁美洲 - 西班牙20285|IBM285|IBM EBCDIC英国20290|IBM290|IBM EBCDIC日语片假名扩展20297|IBM297|IBM EBCDIC France20420|IBM420|IBM EBCDIC阿拉伯语20423|IBM423|IBM EBCDIC希腊语20424|IBM424|IBM EBCDIC希伯来语20833|X-EBCDIC-KoreanExtended|IBM EBCDIC Korean Extended20838|IBM泰|IBM EBCDIC Thai20866|KOI8-R|俄语（KOI8-R）; 西里尔文（KOI8-R）20871|IBM871|IBM EBCDIC冰岛语20880|IBM880|IBM EBCDIC西里尔语俄语20905|IBM905|IBM EBCDIC土耳其语20924|IBM00924|IBM EBCDIC Latin 1 /开放系统（1047 +欧元符号）20932|EUC-JP|日语（JIS 0208-1990和0212-1990）20936|X-cp20936|简体中文（GB2312）; 简体中文（GB2312-80）20949|X-cp20949|韩国万松21025|CP1025|IBM EBCDIC Cyrillic Serbian-Bulgarian21027||（废弃）21866|KOI8-U|乌克兰语（KOI8-U）; 西里尔文（KOI8-U）28591|ISO-8859-1|ISO 8859-1拉丁文1; 西欧（ISO）28592|ISO-8859-2|ISO 8859-2中欧; 中欧（ISO）28593|ISO-8859-3|ISO 8859-3拉丁文328594|ISO-8859-4|ISO 8859-4波罗的海28595|ISO-8859-5|ISO 8859-5西里尔文28596|ISO-8859-6|ISO 8859-6阿拉伯文28597|ISO-8859-7|ISO 8859-7希腊语28598|ISO-8859-8|ISO 8859-8希伯来语; 希伯来语（ISO-Visual）28599|ISO-8859-9|ISO 8859-9土耳其语28603|ISO-8859-13|ISO 8859-13爱沙尼亚语28605|ISO-8859-15|ISO 8859-15拉丁文929001|X-欧罗巴|欧罗巴338598|ISO-8859-8-I|ISO 8859-8希伯来语; 希伯来语（ISO-Logical）50220|ISO-2022-JP|ISO 2022日语，没有半宽片假名; 日语（JIS）50221|csISO2022JP|带有半宽片假名的ISO 2022日语; 日语（JIS-Allow 1字节假名）50222|ISO-2022-JP|ISO 2022日本JIS X 0201-1989; 日语（JIS-Allow 1字节假名 - SO / SI）50225|ISO-2022-KR|ISO 2022韩语50227|X-cp50227|ISO 2022简体中文; 简体中文（ISO 2022）50229||ISO 2022繁体中文50930||EBCDIC日语（片假名）扩展50931||EBCDIC美国 - 加拿大和日本50933||EBCDIC韩语扩展和韩语50935||EBCDIC简体中文扩展和简体中文50936||EBCDIC简体中文50937||EBCDIC美国 - 加拿大和繁体中文50939||EBCDIC日语（拉丁语）扩展和日语51932|EUC-JP|EUC日语51936|EUC-CN|EUC简体中文; 简体中文（EUC）51949|EUC-KR|EUC韩语51950||EUC繁体中文52936|HZ-GB-2312|HZ-GB2312简体中文; 简体中文（HZ）54936|GB18030|Windows XP及更高版本： GB18030简体中文（4字节）; 简体中文（GB18030）57002|X-ISCII-DE|ISCII梵文57003|的x ISCII待|ISCII孟加拉语57004|的x ISCII-TA|ISCII泰米尔语57005|的x ISCII-TE|ISCII泰卢固语57006|的x ISCII-作为|ISCII阿萨姆57007|的x ISCII-或|ISCII Odia57008|X-ISCII-KA|ISCII卡纳达语57009|X-ISCII-MA|ISCII马拉雅拉姆语57010|X-ISCII区|ISCII古吉拉特语57011|X-ISCII-PA|ISCII旁遮普语65000|UTF-7|Unicode（UTF-7）65001|UTF-8|Unicode（UTF-8）”"
+.常量 SIF_DISABLENOSCROLL, "8"
+.常量 SIF_PAGE, "2"
+.常量 SIF_POS, "4"
+.常量 SIF_TRACKPOS, "16"
+.常量 SIF_RANGE, "1"
+.常量 SIF_ALL, "23"
+.常量 OBJID_VSCROLL, "-5"
+.常量 LVM_APPROXIMATEVIEWRECT, "4160", , 超列表_计算显示一个项目所需的宽度和高度
+.常量 LVM_ARRANGE, "4118", , 超列表_在图象显示时自动排列
+.常量 LVM_CREATEDRAGIMAGE, "4129", , 超列表_为指定的项目产生一个拖曳图像列表
+.常量 LVM_DELETEALLITEMS, "4105", , 超列表_清空
+.常量 LVM_DELETECOLUMN, "4124", , 超列表_删除列
+.常量 LVM_DELETEITEM, "4104", , 超列表_删除行
+.常量 LVM_EDITLABELW, "4214", , 超列表_编辑指定位置
+.常量 LVM_ENABLEGROUPVIEW, "4253", , 超列表_显示或禁止项目
+.常量 LVM_ENSUREVISIBLE, "4115", , 超列表_保证显示
+.常量 LVM_FINDITEMW, "4179", , 超列表_查找
+.常量 LVM_GETBKCOLOR, "4096", , 取背景颜色
+.常量 LVM_GETBKIMAGEW, "4235", , 取背景图片
+.常量 LVM_GETCALLBACKMASK, "4106", , 取回调掩码
+.常量 LVM_GETCOLUMNW, "4191", , 超列表_取列信息
+.常量 LVM_GETCOLUMNORDERARRAY, "4155", , 超列表_取对齐方式
+.常量 LVM_GETCOLUMNWIDTH, "4125", , 超列表_取列宽
+.常量 LVM_GETCOUNTPERPAGE, "4136", , 取可视的项目数量
+.常量 LVM_GETEDITCONTROL, "4120", , 当列表框在进行编辑时，返回这引编辑框的句柄
+.常量 LVM_GETEXTENDEDLISTVIEWSTYLE, "4151", , 取当前扩展风格
+.常量 LVM_GETGROUPINFO, "4245", , 取块的信息
+.常量 LVM_GETGROUPCOUNT, "4248", , 获取组数。
+.常量 LVM_GETGROUPINFOBYINDEX, "4249", , 获取有关指定组的信息。
+.常量 LVM_GETGROUPMETRICS, "4252", , 取块的规格
+.常量 LVM_GETHEADER, "4127", , 超列表_取表头句柄
+.常量 LVM_GETHOTCURSOR, "4159", , 如果激活了热点跟随踪，当鼠标在某个项目上时，返回其句柄
+.常量 LVM_GETHOTITEM, "4157", , 取鼠标指针指向项目的索引
+.常量 LVM_GETHOVERTIME, "4168", , 检索鼠标光标在项目被选中之前必须悬停在项目上的时间量。
+.常量 LVM_GETIMAGELIST, "4098", , 取图片组
+.常量 LVM_GETINSERTMARK, "4263", , 取插入掩码
+.常量 LVM_GETINSERTMARKCOLOR, "4267", , 取插入掩码颜色
+.常量 LVM_GETINSERTMARKRECT, "4265", , 取插入掩码的矩形范围
+.常量 LVM_GETITEMW, "4171", , 超列表_取项目
+.常量 LVM_GETITEMCOUNT, "4100", , 超列表_取表项总数
+.常量 LVM_GETITEMPOSITION, "4112", , 超列表_取图标位置
+.常量 LVM_GETITEMRECT, "4110", , 取指定项目的矩形范围
+.常量 LVM_GETITEMSPACING, "4147", , 取项目之间的间隔距离
+.常量 LVM_GETITEMSTATE, "4140", , 超列表_取项目状态
+.常量 LVM_GETITEMTEXTW, "4211", , 取项目正文
+.常量 LVM_GETNEXTITEM, "4108", , 取下一项目
+.常量 LVM_GETNUMBEROFWORKAREAS, "4169", , 取当前列表框工作区中的项目数量
+.常量 LVM_GETOUTLINECOLOR, "4272", , 取列表框边框颜色
+.常量 LVM_GETSELECTEDCOLUMN, "4270", , 取选择列
+.常量 LVM_GETSELECTEDCOUNT, "4146", , 超列表_取被选择项目数
+.常量 LVM_GETSELECTIONMARK, "4162", , 超列表_取现行选中项
+.常量 LVM_GETSTRINGWIDTHA, "4113", , 取显示一个文本所需要的列宽度
+.常量 LVM_GETSUBITEMRECT, "4152", , 取子项目的矩形范围
+.常量 LVM_GETTEXTBKCOLOR, "4133", , 取正文背景色
+.常量 LVM_GETTEXTCOLOR, "4131", , 取正文颜色
+.常量 LVM_GETTOOLTIPS, "4174", , 取工具提示
+.常量 LVM_GETTOPINDEX, "4135", , 取在可视范围中第一个项目的索引
+.常量 LVM_GETVIEW, "4239", , 取超级列表框当前的类型
+.常量 LVM_GETVIEWRECT, "4130", , 取当前所有项目所占用的矩形范围
+.常量 LVM_GETWORKAREAS, "4166", , 取工作区的矩形范围
+.常量 LVM_INSERTCOLUMNW, "4193", , 超列框_插入列
+.常量 LVM_INSERTGROUP, "4241", , 插入块
+.常量 LVM_INSERTGROUPSORTED, "4255", , 插入块种类
+.常量 LVM_INSERTITEMW, "4173", , 超列框_插入项目
+.常量 LVM_ISGROUPVIEWENABLED, "4271", , 块检视是否激活
+.常量 LVM_MOVEITEMTOGROUP, "4250", , 移动项目到块
+.常量 LVM_REDRAWITEMS, "4117", , 重画项目
+.常量 LVM_REMOVEALLGROUPS, "4256", , 移动全部块
+.常量 LVM_SCROLL, "4116", , 移动滚动条
+.常量 LVM_SETBKCOLOR, "4097", , 设置背景色
+.常量 LVM_SETBKIMAGEW, "4234", , 设置背景图片
+.常量 LVM_SETCALLBACKMASK, "4107", , 设置回调掩码
+.常量 LVM_SETCOLUMNW, "4192", , 超列表_置列信息
+.常量 LVM_SETCOLUMNORDERARRAY, "4154", , 设置列显示的排序
+.常量 LVM_SETCOLUMNWIDTH, "4126", , 设置列宽
+.常量 LVM_SETEXTENDEDLISTVIEWSTYLE, "4150", , 设置扩展风格
+.常量 LVM_SETGROUPINFO, "4243", , 设置块信息
+.常量 LVM_SETHOTITEM, "4156", , 置鼠标指针指向项目的索引？？？
+.常量 LVM_SETICONSPACING, "4149", , 置图标间隔
+.常量 LVM_SETIMAGELIST, "4099", , 置图片组
+.常量 LVM_SETINFOTIP, "4269", , 置信息提示
+.常量 LVM_SETINSERTMARK, "4262", , 置插入掩码
+.常量 LVM_SETINSERTMARKCOLOR, "4266", , 置插入掩码颜色
+.常量 LVM_SETITEMW, "4172", , 超列表_置项目
+.常量 LVM_SETITEMCOUNT, "4143", , 虚拟一个列表项目总数
+.常量 LVM_SETITEMPOSITION, "4111", , 超列表_置表项坐标
+.常量 LVM_SETITEMSTATE, "4139", , 超列表_置项目状态
+.常量 LVM_SETITEMTEXTA, "4142", , 置项目正文
+.常量 LVM_SETOUTLINECOLOR, "4273", , 置列表框边框颜色
+.常量 LVM_SETSELECTEDCOLUMN, "4236", , 置现行选择列
+.常量 LVM_SETSELECTIONMARK, "4163", , 置选择标志
+.常量 LVM_SETTEXTBKCOLOR, "4134", , 置正文背景色
+.常量 LVM_SETTEXTCOLOR, "4132", , 置文本颜色
+.常量 LVM_SETTOOLTIPS, "4170", , 置工具条
+.常量 LVM_SETVIEW, "4238", , 置列表框类型
+.常量 LVM_SETWORKAREAS, "4161", , 置工作区
+.常量 LVM_SORTGROUPS, "4254", , 群（块）分类
+.常量 LVM_SORTITEMS, "4144", , 排序分类
+.常量 LVM_SORTITEMSEX, "4177", , 项目分类扩展
+.常量 LVM_UPDATE, "4138", , 刷新列表框
+.常量 LVM_SUBITEMHITTEST, "4153", , 取坐标表项索引
+.常量 LVM_CANCELEDITLABEL, "4275", , 取消项目文本编辑操作。
+.常量 LVM_INSERTMARKHITTEST, "4264", , 检索最接近指定点的插入点。
+.常量 LVM_SETITEMPOSITION32, "4145", , 将项目移动到列表视图控件中的指定位置（必须在图标或小图标视图中）。此消息与LVM_SETITEMPOSITION消息的不同之处在于它使用 32 位坐标。
+.常量 窗口风格_单边框, "8388608", , WS_BORDER
+.常量 窗口风格_标题栏, "12582912", , WS_CAPTION 有标题和边框（包括WS_BODER风格）。
+.常量 窗口风格_子窗口, "1073741824", , WS_CHILD 不能与“窗口风格_弹出式窗口”合用。
+.常量 窗口风格_排除子窗口重画, "33554432", , WS_CLIPCHILDREN 在创建父窗口时使用这个风格。
+.常量 窗口风格_排除重叠窗口重画, "67108864", , WS_CLIPSIBLINGS 使窗口排除子窗口之间的相对区域。
+.常量 窗口风格_禁止, "134217728", , WS_DISABLED
+.常量 窗口风格_对话框边框, "4194304", , WS_DLGFRAME
+.常量 窗口风格_组样式, "131072", , WS_GROUP
+.常量 窗口风格_水平滚动条, "1048576", , WS_HSCROLL
+.常量 窗口风格_最大化状态, "16777216", , WS_MAXIMIZE
+.常量 窗口风格_最大化按钮, "65536", , WS_MAXIMIZEBOX
+.常量 窗口风格_最小化状态, "536870912", , WS_MINIMIZE
+.常量 窗口风格_最小化按钮, "131072", , WS_MINIMIZEBOX
+.常量 窗口风格_默认, "13565952", , WS_OVERLAPPEDWINDOW具有层叠，标题框，系统菜单，可调边框，系统按钮。
+.常量 窗口风格_弹出式窗口, "2147483648", , WS_POPUP 不能与“窗口风格_子窗口”合用。
+.常量 窗口风格_可调边框, "262144", , WS_SIZEBOX
+.常量 窗口风格_系统菜单, "524288", , WS_SYSMENU 必须同时设定“窗口风格_标题栏”风格。
+.常量 窗口风格_可停留焦点, "65536", , WS_TABSTOP
+.常量 窗口风格_层叠窗口, "13565952", , WS_TILEDWINDOW 创建一个具有WS_OVERLAPPED，WS_CAPTION，WS_SYSMENU MS_THICKFRAME
+.常量 窗口风格_可视, "268435456", , WS_VISIBLE
+.常量 窗口风格_垂直滚动条, "2097152", , WS_VSCROLL
+.常量 窗口风格_无边框, "2147483648", , WS_POPUP 不能与“窗口风格_子窗口”合用。
+.常量 窗口扩展_阴影边缘, "512", , WS_EX_CLIENTEDGE
+.常量 窗口扩展_双层边框, "1", , WS_EX_DLGMODALFRAME
+.常量 窗口扩展_凸起阴影, "768", , WS_EX_OVERLAPPEDWINDOW
+.常量 窗口扩展_三维边缘, "131072", , WS_EX_STATICEDGE
+.常量 窗口扩展_凸起边框, "256", , WS_EX_WINDOWEDGE
+.常量 窗口扩展_容器窗口, "65536", , WS_EX_CONTROLPARENT 允许用户使用Tab键在窗口的子窗口间搜索
+.常量 窗口扩展_分层, "524288", , WS_EX_LAYERED 透明窗口或分层，该样式可使用混合特效
+.常量 窗口扩展_总在最前, "8", , WS_EX_TOPMOST
+.常量 窗口扩展_工具条窗口, "128", , WS_EX_TOOLWINDOW
+.常量 窗口扩展_可接受拖放, "16", , WS_EX_ACCEPTFILES 可接受拖放文件
+.常量 窗口扩展_在任务栏显示, "262144", , WS_EX_APPWINDOW 当窗口可见时，将一个顶层窗口放置到任务条上
+.常量 窗口扩展_帮助按钮, "1024", , WS_EX_CONTEXTHELP。在窗口的标题条包含一个问号标志，
+.常量 窗口扩展_垂直滚动条居左, "16384", , WS_EX_LEFTSCROLLBAR 垂直滚动条在窗口左边界
+.常量 窗口扩展_MDI子窗口, "64", , WS_EX_MDICHILD。MDI子窗口
+.常量 窗口扩展_右对齐, "4096", , WS_EX_RIGHT
+.常量 窗口扩展_文本从右到左, "8192", , WS_EX_RTLREADING 窗口文本从右到左显示
+.常量 窗口扩展_透明, "32", , WS_EX_TRANSPARENT。透明样式，在同属窗口已重画时，该窗口才可以重画
+.常量 CB_ADDSTRING, "323", , 组合框_添加项目
+.常量 CB_DELETESTRING, "324", , 组合框_删除项目
+.常量 CB_ERR, "-1", , 组合框_错误
+.常量 CB_FINDSTRING, "332", , 组合框_前缀查找
+.常量 CB_FINDSTRINGEXACT, "344", , 组合框_精确查找
+.常量 CB_GETCOUNT, "326", , 组合框_取项目总数
+.常量 CB_GETCURSEL, "327", , 组合框_取现行选中项
+.常量 CB_GETDROPPEDCONTROLRECT, "338", , 组合框_列表框的屏幕位置
+.常量 CB_GETDROPPEDSTATE, "343", , 组合框_列表框是否可见
+.常量 CB_GETDROPPEDWIDTH, "351", , 组合框_列表框的宽度。
+.常量 CB_GETEDITSEL, "320", , 组合框_编辑控件中选定内容的范围
+.常量 CB_GETEXTENDEDUI, "342", , 组合框_是否存在扩展界面
+.常量 CB_GETITEMDATA, "336", , 组合框_取项目数值
+.常量 CB_GETITEMHEIGHT, "340", , 组合框_取列表框项目高度
+.常量 CB_GETLBTEXT, "328", , 组合框_取项目文本
+.常量 CB_GETLBTEXTLEN, "329", , 组合框_取项目文本长度
+.常量 CB_GETTOPINDEX, "347", , 组合框_取组合框中列表框中第一个可见项的索引
+.常量 CB_INSERTSTRING, "330", , 组合框_指定位置插入字符串。
+.常量 CB_LIMITTEXT, "321", , 组合框_限制编辑控件文本的最大长度
+.常量 CB_RESETCONTENT, "331", , 组合框_清空
+.常量 CB_SELECTSTRING, "333", , 组合框_设定与指定字符串相匹配的列表项为选中项。
+.常量 CB_SETCURSEL, "334", , 组合框_置现行选中项
+.常量 CB_SETDROPPEDWIDTH, "352", , 组合框_列表框最大允许宽度
+.常量 CB_SETEDITSEL, "322", , 组合框_编辑控件中文本选定内容范围
+.常量 CB_SETEXTENDEDUI, "341", , 组合框_是使用默认界面或扩展界面
+.常量 CB_SETHORIZONTALEXTENT, "350", , 组合框_置列表宽度
+.常量 CB_SETITEMDATA, "337", , 组合框_置项目数值
+.常量 CB_SETITEMHEIGHT, "339", , 组合框_列表项显示高度
+.常量 CB_SETTOPINDEX, "348", , 组合框_置为列表框的第一个可见项
+.常量 CB_SHOWDROPDOWN, "335", , 组合框_显示列表。
+.常量 CB_GETCOMBOBOXINFO, "356"
+.常量 FILE_ATTRIBUTE_NORMAL, "128", , 没有设置其他属性的文件。此属性仅在单独使用时才有效。
+.常量 CSIDL_DESKTOP, "0", , 表示Windows桌面的虚拟文件夹，名称空间的根。
+.常量 CSIDL_INTERNET, "1", , Internet Explorer的虚拟文件夹。
+.常量 CSIDL_PROGRAMS, "2", , 包含用户程序组的文件系统目录（本身就是文件系统目录）。典型的路径是C:\Documents and Settings\用户名\Start Menu\Programs。
+.常量 CSIDL_CONTROLS, "3", , 包含控制面板应用程序图标的虚拟文件夹。
+.常量 CSIDL_PRINTERS, "4", , 包含已安装打印机的虚拟文件夹。
+.常量 CSIDL_PERSONAL, "5", , 代表“我的文档”桌面项目的虚拟文件夹。
+.常量 CSIDL_FAVORITES, "6", , 文件系统目录，用作用户喜欢的项目的公共存储库。典型路径是C:\Documents and Settings\用户名\Favorites。
+.常量 CSIDL_STARTUP, "7", , 与用户的启动程序组相对应的文件系统目录。每当相关联的用户登录时，系统都会启动这些程序。典型路径是C:\Documents and Settings\用户名\Start Menu\Programs\Startup。
+.常量 CSIDL_RECENT, "8", , 文件系统目录，其中包含用户最近使用的文档的快捷方式。典型路径是C:\Documents and Settings\用户名\My Latest Documents。要在此文件夹中创建快捷方式，请使用SHAddToRecentDocs。除了创建快捷方式外，此功能还可以更新命令行管理程序的近期文档列表，并将快捷方式添加到“开始”菜单的“我的近期文档”子菜单中。
+.常量 CSIDL_SENDTO, "9", , 包含“发送到”菜单项的文件系统目录。典型路径是C:\Documents and Settings\用户名\SendTo。
+.常量 CSIDL_BITBUCKET, "10", , 包含用户回收站中对象的虚拟文件夹。
+.常量 CSIDL_STARTMENU, "11", , 包含“开始”菜单项的文件系统目录。典型路径是C:\Documents and Settings\用户名\开始菜单。
+.常量 CSIDL_MYMUSIC, "13", , 用作音乐文件的公共存储库的文件系统目录。典型路径是C:\Documents and Settings\User\My Documents\My Music。
+.常量 CSIDL_DESKTOPDIRECTORY, "16", , 用于在桌面上物理存储文件对象的文件系统目录（不要与桌面文件夹本身混淆）。典型路径是C:\Documents and Settings\用户名\Desktop。
+.常量 CSIDL_DRIVES, "17", , 代表“我的电脑”的虚拟文件夹，其中包含本地计算机上的所有内容：存储设备，打印机和控制面板。该文件夹还可以包含映射的网络驱动器。
+.常量 CSIDL_NETWORK, "18", , 表示网络邻居的虚拟文件夹，网络邻居是网络名称空间层次结构的根。
+.常量 CSIDL_NETHOOD, "19", , 一个文件系统目录，其中包含“网上邻居”虚拟文件夹中可能存在的链接对象。它与CSIDL_NETWORK不同，后者表示网络名称空间的根。典型路径是C:\Documents and Settings\用户名\NetHood。
+.常量 CSIDL_FONTS, "20", , 包含字体的虚拟文件夹。典型的路径是C:\Windows\Fonts。
+.常量 CSIDL_TEMPLATES, "21", , 用作文档模板的公共存储库的文件系统目录。典型的路径是C:\Documents and Settings\用户名\Templates。
+.常量 CSIDL_COMMON_STARTMENU, "22", , 文件系统目录，其中包含出现在“开始”菜单上的所有用户的程序和文件夹。典型的路径是C:\Documents and Settings\All Users\Start Menu。
+.常量 CSIDL_COMMON_PROGRAMS, "23", , 文件系统目录，其中包含出现在“开始”菜单上的所有用户的通用程序组的目录。典型的路径是C:\Documents and Settings\All Users\Start Menu\Programs。
+.常量 CSIDL_COMMON_STARTUP, "24", , 文件系统目录，其中包含出现在所有用户的“启动”文件夹中的程序。典型的路径是C:\Documents and Settings\All Users\Start Menu\Programs\Startup。
+.常量 CSIDL_COMMON_DESKTOPDIRECTORY, "25", , 文件系统目录，其中包含为所有用户显示在桌面上的文件和文件夹。典型路径是C:\Documents and Settings\All Users\Desktop。
+.常量 CSIDL_APPDATA, "26", , 文件系统目录，用作特定于应用程序的数据的公共存储库。典型路径是C:\Documents and Settings\用户名\Application Data。
+.常量 CSIDL_PRINTHOOD, "27", , 包含可以在“打印机”虚拟文件夹中存在的链接对象的文件系统目录。典型的路径是C:\Documents and Settings\用户名\PrintHood。
+.常量 CSIDL_LOCAL_APPDATA, "28", , 用户的配置文件文件夹。典型的路径是C:\Users\username。应用程序不应在此级别创建文件或文件夹；他们应该将其数据放在CSIDL_APPDATA或CSIDL_LOCAL_APPDATA所引用的位置下。但是，如果要创建新的“已知文件夹”，则由CSIDL_PROFILE引用的配置文件根目录是合适的。
+.常量 CSIDL_ALTSTARTUP, "29", , 与用户的非本地化启动程序组相对应的文件系统目录。Windows Vista可以识别此值以实现向后兼容，但是文件夹本身不再存在。
+.常量 CSIDL_COMMON_ALTSTARTUP, "30", , 与所有用户的非本地化启动程序组相对应的文件系统目录。Windows Vista可以识别此值以实现向后兼容，但是文件夹本身不再存在。
+.常量 CSIDL_COMMON_FAVORITES, "31", , 文件系统目录，用作所有用户共有的收藏夹项的通用存储库。
+.常量 CSIDL_INTERNET_CACHE, "32", , 用作Internet临时文件的公共存储库的文件系统目录。典型路径是C:\Documents and Settings\用户名\Local Settings\Temporary Internet Files。
+.常量 CSIDL_COOKIES, "33", , 用作Internet cookie通用存储库的文件系统目录。典型路径是C:\Documents and Settings\用户名\Cookies。
+.常量 CSIDL_HISTORY, "34", , 用作Internet历史记录项目的公共存储库的文件系统目录。
+.常量 CSIDL_COMMON_APPDATA, "35", , 包含所有用户的应用程序数据的文件系统目录。典型的路径是C:\Documents and Settings\All Users\Application Data。该文件夹用于非特定于用户的应用程序数据。例如，应用程序可以在CSIDL_COMMON_APPDATA文件夹中存储拼写检查字典，剪贴画数据库或日志文件。此信息将不会漫游，并且使用计算机的任何人都可以使用。
+.常量 CSIDL_WINDOWS, "36", , Windows目录或SYSROOT。这对应于％windir％或％SYSTEMROOT％环境变量。典型路径是C:\Windows。
+.常量 CSIDL_SYSTEM, "37", , Windows系统文件夹。典型路径是C:\Windows\System32。
+.常量 CSIDL_PROGRAM_FILES, "38", , 程序文件文件夹。典型的路径是C:\Program Files。
+.常量 CSIDL_MYPICTURES, "39", , 用作映像文件的公共存储库的文件系统目录。典型路径是C:\Documents and Settings\用户名\My Documents\My Pictures。
+.常量 CSIDL_PROFILE, "40", , 用户的配置文件文件夹。典型的路径是C:\Users\username。应用程序不应在此级别创建文件或文件夹；他们应该将其数据放在CSIDL_APPDATA或CSIDL_LOCAL_APPDATA所引用的位置下。但是，如果要创建新的“已知文件夹”，则由CSIDL_PROFILE引用的配置文件根目录是合适的。
+.常量 CSIDL_SYSTEMX86, "41", , x86 system directory on RISC
+.常量 CSIDL_PROGRAM_FILESX86, "42", , x86 C:\Program Files on RISC
+.常量 CSIDL_PROGRAM_FILES_COMMON, "43", , 跨应用程序共享的组件的文件夹。典型路径是C:\Program Files\Common。仅对Windows XP有效。
+.常量 CSIDL_PROGRAM_FILES_COMMONX86, "44", , x86 Program Files\Common on RISC
+.常量 CSIDL_COMMON_TEMPLATES, "45", , 包含可供所有用户使用的模板的文件系统目录。典型的路径是C:\Documents and Settings\All Users\Templates。
+.常量 CSIDL_COMMON_DOCUMENTS, "46", , 文件系统目录，其中包含所有用户通用的文档。典型的路径是C:\Documents and Settings\All Users\Documents。
+.常量 CSIDL_COMMON_ADMINTOOLS, "47", , 包含计算机所有用户的管理工具的文件系统目录。All Users\Start Menu\Programs\Administrative Tools
+.常量 CSIDL_ADMINTOOLS, "48", , 用于存储单个用户的管理工具的文件系统目录。MMC将自定义的控制台保存到此目录，并且将与用户漫游。<user name>\Start Menu\Programs\Administrative Tools
+.常量 CSIDL_CONNECTIONS, "49", , 表示网络连接的虚拟文件夹，其中包含网络和拨号连接。
+.常量 MOD_ALT, "1", , 功能键_Alt
+.常量 MOD_CONTROL, "2", , 功能键_Ctrl
+.常量 MOD_SHIFT, "4", , 功能键_Shift
+.常量 鼠标指针_标准型, "32512", , 标准的箭头IDC_ARROW
+.常量 鼠标指针_文本编辑型, "32513", , 文本编辑IDC_IBEAM
+.常量 鼠标指针_沙漏型, "32514", , 沙漏IDC_WAIT
+.常量 鼠标指针_十字型, "32515", , 十字光标IDC_CROSS
+.常量 鼠标指针_UPARROW, "32516", , 向上垂直箭头IDC_UPARROW
+.常量 鼠标指针_SIZENWSE, "32642", , 双箭头指向西北和东南IDC_SIZENWSE
+.常量 鼠标指针_SIZENESW, "32643", , 双箭头指向东北和西南IDC_SIZENESW
+.常量 鼠标指针_SIZEWE, "32644", , 双箭头指向西和东IDC_SIZEWE
+.常量 鼠标指针_SIZENS, "32645", , 双箭头指向南北IDC_SIZENS
+.常量 鼠标指针_四向箭头, "32646", , 四向箭头指向东、西、南、北IDC_SIZEALL
+.常量 鼠标指针_禁止型, "32648", , 禁止圈IDC_NO
+.常量 鼠标指针_手型, "32649", , 手型IDC_HAND
+.常量 鼠标指针_APPSTARTING, "32650", , 标准的箭头和小沙漏IDC_APPSTARTING
+.常量 鼠标指针_帮助, "32651", , 箭头和问号IDC_HELP
+.常量 HOOK状态_成功, "0"
+.常量 HOOK状态_修改内存保护失败, "1"
+.常量 HOOK状态_已HOOK, "2", , 如果需要继续HOOK请先卸载
+.常量 HOOK状态_欲HOOK地址为0, "3", , 欲HOOK地址不能为0
+.常量 HOOK状态_读取内存失败, "4", , 请检查打开进程权限
+.常量 HOOK状态_写入内存失败, "5", , 请检查打开进程权限
+.常量 HOOK状态_申请远程内存失败, "6"
+.常量 CF_TEXT, "1", , 文字格式。每行以回车/换行（CR-LF）组合结束。空字符表示数据的结尾。对ANSI文本使用此格式。
+.常量 CF_BITMAP, "2", , 位图的句柄（HBITMAP）
+.常量 CF_METAFILEPICT, "3", , 处理由METAFILEPICT结构定义的图元文件图片格式。通过动态数据交换（DDE）传递CF_METAFILEPICT句柄时，负责删除【HMEM】的应用程序也应该释放CF_METAFILEPICT句柄引用的元文件。
+.常量 CF_SYLK, "4", , Microsoft符号链接（SYLK）格式。
+.常量 CF_DIF, "5", , 软件艺术数据交换格式。
+.常量 CF_TIFF, "6", , 标记图像文件格式。
+.常量 CF_OEMTEXT, "7", , 文字格式包含OEM字符集中的字符。每行以回车/换行（CR-LF）组合结束。空字符表示数据的结尾。
+.常量 CF_DIB, "8", , 一个包含BITMAPINFO结构的内存对象，后跟位图位。
+.常量 CF_PALETTE, "9", , 处理调色板。每当应用程序将数据放置在依赖于或假定调色板的剪贴板中时，它也应将调色板放在剪贴板上。如果剪贴板包含CF_PALETTE（逻辑调色板）格式的数据，则应用程序应使用SelectPalette和RealizePalette函数来实现（比较）剪贴板中与该逻辑调色板的任何其他数据。当显示剪贴板数据时，Windows剪贴板始终将剪贴板上的任何对象用作CF_PALETTE格式的当前调色板。
+.常量 CF_PENDATA, "10", , 用于Pen Computing的Microsoft Windows笔的扩展数据。
+.常量 CF_RIFF, "11", , 表示音频数据比CF_WAVE标准波形格式更复杂。
+.常量 CF_WAVE, "12", , 以诸如11 kHz或22 kHz脉冲编码调制（PCM）的标准波形格式之一表示音频数据。
+.常量 CF_UNICODETEXT, "13", , 仅Windows NT： Unicode文字格式。每行以回车/换行（CR-LF）组合结束。空字符表示数据的结尾。
+.常量 CF_ENHMETAFILE, "14", , 增强图元文件的句柄（HENHMETAFILE）。
+.常量 CF_HDROP, "15", , 类型为HDROP的句柄，用于标识文件列表。应用程序可以通过将句柄传递给DragQueryFile函数来检索有关文件的信息。
+.常量 MAX_PATH, "260", , 编译器所支持的最长全路径名的长度
+.常量 LOCALE_INVARIANT, "127", , 用于固定区域设置的语言。
+.常量 IfOperStatusUp, "1", , 接口已启动，并且可以传递数据包。
+.常量 IfOperStatusDown, "2", , 接口处于关闭状态，并且无法传递数据包。该 IfOperStatusDown状态有两个含义，这取决于的值 AdminStatus构件。如果AdminStatus未设置为 NET_IF_ADMIN_STATUS_DOWN且ifOperStatus设置为 IfOperStatusDown，则假定接口上存在故障条件。如果 AdminStatus设置为IfOperStatusDown，则 ifOperStatus通常也将设置为 IfOperStatusDown或IfOperStatusNotPresent 并且接口上不一定存在故障。
+.常量 IfOperStatusTesting, "3", , 接口处于测试模式。
+.常量 IfOperStatusUnknown, "4", , 接口的运行状态未知。
+.常量 IfOperStatusDormant, "5", , 该接口实际上不是在传递数据包的条件下（它不处于运行状态），而是处于挂起状态，正在等待某些外部事件。对于按需接口，此新状态标识接口正在等待事件以将其置于IfOperStatusUp状态的情况。
+.常量 IfOperStatusNotPresent, "6", , 对IfOperStatusDown状态的一种改进，它指示相关的接口已关闭，特别是因为受管系统中不存在某些组件（通常是硬件组件）。
+.常量 IfOperStatusLowerLayerDown, "7", , 对IfOperStatusDown状态的改进。此新状态指示此接口在一个或多个其他接口之上运行，并且该接口已关闭，特别是因为这些下层接口中的一个或多个已关闭。
+.常量 KEYCODE_LBUTTON, "1", , 左键
+.常量 KEYCODE_RBUTTON, "2", , 右键
+.常量 KEYCODE_MBUTTON, "3", , 中键
+.常量 KEYCODE_WHEEL, "4", , 滚轮
+.常量 KEYCODE_SIDEKEYUP, "5", , 侧键上
+.常量 KEYCODE_SIDEKEYDOWN, "6", , 侧键下
+.常量 KEYSTATUS_DOWN, "1", , 按下
+.常量 KEYSTATUS_UP, "2", , 弹起
+.常量 KEYSTATUS_DBLCLK, "3", , 双击
+.常量 KEYSTATUS_WHEELUP, "4", , 滚轮往上
+.常量 KEYSTATUS_WHEELDOWN, "5", , 滚轮往下
+.常量 _WIN32_WINNT_WINXP, "1281", , Windows XP
+.常量 _WIN32_WINNT_VISTA, "1536", , Windows Vista
+.常量 _WIN32_WINNT_WIN7, "1537", , Windows 7
+.常量 _WIN32_WINNT_WIN8, "1538", , Windows 8
+.常量 _WIN32_WINNT_WINBLUE, "1539", , Windows 8.1
+.常量 _WIN32_WINNT_WIN10, "2560", , Windows 10
+.常量 HOTKEYF_SHIFT, "1", , SHIFT 键
+.常量 HOTKEYF_CONTROL, "2", , CTRL 键
+.常量 HOTKEYF_ALT, "4", , ALT键
+.常量 HOTKEYF_EXT, "8", , 扩展键
+.常量 CRYPT_STRING_BASE64, "1", , Base64，没有标头。
+.常量 CRYPT_STRING_HEX, "4", , 仅十六进制。
+.常量 CRYPT_STRING_HEXRAW, "12", , 一个原始的十六进制字符串。Windows Server 2003 和 Windows XP：  不支持此值。
+.常量 CRYPT_STRING_NOCRLF, "1073741824", , 不要将任何新行字符附加到编码字符串。默认行为是使用回车/换行 (CR/LF) 对 (0x0D/0x0A) 来表示新行。Windows Server 2003 和 Windows XP：  不支持此值。
+.常量 CRYPT_STRING_NOCR, "2147483648", , 仅对新行使用换行 (LF) 字符 (0x0A)。默认行为是使用 CR/LF 对 (0x0D/0x0A) 来表示新行。
+.常量 VK_LSHIFT, "160", , 左Shift键
+.常量 VK_RSHIFT, "161", , 右Shift键
+.常量 VK_LCONTROL, "162", , 左Ctrl键
+.常量 VK_RCONTROL, "163", , 右Ctrl键
+.常量 VK_LMENU, "164", , 左Alt键
+.常量 VK_RMENU, "165", , 右Alt键
+.常量 INPUT_KEYBOARD, "1", , 该事件是一个键盘事件。使用union的ki结构。
+.常量 KEYEVENTF_KEYUP, "2", , 如果指定，则释放密钥。如果未指定，则按下该键。
+.常量 SeDebugPrivilege, "20", , 调试进程所必需的。
+.常量 GRANT_ACCESS, "1", , 表示ACCESS_ALLOWED_ACE结构。新的 ACE 将指定的权利与受托人现有的任何允许或拒绝的权利相结合。
+.常量 SET_ACCESS, "2", , 表示允许指定权限的ACCESS_ALLOWED_ACE结构。在输入时，此值会丢弃受托人的任何现有访问控制信息。
+.常量 DENY_ACCESS, "3", , 表示拒绝指定权限的ACCESS_DENIED_ACE结构。
+.常量 SB_HORZ, "0", , 显示或隐藏窗口的标准水平滚动条。
+.常量 SB_VERT, "1", , 显示或隐藏窗口的标准垂直滚动条。
+.常量 SB_CTL, "2", , 显示或隐藏滚动条控件。hwnd参数必须是滚动条控件的句柄 。
+.常量 SB_BOTH, "3", , 显示或隐藏窗口的标准水平和垂直滚动条。
+.常量 CTRL_C_EVENT, "0", , 从键盘输入或 GenerateConsoleCtrlEvent 函数生成的信号接收到 + 信号。CTRL + C
+.常量 CTRL_BREAK_EVENT, "1", , 从键盘输入或 GenerateConsoleCtrlEvent 生成的信号接收到 + 信号。CTRL + BREAK
+.常量 CTRL_CLOSE_EVENT, "2", , 当用户关闭控制台时，系统会向附加到控制台的所有进程发送信号（通过单击控制台窗口窗口菜单上的“关闭”，或单击任务管理器中的“结束任务”按钮命令）。
+.常量 CTRL_LOGOFF_EVENT, "5", , 用户注销时系统发送到所有控制台进程的信号。此信号不指示哪个用户正在注销，因此无法做出任何假设。
+.常量 CTRL_SHUTDOWN_EVENT, "6", , 系统关闭时系统发送的信号。当系统发送此信号时，交互式应用程序不存在，因此在这种情况下只能接收服务。服务还具有自己的关闭事件通知机制。
+.常量 DLL_PROCESS_ATTACH, "1", , 由于启动进程或调用 LoadLibrary，DLL 正在加载到当前进程的虚拟地址空间中。
+.常量 DLL_THREAD_ATTACH, "2", , 当前进程正在创建新线程。
+.常量 DLL_THREAD_DETACH, "3", , 线程正在完全退出。
+.常量 DLL_PROCESS_DETACH, "0", , DLL 正在从调用进程的虚拟地址空间中卸载。
+.常量 SCS_32BIT_BINARY, "0", , 基于 32 位 Windows 的应用程序
+.常量 SCS_DOS_BINARY, "1", , 基于 MS-DOS 的应用程序
+.常量 SCS_WOW_BINARY, "2", , 基于 16 位 Windows 的应用程序
+.常量 SCS_PIF_BINARY, "3", , 执行基于 MS-DOS 的应用程序的 PIF 文件
+.常量 SCS_POSIX_BINARY, "4", , 基于 POSIX 的应用程序
+.常量 SCS_OS216_BINARY, "5", , 基于 16 位 OS/2 的应用程序
+.常量 SCS_64BIT_BINARY, "6", , 基于 64 位 Windows 的应用程序
+
+
+
+
+

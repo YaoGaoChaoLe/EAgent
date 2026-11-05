@@ -1,0 +1,79 @@
+﻿.版本 2
+
+.程序集 类_Cookie, , 公开, Cookie操作类   感谢【@bj2757 】提供源码
+.子程序 加入Cookie, , 公开, 加入单个cookie
+    .参数 cookie, Cookie, , 需要加入的cookie
+
+    
+
+.子程序 加入Cookie2, , 公开, 加入单个cookie
+    .参数 健, 文本型, , Cookie的名字
+    .参数 值, 文本型, , Cookie的值
+
+    
+
+.子程序 加入Cookie文本, , 公开, 自动解析cookie文本并加入当前cookie对象
+    .参数 cookie字串, 文本型, , 需要加入的文本字串
+
+    
+
+.子程序 加入Cookie数组, , 公开
+    .参数 Cookie_数组, Cookie, 数组
+
+    
+
+.子程序 Cookie解析, , 公开, 根据cookie文本解析cookie并加入返回数组中
+    .参数 Cookie文本, 文本型, , 需要解析的cookie文本字符串
+    .参数 Cookie集合, Cookie, 参考 数组, 返回cookie集合
+    .参数 删收尾引号, 逻辑型, 可空, 默认为真
+
+    
+
+.子程序 删除Cookie, 逻辑型, 公开, 根据cookie的键删除cookie
+    .参数 cookieKey, 文本型, , 需要删除cookie的健
+
+    
+
+.子程序 删除全部, , 公开, 删除当前对象中所有的cookie
+    
+
+.子程序 取Cookie文本, 文本型, 公开, 返回当前集合中所有的cookie组成的字符串
+    
+
+.子程序 取全部Cookie, 逻辑型, 公开, 如果当前对象没有Cookie则返回假
+    .参数 Cookie数组, Cookie, 参考 数组, 返回的cookie所存放的数组
+
+    
+
+.子程序 取Cookie值, 文本型, 公开, 根据键取值 成功返回对应的值 失败返回空
+    .参数 CookieKey, 文本型, , cookie健
+
+    
+
+.子程序 取Cookie组, 文本型, 公开, 返回一组cookie
+    .参数 CookieKey, 文本型, , cookie健
+
+    
+
+.子程序 取Cookie组对象, Cookie, 公开, 返回一组cookie对象
+    .参数 CookieKey, 文本型, , cookie健，也就是cookie名称
+
+    
+
+.子程序 Cookie是否存在, 逻辑型, 公开, 根据key判断cookie中是否存在
+    .参数 cookieKey, 文本型, , 需要判断的cookie的key
+
+    
+
+.子程序 Cookie是否存在数组中, 逻辑型, 公开, 根据key判断指定的cookie数组中是否存在
+    .参数 CookieKey, 文本型, , 需要判断的cookie的key
+    .参数 Cookie数组, Cookie, 数组, Cookie数组
+
+    
+
+.子程序 Cookie是否存在文本中, 逻辑型, 公开, 根据key判断指定的cookie字符串文本中是否存在
+    .参数 CookieKey, 文本型, , 需要判断的cookie的key
+    .参数 Cookie文本, 文本型, , Cookie文本
+
+    
+

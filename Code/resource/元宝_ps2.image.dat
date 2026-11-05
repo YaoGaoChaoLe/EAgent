@@ -1,0 +1,444 @@
+﻿# 长文本
+#   第 1 步：先把 Base64 写进文件（UTF-8 无 BOM）， {{运行目录}}\msg.b64。内容形如 5L2g5aW977yM6L+Z5piv5LiA5q61...（纯 Base64 字符串）
+#   powershell -NoProfile -ExecutionPolicy Bypass -Command "& '{{运行目录}}\2_发送并等待回复.ps1' -MessageB64 '{{运行目录}}\msg.b64'"
+
+# 长文本 + 附带文件
+#   powershell -NoProfile -ExecutionPolicy Bypass -Command "& '{{运行目录}}\2_发送并等待回复.ps1' -Files \"文件名\",\"文件名\" -MessageB64 '{{运行目录}}\msg.b64'"
+param(
+    [string]$Message = "",
+    [string]$MessageB64 = "",
+    [string[]]$Files = @(),
+    [int]$Port = 9223,
+    [int]$Timeout = 180,
+    [string]$OutputFile = "",
+    [string]$Encoding = "gbk",
+    [switch]$Quiet = $false,
+    [int]$FastFailSec = 15
+)
+$script:DbgT0 = Get-Date
+function Dbg([string]$msg, [string]$color = 'DarkGray') {
+    if ($Quiet) { return }
+    $ms = [int]((Get-Date) - $script:DbgT0).TotalMilliseconds
+    Write-Host ("[{0,7}ms] {1}" -f $ms, $msg) -ForegroundColor $color
+}
+
+if ($PSScriptRoot) { $WorkDir = $PSScriptRoot } else { $WorkDir = (Get-Location).Path }
+if (-not $OutputFile) { $OutputFile = Join-Path $WorkDir "reply.txt" }
+Dbg ("参数 Message={0}字 B64={1} Files={2} Port={3} Timeout={4}s Out={5} Enc={6} Quiet={7}" -f $Message.Length, $MessageB64.Length, $Files.Count, $Port, $Timeout, $OutputFile, $Encoding, $Quiet) 'Cyan'
+Dbg ("工作目录={0}" -f $WorkDir) 'Cyan'
+
+# 腾讯元宝专属选择器配置
+$Selectors = @{
+    assistant = @('.agent-chat__bubble__content .hyc-common-markdown', '.agent-chat__bubble__content')
+    input     = @('.ql-editor')
+}
+$SelJson = ($Selectors | ConvertTo-Json -Compress)
+$SelJs = @"
+var SEL = $SelJson;
+function pick(key){
+    var list = SEL[key]||[];
+    if(typeof list==='string') list=[list];
+    var out=[], seen=[];
+    for(var i=0;i<list.length;i++){
+        var els=document.querySelectorAll(list[i]);
+        for(var j=0;j<els.length;j++){
+            if(seen.indexOf(els[j])<0){ seen.push(els[j]); out.push(els[j]); }
+        }
+    }
+    return out;
+}
+"@
+
+if ($MessageB64) {
+    if (Test-Path -LiteralPath $MessageB64 -PathType Leaf) {
+        $MessageB64 = [IO.File]::ReadAllText((Resolve-Path -LiteralPath $MessageB64).Path).Trim()
+    }
+    try {
+        $bytes = [Convert]::FromBase64String($MessageB64)
+        $Message = [Text.Encoding]::UTF8.GetString($bytes)
+    } catch { Write-Output "ERROR: MessageB64 decode failed"; exit 1 }
+}
+if ([string]::IsNullOrEmpty($Message) -and $Files.Count -eq 0) { Write-Output "ERROR: no message"; exit 1 }
+
+Dbg ("查询调试端口 {0} 页面列表..." -f $Port) 'Cyan'
+$pages = Invoke-RestMethod -Uri "http://127.0.0.1:$Port/json" -TimeoutSec 5
+$target = $pages | Where-Object { $_.url -match "yuanbao\.tencent\.com" -and $_.type -eq 'page' } | Select-Object -First 1
+if (-not $target) { Write-Output "ERROR: no yuanbao page"; exit 1 }
+Dbg ("目标页面 url={0}" -f $target.url) 'Cyan'
+
+$ws = New-Object System.Net.WebSockets.ClientWebSocket
+$ws.ConnectAsync([Uri]$target.webSocketDebuggerUrl, [Threading.CancellationToken]::None).Wait(5000) | Out-Null
+if ($ws.State -ne 'Open') { Write-Output "ERROR: WS not open"; exit 1 }
+Dbg "WebSocket 已连接" 'Cyan'
+
+$script:cdpId = 0
+
+function CDPRecv([int]$id, [int]$timeoutMs) {
+    $deadline = (Get-Date).AddMilliseconds($timeoutMs)
+    $pattern = '"id"\s*:\s*' + $id + '\b'
+    try {
+        while ((Get-Date) -lt $deadline) {
+            $ms = New-Object System.IO.MemoryStream
+            $buf = New-Object byte[] 4194304
+            $done = $false
+            while (-not $done) {
+                $left = [int]($deadline - (Get-Date)).TotalMilliseconds
+                if ($left -lt 1) { break }
+                $seg = New-Object System.ArraySegment[byte] -ArgumentList @(,$buf)
+                $task = $ws.ReceiveAsync($seg, [Threading.CancellationToken]::None)
+                if (-not $task.Wait($left)) { break }
+                $rr = $task.Result
+                if ($rr.Count -gt 0) { $ms.Write($buf, 0, $rr.Count) }
+                if ($rr.EndOfMessage) { $done = $true }
+            }
+            if ($ms.Length -gt 0) {
+                $text = [Text.Encoding]::UTF8.GetString($ms.ToArray())
+                $ms.Dispose()
+                foreach ($line in ($text -split "`n")) {
+                    if ($line -match $pattern) {
+                        try { return ($line | ConvertFrom-Json) } catch {}
+                    }
+                }
+            } else { $ms.Dispose() }
+        }
+    } catch {
+        Write-Output "ERROR: WS_RECV_FAIL: $($_.Exception.Message)"
+        return $null
+    }
+    return $null
+}
+
+function CDPCall([string]$method, $params, [int]$timeoutMs = 8000) {
+    try {
+        $script:cdpId++; $id = $script:cdpId
+        $dbgPs = ''
+        if ($null -ne $params) {
+            try { $dbgPs = ($params | ConvertTo-Json -Compress -Depth 4) } catch { $dbgPs = '<json?>' }
+        }
+        if ($dbgPs.Length -gt 150) { $dbgPs = $dbgPs.Substring(0,150) + '…' }
+        Dbg ("CDP>> #{0} {1} {2}" -f $id, $method, $dbgPs) 'Magenta'
+        $payload = @{ id=$id; method=$method; params=$params } | ConvertTo-Json -Depth 20 -Compress
+        $bytes = [Text.Encoding]::UTF8.GetBytes($payload)
+        $seg = New-Object System.ArraySegment[byte] -ArgumentList @(,$bytes)
+        $sendTask = $ws.SendAsync($seg, [System.Net.WebSockets.WebSocketMessageType]::Text, $true, [Threading.CancellationToken]::None)
+        if (-not $sendTask.Wait(3000)) { Write-Output "ERROR: CDP_SEND_TIMEOUT: $method"; return $null }
+        $resp = CDPRecv $id $timeoutMs
+        Dbg ("CDP<< #{0} {1}" -f $id, $(if ($null -eq $resp) { 'NULL' } else { 'OK' })) 'Magenta'
+        if ($resp -and $resp.result) { return $resp.result }
+        return $null
+    } catch {
+        Write-Output "ERROR: CDP_$method : $($_.Exception.Message)"
+        return $null
+    }
+}
+
+function CDP([string]$expr, [int]$timeoutMs = 8000) {
+    $r = CDPCall 'Runtime.evaluate' @{ expression=$expr; returnByValue=$true } $timeoutMs
+    if ($r -and $r.result) { return $r.result.value }
+    return $null
+}
+
+# 提取最新文本
+$lastAssistJs = $SelJs + @"
+(function(){
+    var a=pick('assistant');
+    if(a.length===0) return '';
+    return (a[a.length-1].innerText||'').trim();
+})()
+"@
+
+# 核心更改：一次返回 文本 + regen可见性 + 是否生成中（停止按钮可见）
+$statusJs = $SelJs + @"
+(function(){
+    var assistants = pick('assistant');
+    var lastText = assistants.length > 0 ? (assistants[assistants.length-1].innerText||'').trim() : '';
+    var hasRegen = false, regenVisible = false;
+    if (assistants.length > 0) {
+        var lastEl = assistants[assistants.length-1];
+        var container = lastEl.closest('.agent-chat__bubble') || lastEl.parentElement;
+        if (container) {
+            var regen = container.querySelector('[aria-label="重新生成"]') || container.querySelector('[class*="Repeat_iconBox"]');
+            if (regen) {
+                hasRegen = true;
+                var r = regen.getBoundingClientRect();
+                var cs = getComputedStyle(regen);
+                regenVisible = (regen.offsetParent !== null) && r.width > 0 && r.height > 0 && cs.visibility !== 'hidden' && cs.opacity !== '0';
+            }
+        }
+    }
+    var isGenerating = false;
+    var stopSels = ['[aria-label*="停止"]','[aria-label*="暂停"]','[aria-label*="stop"]','[aria-label*="Stop"]'];
+    for (var i=0;i<stopSels.length && !isGenerating;i++){
+        var els = document.querySelectorAll(stopSels[i]);
+        for (var j=0;j<els.length;j++){
+            var el = els[j];
+            var rr = el.getBoundingClientRect();
+            var cc = getComputedStyle(el);
+            if (el.offsetParent!==null && rr.width>0 && rr.height>0 && cc.visibility!=='hidden' && cc.opacity!=='0') { isGenerating = true; break; }
+        }
+    }
+    return JSON.stringify({
+        assistCount: assistants.length,
+        text: lastText,
+        hasRegen: hasRegen,
+        regenVisible: regenVisible,
+        isGenerating: isGenerating
+    });
+})()
+"@
+
+$null = CDPCall 'Page.enable' @{}
+$null = CDPCall 'Page.bringToFront' @{}
+$null = CDPCall 'Emulation.setFocusEmulationEnabled' @{enabled=$true}
+Write-Output "KEEPALIVE_SET"
+Dbg "页面保持活跃已设置" 'DarkGray'
+
+$lastAssist0 = CDP $lastAssistJs -timeoutMs 4000
+if ($null -eq $lastAssist0) { $lastAssist0 = '' }
+Write-Output "PREV_ASSIST_LEN: $($lastAssist0.Length)"
+
+# ================= 文件上传核心逻辑 =================
+if ($Files.Count -gt 0) {
+    $abs = @()
+    foreach ($f in $Files) {
+        if (-not (Test-Path -LiteralPath $f)) { Write-Output "ERROR: file not found: $f"; $ws.Dispose(); exit 1 }
+        $abs += (Resolve-Path -LiteralPath $f).Path
+    }
+    $null = CDPCall 'DOM.enable' @{}
+    
+    # 1. 埋下陷阱，拦截并挂载 input，同时点开菜单
+    $patchJs = @"
+    (function(){
+        if(!window._origClick) {
+            window._origClick = HTMLInputElement.prototype.click;
+            HTMLInputElement.prototype.click = function() {
+                if (this.type === 'file') {
+                    this.id = 'hacked-file-input';
+                    document.body.appendChild(this);
+                    return; // 阻止系统弹窗
+                }
+                return window._origClick.apply(this, arguments);
+            };
+        }
+        var addBtn = document.querySelector('button[aria-label="添加"]');
+        if (addBtn) addBtn.click();
+        return 'PATCHED';
+    })()
+"@
+    $null = CDP $patchJs
+    Start-Sleep -Milliseconds 500
+    
+    # 2. 自动点击"本地文件"菜单
+    $clickMenuJs = @"
+    (function(){
+        var el = Array.from(document.querySelectorAll('*')).find(e => e.textContent && e.textContent.trim() === '本地文件' && e.children.length <= 2);
+        if (el) {
+            const opts = { bubbles: true, cancelable: true, view: window };
+            el.dispatchEvent(new PointerEvent('pointerdown', opts));
+            el.dispatchEvent(new MouseEvent('mousedown', opts));
+            el.dispatchEvent(new PointerEvent('pointerup', opts));
+            el.dispatchEvent(new MouseEvent('mouseup', opts));
+            el.dispatchEvent(new MouseEvent('click', opts));
+            if(el.click) el.click();
+            return 'CLICKED';
+        }
+        return 'NOT_FOUND';
+    })()
+"@
+    $clickRes = CDP $clickMenuJs
+    Write-Output "MENU_CLICK_RESULT: $clickRes"
+    Start-Sleep -Milliseconds 800
+    
+    # 3. 获取挂载的 input
+    $objRes = CDPCall 'Runtime.evaluate' @{ expression = 'document.querySelector(''#hacked-file-input'')'; returnByValue = $false }
+    if (-not $objRes -or -not $objRes.result -or -not $objRes.result.objectId) { 
+        Write-Output "ERROR: no file input generated. 请手动检查是否成功唤出菜单。"
+        $ws.Dispose(); exit 1 
+    }
+    $objectId = $objRes.result.objectId
+    
+    Dbg ("上传文件 {0} 个: {1}" -f $abs.Count, ($abs -join '; ')) 'Cyan'
+    $null = CDPCall 'DOM.setFileInputFiles' @{ files = $abs; objectId = $objectId }
+    
+    # 4. 触发 change 事件让框架识别
+    $triggerChangeJs = @"
+    (function(){
+        var el = document.querySelector('#hacked-file-input');
+        if(el) {
+            el.dispatchEvent(new Event('change', {bubbles:true}));
+            return 'CHANGE_TRIGGERED';
+        }
+        return 'NOT_FOUND';
+    })()
+"@
+    $null = CDP $triggerChangeJs
+    
+    Write-Output "FILES_SET: $($abs.Count)"
+    Dbg "等待文件上传及解析完成..." 'Cyan'
+    Start-Sleep -Seconds 4
+}
+# ====================================================
+
+$msgJson = $Message | ConvertTo-Json -Compress
+
+# 腾讯元宝 Quill 编辑器注入逻辑（修复多行截断问题）
+$injectJs = $SelJs + @"
+(function(){
+    var msg = $msgJson;
+    var ta = pick('input')[0];
+    if(!ta) return JSON.stringify({ok:false, err:'no editor'});
+    ta.focus();
+    
+    // 清空现有输入
+    document.execCommand('selectAll', false, null);
+    document.execCommand('delete', false, null);
+    
+    try {
+        // 方案A：使用 ClipboardEvent 模拟真实的粘贴事件
+        var dt = new DataTransfer();
+        dt.setData('text/plain', msg);
+        var pasteEvent = new ClipboardEvent('paste', {
+            clipboardData: dt,
+            bubbles: true,
+            cancelable: true
+        });
+        ta.dispatchEvent(pasteEvent);
+    } catch(e) {
+        // 方案B：如果剪贴板不可用，按行拆分生成 Quill 认识的 <p> 段落
+        var lines = msg.split(/\r?\n/);
+        var html = lines.map(function(line) {
+            var escaped = line.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+            return '<p>' + escaped + '</p>';
+        }).join('');
+        document.execCommand('insertHTML', false, html);
+    }
+    
+    // 强制触发 input 让 React 同步状态
+    ta.dispatchEvent(new Event('input',{bubbles:true}));
+    return JSON.stringify({ok:true, len:ta.innerText.length});
+})()
+"@
+Dbg ("注入消息 长度={0}" -f $Message.Length) 'Cyan'
+$r = CDP $injectJs
+if (-not $r -or $r -notmatch '"ok":true') {
+    Write-Output "ERROR: inject failed ($r)"
+    $ws.Dispose(); exit 1
+}
+Write-Output "INJECTED"
+
+Start-Sleep -Milliseconds 500
+
+# 腾讯元宝发送逻辑：直接模拟回车
+$sendJs = $SelJs + @"
+(function(){
+    var ta = pick('input')[0];
+    if(!ta) return 'NO_EDITOR';
+    ta.focus();
+    function ev(t){
+        var e = new KeyboardEvent(t, {key:'Enter', code:'Enter', keyCode:13, which:13, bubbles:true, cancelable:true});
+        ta.dispatchEvent(e);
+    }
+    ev('keydown'); ev('keypress'); ev('keyup');
+    return 'SENT';
+})()
+"@
+Dbg "执行发送 (模拟回车)" 'Cyan'
+$r = CDP $sendJs
+if ($r -ne 'SENT') {
+    Write-Output "ERROR: send failed ($r)"
+    $ws.Dispose(); exit 1
+}
+Write-Output "SEND_ACTION: SENT"
+
+$deadline = (Get-Date).AddSeconds($Timeout)
+$failFastDeadline = (Get-Date).AddSeconds($FastFailSec)
+$finalText = ""
+$nullTicks = 0
+$requiredNull = 10
+$cdpBroken = $false
+$tick = 0
+$sawNew = $false
+$failFast = $false
+$stage2Stable = 0
+$stage2LastText = ''
+$requiredStage2Stable = 3
+
+Dbg ("进入轮询 超时={0}s 断开={1} 快速失败={2}s 判定=regen可见+非生成中+文本稳定{3}次" -f $Timeout, $requiredNull, $FastFailSec, $requiredStage2Stable) 'Cyan'
+Dbg ("初始基线 len={0} head={1}" -f $lastAssist0.Length, ($lastAssist0.Substring(0, [Math]::Min(40, $lastAssist0.Length)))) 'DarkGray'
+
+while ((Get-Date) -lt $deadline) {
+    Start-Sleep -Milliseconds 150
+    $tick++
+    if ($tick -eq 1 -or ($tick % 20) -eq 0) {
+        Dbg ("轮询#{0} 新={1} 阶段2稳定={2}/{3}" -f $tick, $sawNew, $stage2Stable, $requiredStage2Stable) 'DarkGray'
+    }
+    $status = CDP $statusJs -timeoutMs 5000
+    if ($null -eq $status) {
+        $nullTicks++
+        if ($nullTicks -ge $requiredNull) {
+            $cdpBroken = $true
+            Write-Output "ERROR: CDP_BROKEN: 连续 $nullTicks 次无响应，通道疑似断开"
+            break
+        }
+        continue
+    }
+    $nullTicks = 0
+    $j = $null
+    try { $j = $status | ConvertFrom-Json } catch { continue }
+    if (-not $j) { continue }
+
+    $curText      = [string]$j.text
+    $regenVisible = [bool]$j.regenVisible
+    $isGenerating = [bool]$j.isGenerating
+
+    if (-not $sawNew) {
+        if ($curText -ne $lastAssist0 -and $curText.Length -gt 0) {
+            Write-Output "  [new-reply] textLen=$($curText.Length) (init=$($lastAssist0.Length))"
+            Dbg ("检测到新回复文本 len {0} → {1}" -f $lastAssist0.Length, $curText.Length) 'Green'
+            $sawNew = $true
+            continue
+        }
+        if ((Get-Date) -gt $failFastDeadline) {
+            $failFast = $true
+            Write-Output "ERROR: FAIL_FAST: ${FastFailSec}s 内未出现新回复（init=$($lastAssist0.Length) cur=$($curText.Length)）"
+            break
+        }
+        continue
+    }
+
+    # 阶段2：regen 可见 + 非生成中 + 文本连续 N 次不变
+    if ($regenVisible -and (-not $isGenerating) -and $curText.Length -gt 0 -and $curText -ne $lastAssist0) {
+        if ($curText -eq $stage2LastText) { $stage2Stable++ } else { $stage2Stable = 1; $stage2LastText = $curText }
+        if ($stage2Stable -ge $requiredStage2Stable) {
+            Dbg ("regen可见+非生成中+文本稳定{0}次 长度={1}" -f $requiredStage2Stable, $curText.Length) 'Green'
+            Write-Output "  [finished] regenVisible=$regenVisible isGenerating=$isGenerating textLen=$($curText.Length) stable=$stage2Stable"
+            $finalText = $curText
+            break
+        }
+    } else {
+        $stage2Stable = 0
+        $stage2LastText = ''
+    }
+}
+
+Dbg ("轮询结束 用时={0}ms 有结果={1}" -f [int]((Get-Date)-$script:DbgT0).TotalMilliseconds, [bool]$finalText) 'Cyan'
+if ($ws.State -eq 'Open') { $ws.Dispose() }
+if ($cdpBroken) { exit 3 }
+if ($failFast) { exit 4 }
+
+if ($finalText) {
+    if ($Encoding.ToLower() -match 'utf-?8') {
+        [IO.File]::WriteAllText($OutputFile, $finalText, [Text.UTF8Encoding]::new($false))
+    } else {
+        $enc = [Text.Encoding]::GetEncoding(936)
+        [IO.File]::WriteAllText($OutputFile, $finalText, $enc)
+    }
+    Dbg ("已写文件 {0} 编码={1}" -f $OutputFile, $(if ($Encoding.ToLower() -match 'utf-?8') { 'UTF8-NOBOM' } else { 'GBK' })) 'Green'
+    Write-Output "OK: len=$($finalText.Length) path=$OutputFile"
+    Write-Output "----- reply.txt -----"
+    Write-Output $finalText
+} else {
+    Dbg "超时 未等到回复" 'Red'
+    Write-Output "TIMEOUT"
+    exit 2
+}

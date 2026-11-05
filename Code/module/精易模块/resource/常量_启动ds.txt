@@ -1,0 +1,1 @@
+powershell -NoProfile -ExecutionPolicy Bypass -File "{{运行目录}}\1_启动调试浏览器.ps1" -UserDataDir "C:\_EAgent\deepseek_debug_profile"
