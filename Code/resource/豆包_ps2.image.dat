@@ -3,7 +3,7 @@ param(
     [string]$Message = "",
     [string]$MessageB64 = "",
     [string[]]$Files = @(),
-    [int]$Port = 9224,
+    [int]$Port = 7891,
     [int]$Timeout = 180,
     [string]$OutputFile = "",
     [string]$Encoding = "gbk",

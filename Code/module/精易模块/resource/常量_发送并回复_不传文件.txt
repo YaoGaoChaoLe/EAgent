@@ -1,1 +1,0 @@
-powershell -NoProfile -ExecutionPolicy Bypass -Command "& '{{运行目录}}\2_发送并等待回复.ps1' -MessageB64 '{{运行目录}}\msg.b64'"

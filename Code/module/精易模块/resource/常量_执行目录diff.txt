@@ -1,1 +1,0 @@
-powershell -NoProfile -ExecutionPolicy Bypass -File "{{工作目录}}\diff.ps1" "{{目录1}}" "{{目录2}}"

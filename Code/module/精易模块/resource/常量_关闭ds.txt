@@ -1,1 +1,0 @@
-powershell -NoProfile -ExecutionPolicy Bypass -File "{{运行目录}}\3_关闭浏览器.ps1"

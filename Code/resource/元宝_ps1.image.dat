@@ -1,9 +1,8 @@
 # cmd调用_打开浏览器：powershell -NoProfile -ExecutionPolicy Bypass -File ""{{运行目录}}\1_启动调试浏览器.ps1""
 param(
     [string]$ChromePath = "",
-    [int]$Port = 9223,
+    [int]$Port = 7891,
     [string]$UserDataDir = "$env:TEMP\deepseek_debug_profile",
-    # [string]$Url = "https://chat.deepseek.com"
     [string]$Url = "https://yuanbao.tencent.com/chat/naQivTmsDa"
 )
 
