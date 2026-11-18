@@ -1,0 +1,94 @@
+# cmd 调用示例
+# 参数1 {{ps位置}} - C:\Users\Micro\Downloads\deepseek_share2txt.ps1
+# 参数2 {{分享链接}} - https://chat.deepseek.com/share/u28k9ioqnqadcckpqp
+# 参数3 {{输出文件}} - C:\Users\Micro\Downloads\对话.txt
+# powershell -ExecutionPolicy Bypass -File "{{ps位置}}" "{{分享链接}}" "{{输出文件}}"
+param(
+    [string]$Share,
+    [string]$OutFile
+)
+
+$ErrorActionPreference = 'Stop'
+
+$L_USER = '[' + [char]0x7528 + [char]0x6237 + ']'
+$L_AI   = '[' + [char]0x52A9 + [char]0x624B + ']'
+
+function Fail([string]$msg) {
+    Write-Host "ERROR: $msg"
+    exit 1
+}
+
+if ([string]::IsNullOrWhiteSpace($Share))   { Fail "Missing parameter 1 (share link or share_id)" }
+if ([string]::IsNullOrWhiteSpace($OutFile)) { Fail "Missing parameter 2 (output txt path)" }
+$s = $Share.Trim().TrimEnd('/')
+$sid = $null
+if ($s -match 'share/([0-9A-Za-z]+)') { $sid = $matches[1] }
+elseif ($s -match '^([0-9A-Za-z]+)$') { $sid = $matches[1] }
+if (-not $sid) { Fail "Cannot parse share_id from input: $Share" }
+
+try { [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12 } catch {}
+
+$url = "https://chat.deepseek.com/api/v0/share/content?share_id=$sid"
+$req = [Net.HttpWebRequest]::Create($url)
+$req.Method = 'GET'
+$req.Timeout = 30000
+$req.ReadWriteTimeout = 30000
+$req.UserAgent = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36'
+$req.Accept = 'application/json, text/plain, */*'
+$req.Referer = "https://chat.deepseek.com/share/$sid"
+
+try {
+    $resp = $req.GetResponse()
+} catch {
+    Fail "HTTP request failed: $($_.Exception.Message)"
+}
+
+try {
+    $stream = $resp.GetResponseStream()
+    $ms = New-Object IO.MemoryStream
+    $stream.CopyTo($ms)
+    $bytes = $ms.ToArray()
+} finally {
+    $resp.Close()
+}
+$text = [Text.Encoding]::UTF8.GetString($bytes)
+
+try { $j = $text | ConvertFrom-Json } catch { Fail "Invalid JSON response" }
+if ($null -eq $j.code -or $j.code -ne 0) { Fail "API code=$($j.code) msg=$($j.msg)" }
+
+$msgs = $j.data.biz_data.messages
+if ($null -eq $msgs -or $msgs.Count -eq 0) { Fail "No messages found in response" }
+
+$sb = New-Object Text.StringBuilder
+$uc = 0; $ac = 0
+foreach ($m in $msgs) {
+    $label = $null
+    $parts = @()
+    foreach ($f in $m.fragments) {
+        $t = [string]$f.type
+        if ($t -eq 'REQUEST') { $label = $L_USER; $parts += [string]$f.content }
+        elseif ($t -eq 'RESPONSE') { $label = $L_AI; $parts += [string]$f.content }
+    }
+    if (-not $label -or $parts.Count -eq 0) { continue }
+    $body = ($parts -join "`n").Trim()
+    if ($body.Length -eq 0) { continue }
+    [void]$sb.AppendLine($label)
+    [void]$sb.AppendLine($body)
+    [void]$sb.AppendLine()
+    if ($label -eq $L_USER) { $uc++ } else { $ac++ }
+}
+
+if ($uc -eq 0 -and $ac -eq 0) { Fail "No REQUEST/RESPONSE fragments found" }
+
+if (-not [IO.Path]::IsPathRooted($OutFile)) {
+    $base = if ($PSScriptRoot) { $PSScriptRoot } else { (Get-Location).Path }
+    $OutFile = Join-Path $base $OutFile
+}
+$dir = [IO.Path]::GetDirectoryName($OutFile)
+if ($dir -and -not (Test-Path -LiteralPath $dir)) {
+    New-Item -ItemType Directory -Path $dir -Force | Out-Null
+}
+$full = [IO.Path]::GetFullPath($OutFile)
+[IO.File]::WriteAllText($full, $sb.ToString(), [Text.UTF8Encoding]::new($false))
+
+Write-Host "DONE: out=$full messages=$($msgs.Count) user=$uc assistant=$ac"
