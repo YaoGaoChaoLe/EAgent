@@ -1,4 +1,8 @@
 ﻿{
+    "API_ps": {
+        "Comment": "用API调用",
+        "IsPublic": false
+    },
     "Ds_ps1": {
         "Comment": "1_启动调试浏览器.ps1",
         "IsPublic": false

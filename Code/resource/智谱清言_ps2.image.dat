@@ -11,7 +11,7 @@ param(
     [string]$MessageB64 = "",
     [string[]]$Files = @(),
     [int]$Port = 7891,
-    [int]$Timeout = 180,
+    [int]$Timeout = 400,
     [string]$OutputFile = "",
     [string]$Encoding = "gbk",
     [switch]$Quiet = $false,
@@ -31,8 +31,8 @@ Dbg ("工作目录={0}" -f $WorkDir) 'Cyan'
 
 $UrlMatch = 'chatglm\.cn'
 $Selectors = @{
-    input   = @('textarea.scroll-display-none', 'textarea')
-    sendBtn = @('div.enter.is-main-chat', 'div.enter-icon-container', 'div.enter')
+    input   = @('textarea.el-textarea__inner', 'textarea')
+    sendBtn = @('button.send-button')
 }
 
 # pick 辅助函数（注入 / 发送共用，按选择器列表去重取元素）
@@ -55,59 +55,42 @@ function pick(key){
 
 # 取回复 / 取计数 / 生成态探测 的 JS
 $chatglmHelpers = @'
-function lastAnswer(){ var as=document.querySelectorAll('div.answer'); return as[as.length-1]||null; }
+function lastAnswer(){ var as=document.querySelectorAll('.assistant-message-item'); return as[as.length-1]||null; }
 function lastAnswerText(){
     var a=lastAnswer();
     if(!a) return '';
-    var ats=a.querySelectorAll('.advance-thinking');
-    for(var k=0;k<ats.length;k++){
-        if(!/collapse/.test(ats[k].className||'')) return '';
-    }
-    var wraps=a.querySelectorAll('.answer-content-wrap');
+    var wraps=a.querySelectorAll('.assistant-message-item__bubble-content');
     var out=[];
     for(var i=0; i<wraps.length; i++){
         var w = wraps[i];
-        if(/text-advance-thinking-content/.test(w.className||'')) continue;
         var clone = w.cloneNode(true);
-        var blks = clone.querySelectorAll('.code-no-artifacts');
+        var tgs = clone.querySelectorAll('.thinking-group');
+        for (var tk=0; tk<tgs.length; tk++) { if (tgs[tk].parentNode) tgs[tk].parentNode.removeChild(tgs[tk]); }
+        var blks = clone.querySelectorAll('.code-preview');
         for (var k2=0; k2<blks.length; k2++) {
             var blk = blks[k2];
             var lang = 'text';
-            var langEl = blk.querySelector('.top-outer .language');
+            var langEl = blk.querySelector('.toolbar .title') || blk.querySelector('.toolbar');
             if (langEl) {
                 var l = (langEl.textContent||'').trim();
-                if (l) lang = l;
+                if (l && l.length < 30) lang = l;
             }
-            var extractText = function(node) {
-                var text = '';
-                for (var c=0; c<node.childNodes.length; c++) {
-                    var child = node.childNodes[c];
-                    if (child.nodeType === 3) {
-                        text += child.nodeValue;
-                    } else if (child.nodeType === 1) {
-                        var tag = child.tagName.toLowerCase();
-                        if (tag === 'br') {
-                            text += '\n';
-                        } else {
-                            text += extractText(child);
-                            if (tag === 'div' || tag === 'p' || tag === 'pre') {
-                                if (text.length > 0 && text[text.length-1] !== '\n') {
-                                    text += '\n';
-                                }
-                            }
-                        }
-                    }
-                }
-                return text;
-            };
-            var codeEl = blk.querySelector('pre > code');
-            var codeText = codeEl ? extractText(codeEl) : '';
-            codeText = codeText.replace(/^\n+|\n+$/g, '');
+            var lines = blk.querySelectorAll('.code-line .line-content');
+            var codeText = '';
+            if (lines.length) {
+                var parts=[];
+                for (var li=0; li<lines.length; li++) { parts.push(lines[li].textContent || ''); }
+                codeText = parts.join('\n');
+            } else {
+                var codeEl = blk.querySelector('pre.code-pane code') || blk.querySelector('pre code') || blk.querySelector('code');
+                codeText = codeEl ? (codeEl.textContent || '') : '';
+            }
+            codeText = codeText.replace(/\n+$/g, '');
             var md = '\n\n```' + lang + '\n' + codeText + '\n```\n\n';
             var textNode = document.createTextNode(md);
             if (blk.parentNode) { blk.parentNode.replaceChild(textNode, blk); }
         }
-        var bads = clone.querySelectorAll('.copy-button, .top-outer, .interact-container, .line-numbers-rows');
+        var bads = clone.querySelectorAll('.toolbar, .icon-btn, button, .message-toolbar');
         for (var j=0; j<bads.length; j++) { if (bads[j].parentNode) bads[j].remove(); }
         clone.style.whiteSpace = 'pre-wrap';
         var txt = (clone.innerText || clone.textContent || '').trim();
@@ -120,26 +103,22 @@ function lastAnswerText(){
 
 $msgJs = $chatglmHelpers + @"
 (function(){
-    var n=document.querySelectorAll('div.answer').length;
+    var n=document.querySelectorAll('.assistant-message-item').length;
     return JSON.stringify({count:n, text:lastAnswerText()});
 })()
 "@
 
 $userJs = @"
 (function(){
-    return JSON.stringify({count: document.querySelectorAll('div.conversation.question, div.question').length});
+    return JSON.stringify({count: document.querySelectorAll('.user-message-item').length});
 })()
 "@
 
 $btnJs = $chatglmHelpers + @"
 (function(){
-    var a=lastAnswer();
-    var generating=false;
-    if(a){
-        var at=a.querySelector('.advance-thinking');
-        if(at && !/collapse/.test(at.className||'')) generating=true;
-    }
-    var qs=document.querySelectorAll('div.conversation.question, div.question');
+    var b=document.querySelector('button.send-button');
+    var generating = !!(b && /send-button--stop/.test(b.className||''));
+    var qs=document.querySelectorAll('.user-message-item');
     return JSON.stringify({ok:true, isStop:generating, isArrow:!generating, head:'', userCount: qs.length});
 })()
 "@
@@ -151,9 +130,8 @@ $lastAssistJs = $chatglmHelpers + @"
 $statusJs = $chatglmHelpers + @"
 (function(){
     var a=lastAnswer();
-    var es=document.querySelectorAll('div.enter.is-main-chat');
-    var searching=false;
-    for(var i=0;i<es.length;i++){ if(/searching/.test((es[i].className||''))){ searching=true; break; } }
+    var b=document.querySelector('button.send-button');
+    var searching = !!(b && /send-button--stop/.test(b.className||''));
     return JSON.stringify({text:(a?lastAnswerText():''), searching:searching});
 })()
 "@
@@ -286,7 +264,7 @@ if ($Files.Count -gt 0) {
         $abs += (Resolve-Path -LiteralPath $f).Path
     }
     $null = CDPCall 'DOM.enable' @{}
-    $objRes = CDPCall 'Runtime.evaluate' @{ expression = 'document.querySelector(''input.el-upload__input'') || document.querySelector(''input[type="file"]:not(.img-input)'') || document.querySelector(''input[type="file"]'')'; returnByValue = $false }
+    $objRes = CDPCall 'Runtime.evaluate' @{ expression = 'document.querySelector(''input.file-input'') || document.querySelector(''input.el-upload__input'') || document.querySelector(''input[type="file"]:not(.img-input)'') || document.querySelector(''input[type="file"]'')'; returnByValue = $false }
     if (-not $objRes -or -not $objRes.result -or -not $objRes.result.objectId) { Write-Output "ERROR: no file input"; $ws.Dispose(); exit 1 }
     $objectId = $objRes.result.objectId
     Dbg ("上传文件 {0} 个: {1}" -f $abs.Count, ($abs -join '; ')) 'Cyan'
@@ -319,38 +297,35 @@ Write-Output "INJECTED"
 
 Start-Sleep -Milliseconds 300
 
-if ([string]::IsNullOrEmpty($Message)) {
-    $sendJs = $SelJs + @"
+# 等待发送按钮可用（最多5秒）
+$waitBtnJs = @"
 (function(){
-    var btns = pick('sendBtn');
-    var btn=null,w=window.innerWidth,h=window.innerHeight;
-    for(var i=0;i<btns.length;i++){
-        var el=btns[i];
-        if(el.offsetParent===null) continue;
-        var r=el.getBoundingClientRect();
-        if(r.x<w*0.5||r.y<h*0.6) continue;
-        btn=el;
-    }
-    if(!btn) return 'NO_BTN';
-    btn.click();
-    return 'SENT';
+    var b=document.querySelector('button.send-button');
+    if(!b) return 'NO_BTN';
+    if(/send-button--disabled/.test(b.className||'')) return 'DISABLED';
+    return 'READY';
 })()
 "@
-} else {
-    $sendJs = $SelJs + @"
-(function(){
-    var ta = pick('input')[0];
-    if(!ta) return 'NO_TA';
-    ta.focus();
-    function ev(t){
-        var e = new KeyboardEvent(t, {key:'Enter', code:'Enter', keyCode:13, which:13, bubbles:true, cancelable:true});
-        ta.dispatchEvent(e);
-    }
-    ev('keydown'); ev('keypress'); ev('keyup');
-    return 'SENT';
-})()
-"@
+$btnReady = $false
+for($i=0;$i -lt 25;$i++){
+    $bs = CDP $waitBtnJs -timeoutMs 2000
+    if($bs -eq 'READY'){ $btnReady=$true; break }
+    Start-Sleep -Milliseconds 200
 }
+if(-not $btnReady){
+    Write-Output "ERROR: send button not ready ($bs)"
+    $ws.Dispose(); exit 1
+}
+
+$sendJs = @"
+(function(){
+    var b=document.querySelector('button.send-button');
+    if(!b) return 'NO_BTN';
+    if(/send-button--disabled/.test(b.className||'')) return 'DISABLED';
+    b.click();
+    return 'SENT';
+})()
+"@
 Dbg ("执行发送 模式={0}" -f $(if ([string]::IsNullOrEmpty($Message)) { '按钮点击' } else { '输入框回车' })) 'Cyan'
 $r = CDP $sendJs
 if ($r -ne 'SENT') {

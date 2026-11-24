@@ -9,7 +9,7 @@ param(
     [string]$MessageB64 = "",
     [string[]]$Files = @(),
     [int]$Port = 7891,
-    [int]$Timeout = 180,
+    [int]$Timeout = 400,
     [string]$OutputFile = "",
     [string]$Encoding = "gbk",
     [switch]$Quiet = $false,

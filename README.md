@@ -1,7 +1,8 @@
 # 易Agent 
 0 tokens、0门槛 、轻量级 | 基于 DeepSeek 网页版制作的 Agent —— 让 网页版 AI "操控"你的电脑。
 ```
-除了 deepseek 网页，现已支持 豆包、元宝、智谱清言 的网页版！
+1、除了 deepseek 网页，现已支持 豆包、元宝、智谱清言 的网页版！
+2、除了"白嫖"网页资源，现已支持对接ds官方API 或 其它API！（OpenAI兼容）。轻量级的设计，相同的简单任务下 EAgent 消耗的token比 dsh 耗的更少！
 ```
 
 ## 1. 环境要求
@@ -30,7 +31,11 @@
 | DeepSeek Harness 等 | 正规 | 功能强大；但要 API、花钱买 token。 | 调用官方 API |
 | 网页反代 等 | 不正规 | 功能强大；要 API、封号概率大 | 调用非官方接口/逆向网页 |
 | **EAgent (本项目)** | **不正规** | **功能轻量；但不花钱买 token、无需 API、封号概率小（但不是 0%）** | **自动化脚本操控浏览器，模拟人类行为** |
-
+```
+EAgent 也有合规的 API 调用：
+    除了 不正规的"白嫖"网页资源，现已支持对接ds官方API 或 其它API！（OpenAI兼容）。
+    轻量级的设计，相同的简单任务下，EAgent 消耗的token比 DeepSeek Harness 耗的更少！
+```
 
 ## 4. 快速使用
 - 下载文件：[点我下载](https://github.com/YaoGaoChaoLe/EAgent/releases)
@@ -53,13 +58,16 @@
 
     - 无安全系统，Ai 默认权限较高。某些情况下 Ai 会生成恶意代码、再通过本项目破坏系统。建议时刻自查 Ai 执行的命令；
 
-    - 有基础的防风控措施，但 **极端高频地使用** 仍可能会被平台禁言；
+    - 有基础的防风控措施，但 **极端高频地白嫖网页资源** 仍可能会被禁言；
 
 
-- 病毒问题：项目由 `e语言` 编写。它的狗屎编译器会让某安全软件视为木马病毒，请添加信任。我保证 **本项目自身不会带有任何恶意代码，请放心使用。**[微步云-样本分析报告.pdf](https://github.com/user-attachments/files/33975912/_aa1cfadfaf91e60eef30a1400670305089e0cb11eefc07470897802731f74f41.pdf)
+- 病毒问题：项目由 `e语言` 编写。它的狗屎编译器会让某安全软件视为木马病毒，请添加信任。我保证：
+    - **1、本项目自身不会带有任何恶意代码，请放心使用。**
+    - 2、每次发布新版，我都会附带 **当前最新** 的样本检测报告：
+
+        [微步云沙箱-2026.11.24](https://s.threatbook.com/report/file/c430c40869a6a4041368dd0845e00bbeb6a9770118960183af7672d7449e1bd8)、[360沙箱-2026.11.24](https://ata.360.net/report/891758901528576)
+
+
 - 本项目始于 2026/10/8，处于开发阶段，欢迎提交 [issue](https://github.com/YaoGaoChaoLe/EAgent/issues)。开源仓库 [在这](https://github.com/YaoGaoChaoLe/EAgent/)，遵循 `GPL-3.0` 协议。
 
-```
-没事弄了点好玩的：
-https://yaogaochaole.github.io/EAgent/Works/liang-skin/
-```
+[彩蛋](https://yaogaochaole.github.io/EAgent/Works/liang-skin/)

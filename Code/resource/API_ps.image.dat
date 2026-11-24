@@ -1,0 +1,206 @@
+﻿<#
+把系统提示词、用户提示词，转换成 Base64 文件。
+
+cmd 调用示例 - 无文件:
+powershell -ExecutionPolicy Bypass -File "{{ps脚本绝对路径}}" -ApiKey "{{API-KEY}}" -BaseUrl "{{API-URL}}" -SystemPromptFile "{{系统提示词.b64}}" -UserPromptFile "{{用户提示词.b64}}" -Reasoning "{{推理强度}}" -Model "{{模型名}}"
+
+cmd 调用示例 - 有文件:
+powershell -ExecutionPolicy Bypass -File "{{ps脚本绝对路径}}" -ApiKey "{{API-KEY}}" -BaseUrl "{{API-URL}}" -SystemPromptFile "{{系统提示词.b64}}" -UserPromptFile "{{用户提示词.b64}}" -Reasoning "{{推理强度}}" -Model "{{模型名}}" -Files {{文件名}}
+
+{{文件名}} - 多文件:
+  -Files 'D:\1.jpg','C:\_Project\2.doc','D:\3.ini'
+{{文件名}} - 单文件:
+  -Files "C:\1.py"
+
+{{系统/用户提示词.b64}} - Base64 文件路径
+{{API-URL}} = https://api.deepseek.com
+{{推理强度}} = disabled/high/max
+{{模型名}} = deepseek-flash / deepseek-v4-pro
+#>
+param(
+  [Parameter(Mandatory=$true)][string]$ApiKey,
+  [Parameter(Mandatory=$true)][string]$BaseUrl,
+  [string]$SystemPrompt='',
+  [string]$SystemPromptFile='',
+  [string]$UserPrompt='',
+  [string]$UserPromptFile='',
+  [string]$Reasoning='disabled',
+  [Parameter(Mandatory=$true)][string]$Model,
+  [string[]]$Files=@()
+)
+$ErrorActionPreference='Stop'
+try{
+  $sp=[Net.ServicePointManager]::SecurityProtocol
+  [Net.ServicePointManager]::SecurityProtocol=$sp -bor [Net.SecurityProtocolType]::Tls12
+}catch{}
+$enc=[Text.UTF8Encoding]::new($false)
+$encAnsi=[Text.Encoding]::GetEncoding(936)
+function _uq([string]$s){ if($null -eq $s){return $s}; return $s.Trim().Trim("'").Trim('"').Trim() }
+$ApiKey=_uq $ApiKey
+$BaseUrl=_uq $BaseUrl
+$SystemPrompt=_uq $SystemPrompt
+$UserPrompt=_uq $UserPrompt
+function _b64file([string]$path,[string]$name){
+  $pp=$path.Trim().Trim("'").Trim('"').Trim()
+  if(-not (Test-Path -LiteralPath $pp)){ Write-Output ("ERROR: {0} not found: {1}" -f $name,$pp); exit 1 }
+  $raw=[IO.File]::ReadAllText($pp,$enc).Trim()
+  try{ return [Text.Encoding]::UTF8.GetString([Convert]::FromBase64String($raw)) }
+  catch{ Write-Output ("ERROR: {0} base64 decode failed: {1}" -f $name,$_.Exception.Message); exit 1 }
+}
+if($SystemPromptFile){ $SystemPrompt=(_b64file $SystemPromptFile 'SystemPromptFile') }
+if($UserPromptFile){ $UserPrompt=(_b64file $UserPromptFile 'UserPromptFile') }
+$Model=_uq $Model
+$Reasoning=(_uq $Reasoning).ToLowerInvariant()
+if(@('disabled','high','max') -notcontains $Reasoning){ $Reasoning='disabled' }
+
+$here=if($PSScriptRoot){$PSScriptRoot}else{Split-Path -Parent $MyInvocation.MyCommand.Definition}
+$replyPath=Join-Path $here 'reply.txt'
+$allPath=Join-Path $here 'reply_all.txt'
+$memPath=Join-Path $here 'ds_chat.json'
+
+# ---------- 展开文件参数(去引号/逗号兜底) ----------
+$fileList=@()
+foreach($f in $Files){
+  if($null -eq $f){continue}
+  $s=[string]$f
+  foreach($part in ($s -split ',')){
+    $p2=$part.Trim().Trim("'").Trim('"').Trim()
+    if($p2 -and $p2.Length -gt 0){$fileList+=$p2}
+  }
+}
+
+# ---------- 读取聊天记忆 ----------
+$mem=@{ system=''; messages=@() }
+if(Test-Path -LiteralPath $memPath){
+  try{
+    $raw=[IO.File]::ReadAllText($memPath,$enc)
+    if($raw -and $raw.Trim().Length -gt 0){
+      $m=$raw|ConvertFrom-Json
+      if($m){
+        if($m.system){$mem.system=[string]$m.system}
+        if($m.messages){$mem.messages=@($m.messages)}
+      }
+    }
+  }catch{Write-Warning ("读取记忆失败: "+$_.Exception.Message)}
+}
+if($SystemPrompt){$mem.system=$SystemPrompt}
+if($null -eq $mem.messages){$mem.messages=@()}
+
+# ---------- 组装用户消息(多文件) ----------
+$txtExt=@('.txt','.md','.markdown','.py','.js','.ts','.jsx','.tsx','.cs','.java','.c','.cpp','.h','.hpp','.json','.xml','.yml','.yaml','.csv','.ini','.ps1','.bat','.cmd','.sh','.sql','.log','.html','.htm','.css','.go','.rs','.rb','.php','.lua','.toml','.env','.conf','.cfg')
+$fileTexts=@()
+$imageBlocks=@()
+foreach($fp in $fileList){
+  if(-not (Test-Path -LiteralPath $fp)){ Write-Warning ("文件不存在: "+$fp); continue }
+  $ext=([IO.Path]::GetExtension($fp)).ToLowerInvariant()
+  if($txtExt -contains $ext){
+    $c=[IO.File]::ReadAllText($fp,$enc)
+    if($c.Length -gt 60000){$c=$c.Substring(0,60000)+"`n...[TRUNCATED]"}
+    $fileTexts+=("`n`n--- FILE: "+$fp+" ---`n"+$c)
+  }else{
+    $b=[IO.File]::ReadAllBytes($fp)
+    if($b.Length -gt 20MB){Write-Warning ("文件过大(>20MB), 跳过: "+$fp); continue}
+    $b64=[Convert]::ToBase64String($b)
+    $mt='application/octet-stream'
+    switch($ext){
+      '.png'{$mt='image/png'}
+      '.jpg'{$mt='image/jpeg'}
+      '.jpeg'{$mt='image/jpeg'}
+      '.gif'{$mt='image/gif'}
+      '.webp'{$mt='image/webp'}
+      '.bmp'{$mt='image/bmp'}
+      '.pdf'{$mt='application/pdf'}
+    }
+    $dataUri="data:$mt;base64,$b64"
+    $imageBlocks+=@{type='image_url';image_url=@{url=$dataUri}}
+  }
+}
+$userText=$UserPrompt
+if($fileTexts.Count -gt 0){$userText=$UserPrompt+($fileTexts -join '')}
+if($imageBlocks.Count -gt 0){
+  $blocks=@(@{type='text';text=$userText})
+  foreach($ib in $imageBlocks){$blocks+=$ib}
+  $mem.messages+=@{role='user';content=$blocks}
+}else{
+  $mem.messages+=@{role='user';content=$userText}
+}
+
+# ---------- 构造请求 ----------
+$msgs=@()
+if($mem.system){$msgs+=@{role='system';content=$mem.system}}
+foreach($m in $mem.messages){
+  $msgs+=@{role=[string]$m.role;content=$m.content}
+}
+$body=@{model=$Model;messages=$msgs;stream=$true}
+if($Reasoning -eq 'disabled'){$body['thinking']=@{type='disabled'}}else{$body['reasoning_effort']=$Reasoning}
+$json=$body|ConvertTo-Json -Depth 30 -Compress
+$url=([string]$BaseUrl).TrimEnd('/')+'/v1/chat/completions'
+
+# ---------- 重置输出 ----------
+[IO.File]::WriteAllText($replyPath,'',$encAnsi)
+if($UserPrompt){ $pre=''; if((Test-Path -LiteralPath $allPath) -and ((Get-Item -LiteralPath $allPath).Length -gt 0)){ $pre="`r`n" }; [IO.File]::AppendAllText($allPath, $pre+"`r`n`r`n=======================[ 对话 ]=======================`r`n<用户> "+$UserPrompt+"`r`n", $encAnsi) }
+$swR=$null;$swA=$null;$sawThink=$false;$sawBody=$false
+
+# ---------- 流式请求 ----------
+Add-Type -AssemblyName System.Net.Http -ErrorAction SilentlyContinue
+$handler=[System.Net.Http.HttpClientHandler]::new()
+$client=[System.Net.Http.HttpClient]::new($handler)
+$client.Timeout=[TimeSpan]::FromMinutes(10)
+$req=[System.Net.Http.HttpRequestMessage]::new([System.Net.Http.HttpMethod]::Post,$url)
+$req.Headers.Authorization=[System.Net.Http.Headers.AuthenticationHeaderValue]::new('Bearer',$ApiKey)
+$req.Content=[System.Net.Http.StringContent]::new($json,$enc,'application/json')
+
+$fullC='';$fullR='';$finish=''
+try{
+  $resp=$client.SendAsync($req,[System.Net.Http.HttpCompletionOption]::ResponseHeadersRead).GetAwaiter().GetResult()
+  if(-not $resp.IsSuccessStatusCode){
+    $err=$resp.Content.ReadAsStringAsync().GetAwaiter().GetResult()
+    throw ("HTTP "+[int]$resp.StatusCode+" "+$resp.ReasonPhrase+": "+$err)
+  }
+  $stream=$resp.Content.ReadAsStreamAsync().GetAwaiter().GetResult()
+  $reader=[IO.StreamReader]::new($stream,[Text.UTF8Encoding]::new($false))
+$swR=[IO.StreamWriter]::new($replyPath,$true,[Text.Encoding]::GetEncoding(936));$swR.AutoFlush=$true
+$swA=[IO.StreamWriter]::new($allPath,$true,[Text.Encoding]::GetEncoding(936));$swA.AutoFlush=$true
+  while($true){
+    $line=$reader.ReadLine()
+    if($null -eq $line){break}
+    if([string]::IsNullOrWhiteSpace($line)){continue}
+    if($line.StartsWith('data:')){$line=$line.Substring(5).Trim()}
+    if($line -eq '[DONE]'){break}
+    try{$o=$line|ConvertFrom-Json}catch{continue}
+    if(-not $o.choices){continue}
+    $ch=@($o.choices)[0]
+    if($null -eq $ch){continue}
+    if($ch.finish_reason){$finish=[string]$ch.finish_reason}
+    $d=$ch.delta
+    if($null -eq $d){continue}
+    $r=$null
+    if($d.reasoning_content){$r=[string]$d.reasoning_content}
+    elseif($d.reasoning){$r=[string]$d.reasoning}
+if($r){$fullR+=$r;Write-Host -NoNewline -ForegroundColor DarkGray $r; if(-not $sawThink){$swA.Write("======================[ 思考中 ]======================`r`n");$sawThink=$true}; $swA.Write($r)}
+if($d.content){$cc=[string]$d.content;$fullC+=$cc;Write-Host -NoNewline $cc; if(-not $sawBody){ if($sawThink){$swA.Write("`r`n=====================[ 思考完成 ]=====================`r`n")}; $swA.Write("`r`n<助手> ");$sawBody=$true }; $swR.Write($cc); $swA.Write($cc)}
+  }
+  $reader.Close()
+}catch{
+  $msg=$_.Exception.Message
+  if($_.Exception.InnerException){$msg+=' | '+$_.Exception.InnerException.Message}
+  Write-Host ''
+  Write-Host ("[ERROR] "+$msg) -ForegroundColor Red
+  exit 1
+}finally{
+  if($swR){$swR.Close()}
+if($swA){ try{$swA.Write("`r`n")}catch{}; $swA.Close() }
+  if($client){$client.Dispose()}
+}
+
+Write-Host ''
+# ---------- 保存记忆 ----------
+$assistant=@{role='assistant';content=$fullC}
+if($fullR){$assistant['reasoning_content']=$fullR}
+$mem.messages+=$assistant
+$out=@{system=$mem.system;model=$Model;updated_at=(Get-Date -Format 'yyyy-MM-dd HH:mm:ss');messages=$mem.messages}
+$jsonOut=$out|ConvertTo-Json -Depth 30 -Compress
+$tmp=$memPath+'.tmp'
+[IO.File]::WriteAllText($tmp,$jsonOut,$enc)
+Move-Item -LiteralPath $tmp -Destination $memPath -Force
+Write-Output ("DONE reply="+$fullC.Length+" think="+$fullR.Length+" files="+$fileList.Count+" finish="+$finish)
