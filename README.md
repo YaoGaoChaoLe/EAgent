@@ -44,7 +44,7 @@ EAgent 也有合规的 API 调用：
 - 然后会自动打开 Edge 浏览器。请自行登录后，才能进行下一步操作。
 - 在 EAgent 中点击 `开始新对话` 。等待 Ai 分析提示词...
 - 到你回复它了 —— 用 EAgent 发消息，而**不是用网页版发消息**。 `网页版的唯一作用就是给你看的，而不是发消息的。`
-- 如果看不懂以上文字：[演示视频](https://www.bilibili.com/video/BV1dZJk6wEHG/)
+- 如果看不懂以上文字：[演示视频](https://www.bilibili.com/video/BV1YjykzqE9i/)
 ---
 
 <img width="1396" height="825" alt="2" src="https://github.com/user-attachments/assets/26816735-55d1-407f-a7b6-9610f889f673" />
