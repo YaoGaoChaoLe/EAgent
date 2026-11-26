@@ -2,8 +2,7 @@
 0 tokens、0门槛 、轻量级 | 基于 DeepSeek 网页版制作的 Agent —— 让 网页版 AI "操控"你的电脑。
 ```
 1、除了 deepseek 网页，现已支持 豆包、元宝、智谱清言 的网页版！
-2、除了"白嫖"网页资源，现已支持对接ds官方API 或 其它API！（OpenAI兼容）。
-    轻量级的设计，相同的简单任务下 EAgent 消耗的token比 dsh 耗的更少！
+2、除了"白嫖"网页资源，现已支持对接ds官方API 或 其它API！（OpenAI兼容）。轻量级的设计，相同的简单任务下 EAgent 消耗的token比 dsh 耗的更少！
 ```
 
 ## 1. 环境要求
