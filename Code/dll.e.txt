@@ -32,3 +32,8 @@
     .参数 pSrc, 整数型
     .参数 ByteLen, 字节型
 
+.DLL命令 SetProcessWorkingSetSize, 整数型, "kernel32", "SetProcessWorkingSetSize", , ;    设置操作系统实际划分给进程使用的内存容量  非零表示成功，零表示失败。会设置GetLastError
+    .参数 hProcess, 整数型, , 指定一个进程的句柄
+    .参数 dwMinimumWorkingSetSize, 整数型, , 用于装载最小进程容量的一个变量
+    .参数 dwMaximumWorkingSetSize, 整数型, , 用于装载最大进程容量的一个变量适用平台Windows NT;
+

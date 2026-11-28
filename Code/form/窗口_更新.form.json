@@ -16,12 +16,12 @@
             "Top": 50,
             "UnknownBeforeEvents": 0,
             "UnknownBeforeExtensionData": "0000000000000000000000000000000000000000",
-            "UnknownBeforeLeft": 98835280,
+            "UnknownBeforeLeft": 99308336,
             "UnknownBeforeName": "0000000000000000000000000000000000000000",
             "UnknownBeforeParent": 0,
             "UnknownBeforeVisible": 0,
             "Visible": false,
-            "Width": 788
+            "Width": 563
         },
         {
             "Children": [],
@@ -37,7 +37,7 @@
             "Top": 336,
             "UnknownBeforeEvents": 0,
             "UnknownBeforeExtensionData": "0000000000000000000000000000000000000000",
-            "UnknownBeforeLeft": 98832432,
+            "UnknownBeforeLeft": 99314592,
             "UnknownBeforeName": "0000000000000000000000000000000000000000",
             "UnknownBeforeParent": 0,
             "UnknownBeforeVisible": 0,
@@ -58,7 +58,7 @@
             "Top": 331,
             "UnknownBeforeEvents": 0,
             "UnknownBeforeExtensionData": "0000000000000000000000000000000000000000",
-            "UnknownBeforeLeft": 98839936,
+            "UnknownBeforeLeft": 99314688,
             "UnknownBeforeName": "0000000000000000000000000000000000000000",
             "UnknownBeforeParent": 0,
             "UnknownBeforeVisible": 0,
@@ -71,20 +71,20 @@
             "Cursor": "00000000",
             "DataType": "按钮",
             "Disable": false,
-            "ExtensionData": "01000000010000000100000001000000000000003C000000F2FFFFFF000000000000000000000000900100000000008603020122CEA2C8EDD1C5BADA00000000000000000000000000000000000000000000000016000000B8FCD0C2A3A1B3E5A3A1A3A128BFC6D1A7C9CFCDF829",
+            "ExtensionData": "01000000010000000100000001000000000000003C000000F2FFFFFF000000000000000000000000900100000000008603020122CEA2C8EDD1C5BADA0000000000000000000000000000000000000000000000001C000000B8FCD0C2A3A1B3E5A3A1A3A128BFC9C4DCD2AABFC6D1A7C9CFCDF829",
             "Height": 40,
-            "Left": 522,
+            "Left": 320,
             "Name": "按钮_前往更新",
             "Tag": "",
             "Top": 331,
             "UnknownBeforeEvents": 0,
             "UnknownBeforeExtensionData": "0000000000000000000000000000000000000000",
-            "UnknownBeforeLeft": 98840112,
+            "UnknownBeforeLeft": 99315008,
             "UnknownBeforeName": "0000000000000000000000000000000000000000",
             "UnknownBeforeParent": 0,
             "UnknownBeforeVisible": 0,
             "Visible": true,
-            "Width": 250
+            "Width": 232
         },
         {
             "Children": [],
@@ -100,17 +100,17 @@
             "Top": 2,
             "UnknownBeforeEvents": 0,
             "UnknownBeforeExtensionData": "0000000000000000000000000000000000000000",
-            "UnknownBeforeLeft": 98840288,
+            "UnknownBeforeLeft": 99315184,
             "UnknownBeforeName": "0000000000000000000000000000000000000000",
             "UnknownBeforeParent": 0,
             "UnknownBeforeVisible": 0,
             "Visible": true,
-            "Width": 767
+            "Width": 547
         }
     ],
     "Id": 1375815927,
     "Menus": [],
     "Name": "窗口_更新",
-    "UnknownAfterId": 41762400,
+    "UnknownAfterId": 41827936,
     "UnknownBeforeClass": 10381992
 }

@@ -44,7 +44,7 @@ EAgent 也有合规的 API 调用：
 - 然后会自动打开 Edge 浏览器。请自行登录后，才能进行下一步操作。
 - 在 EAgent 中点击 `开始新对话` 。等待 Ai 分析提示词...
 - 到你回复它了 —— 用 EAgent 发消息，而**不是用网页版发消息**。 `网页版的唯一作用就是给你看的，而不是发消息的。`
-- 如果看不懂以上文字：[演示视频](https://www.bilibili.com/video/BV1YjykzqE9i/)
+- 演示视频：[演示视频](https://www.bilibili.com/video/BV1YjykzqE9i/)
 ---
 
 <img width="1396" height="825" alt="2" src="https://github.com/user-attachments/assets/26816735-55d1-407f-a7b6-9610f889f673" />
@@ -65,7 +65,7 @@ EAgent 也有合规的 API 调用：
     - **1、本项目自身不会带有任何恶意代码，请放心使用。**
     - 2、每次发布新版，我都会附带 **当前最新** 的样本检测报告：
 
-        [微步云沙箱-2026.11.24](https://s.threatbook.com/report/file/c430c40869a6a4041368dd0845e00bbeb6a9770118960183af7672d7449e1bd8)、[360沙箱-2026.11.24](https://ata.360.net/report/891758901528576)
+        [微步云沙箱-2026.11.28](https://s.threatbook.com/report/file/4be9d037ebbb6244f1900472df3beb38ea3405a82d69323bb154a3159919ef20)、[360沙箱-2026.11.28](https://ata.360.net/report/893145249941504)
 
 
 - 本项目始于 2026/10/8，处于开发阶段，欢迎提交 [issue](https://github.com/YaoGaoChaoLe/EAgent/issues)。开源仓库 [在这](https://github.com/YaoGaoChaoLe/EAgent/)，遵循 `GPL-3.0` 协议。

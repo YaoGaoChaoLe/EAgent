@@ -35,6 +35,16 @@ $Selectors = @{
 $SelJson = ($Selectors | ConvertTo-Json -Compress)
 $SelJs = @"
 var SEL = $SelJson;
+function cleanText(el){
+    if(!el) return '';
+    var th = el.querySelectorAll('.hyc-component-deepsearch-cot__think');
+    if(th.length===0) return (el.innerText||'').trim();
+    var saved=[];
+    for(var i=0;i<th.length;i++){ saved.push(th[i].style.display); th[i].style.display='none'; }
+    var tt=(el.innerText||'').trim();
+    for(var i=0;i<th.length;i++){ th[i].style.display=saved[i]; }
+    return tt;
+}
 function pick(key){
     var list = SEL[key]||[];
     if(typeof list==='string') list=[list];
@@ -143,7 +153,7 @@ $lastAssistJs = $SelJs + @"
 (function(){
     var a=pick('assistant');
     if(a.length===0) return '';
-    return (a[a.length-1].innerText||'').trim();
+    return cleanText(a[a.length-1]);
 })()
 "@
 
@@ -151,7 +161,8 @@ $lastAssistJs = $SelJs + @"
 $statusJs = $SelJs + @"
 (function(){
     var assistants = pick('assistant');
-    var lastText = assistants.length > 0 ? (assistants[assistants.length-1].innerText||'').trim() : '';
+    var lastRaw = assistants.length > 0 ? (assistants[assistants.length-1].innerText||'').trim() : '';
+    var lastText = assistants.length > 0 ? cleanText(assistants[assistants.length-1]) : '';
     var hasRegen = false, regenVisible = false;
     if (assistants.length > 0) {
         var lastEl = assistants[assistants.length-1];
@@ -180,6 +191,7 @@ $statusJs = $SelJs + @"
     return JSON.stringify({
         assistCount: assistants.length,
         text: lastText,
+        rawLen: lastRaw.length,
         hasRegen: hasRegen,
         regenVisible: regenVisible,
         isGenerating: isGenerating
@@ -196,6 +208,10 @@ Dbg "页面保持活跃已设置" 'DarkGray'
 $lastAssist0 = CDP $lastAssistJs -timeoutMs 4000
 if ($null -eq $lastAssist0) { $lastAssist0 = '' }
 Write-Output "PREV_ASSIST_LEN: $($lastAssist0.Length)"
+$baselineRawLen = -1
+$st0 = CDP $statusJs -timeoutMs 5000
+if ($st0) { try { $baselineRawLen = [int](($st0 | ConvertFrom-Json).rawLen) } catch {} }
+Write-Output "BASELINE_RAW_LEN: $baselineRawLen"
 
 # ================= 文件上传核心逻辑 =================
 if ($Files.Count -gt 0) {
@@ -388,11 +404,12 @@ while ((Get-Date) -lt $deadline) {
     if (-not $j) { continue }
 
     $curText      = [string]$j.text
+    $curRawLen    = [int]$j.rawLen
     $regenVisible = [bool]$j.regenVisible
     $isGenerating = [bool]$j.isGenerating
 
     if (-not $sawNew) {
-        if ($curText -ne $lastAssist0 -and $curText.Length -gt 0) {
+        if ($curRawLen -ne $baselineRawLen) {
             Write-Output "  [new-reply] textLen=$($curText.Length) (init=$($lastAssist0.Length))"
             Dbg ("检测到新回复文本 len {0} → {1}" -f $lastAssist0.Length, $curText.Length) 'Green'
             $sawNew = $true
